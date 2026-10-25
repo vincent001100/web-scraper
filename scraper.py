@@ -18,6 +18,8 @@ from urllib.parse import urljoin
 #               "attr" = (optional) grab a hidden label instead of the visible text
 #               "all"  = (optional) grab every match and join them with commas
 #   next      : where the "next page" button is (leave out if there is only one page)
+#   js        : (optional) True if the data only appears after the page's own code runs
+#               (a "JavaScript site"). We then open it in a real, invisible browser.
 #
 # Only add sites that allow scraping (check their robots.txt and terms).
 # ============================================================
@@ -36,6 +38,18 @@ SITES = {
     "quotes": {
         "name": "Famous Quotes",
         "start_url": "https://quotes.toscrape.com/",
+        "item": "div.quote",
+        "fields": {
+            "quote":  {"css": "span.text"},
+            "author": {"css": "small.author"},
+            "tags":   {"css": "a.tag", "all": True},
+        },
+        "next": "li.next a",
+    },
+    "quotes_js": {
+        "name": "Famous Quotes (JavaScript site)",
+        "start_url": "https://quotes.toscrape.com/js/",
+        "js": True,
         "item": "div.quote",
         "fields": {
             "quote":  {"css": "span.text"},
@@ -135,8 +149,43 @@ def get_value(box, rule):
     return el.get_text(strip=True)
 
 
+class Browser:
+    """An invisible Chrome browser, for sites whose data is drawn by JavaScript."""
+
+    def __enter__(self):
+        from playwright.sync_api import sync_playwright
+        self.playwright = sync_playwright().start()
+        self.browser = self.playwright.chromium.launch()
+        self.page = self.browser.new_page()
+        return self
+
+    def get_html(self, url, wait_for):
+        self.page.goto(url, timeout=30000)
+        self.page.wait_for_selector(wait_for, timeout=15000)  # wait until the items have appeared
+        return self.page.content()
+
+    def __exit__(self, *errors):
+        self.browser.close()
+        self.playwright.stop()
+
+
+def get_html(url, site, browser):
+    if browser:
+        return browser.get_html(url, site["item"])
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()  # stop if the site answered with an error
+    return response.content
+
+
 def scrape(site_name, folder=".", max_pages=None):
     """Scrape one site, save a CSV in `folder`, and return (rows, csv_path)."""
+    if SITES[site_name].get("js"):
+        with Browser() as browser:
+            return _scrape(site_name, folder, max_pages, browser)
+    return _scrape(site_name, folder, max_pages, None)
+
+
+def _scrape(site_name, folder, max_pages, browser):
     site = SITES[site_name]
     url = site["start_url"]
     visited = set()
@@ -146,9 +195,7 @@ def scrape(site_name, folder=".", max_pages=None):
     while url and url not in visited:
         visited.add(url)
         print(f"🔄 Page {page}: connecting...")
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()  # stop if the site answered with an error
-        soup = BeautifulSoup(response.content, 'html.parser')
+        soup = BeautifulSoup(get_html(url, site, browser), 'html.parser')
         items = soup.select(site["item"])
         print(f"✓ Found {len(items)} items")
 

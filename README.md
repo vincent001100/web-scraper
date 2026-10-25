@@ -9,6 +9,7 @@ One engine, many websites: each site is a short entry in the `SITES` settings.
 |---|---|
 | `python scraper.py books` | Title, price and rating of every book on books.toscrape.com (1,000 books, 50 pages) |
 | `python scraper.py quotes` | Quote, author and tags from quotes.toscrape.com (100 quotes, 10 pages) |
+| `python scraper.py quotes_js` | The same quotes from a JavaScript site (data drawn by the page's own code), read with an invisible browser |
 | `python scraper.py countries` | Name, capital, population and area of 250 countries |
 | `python scraper.py hockey` | Hockey team results by season |
 | `python scraper.py laptops` / `tablets` / `phones` | Product, price, description and reviews from a test online store |
@@ -33,6 +34,7 @@ Copy an entry in `SITES`, then set the start URL and the CSS selectors for the i
 - Waits 1 second between pages to be polite to the website
 - Missing fields become empty cells instead of crashing
 - Timestamped output files
+- JavaScript sites: set `"js": True` and the page is opened in an invisible Chrome browser first
 
 ## Daily data drop
 
