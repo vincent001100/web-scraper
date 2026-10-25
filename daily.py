@@ -26,8 +26,9 @@ BRAND = "SOLVIX"
 MAX_PAGES = 5          # keep each daily run small and polite
 RESULTS = "results"
 
-# Post colours: dark background, bright accent
-BG, CARD, TEXT, MUTED, ACCENT = "#0f172a", "#1e293b", "#f8fafc", "#94a3b8", "#38bdf8"
+# Post colours: warm paper, deep ink, forest green brand, terracotta accent
+BG, CARD, TEXT, MUTED = "#f4efe6", "#e8e0d0", "#1f2a24", "#6b675c"
+BRAND_COLOUR, ACCENT = "#2f4a3a", "#b5532a"
 
 
 def allowed_to_scrape(url):
@@ -64,9 +65,10 @@ def take_screenshot(url, path):
         browser.close()
 
 
-def font(size, bold=False):
+def font(size, bold=False, serif=False):
     # DejaVu fonts come with most Linux systems (including GitHub's); fall back to Pillow's own
-    name = "DejaVuSans-Bold.ttf" if bold else "DejaVuSans.ttf"
+    family = "DejaVuSerif" if serif else "DejaVuSans"
+    name = f"{family}-Bold.ttf" if bold else f"{family}.ttf"
     try:
         return ImageFont.truetype(f"/usr/share/fonts/truetype/dejavu/{name}", size)
     except OSError:
@@ -84,7 +86,7 @@ def make_post(site, rows, screenshot_path, path, date_text):
     d = ImageDraw.Draw(img)
 
     # Header: brand + date
-    d.text((60, 55), BRAND, font=font(56, bold=True), fill=ACCENT)
+    d.text((60, 55), BRAND, font=font(56, bold=True, serif=True), fill=BRAND_COLOUR)
     d.text((W - 60, 72), date_text, font=font(30), fill=MUTED, anchor="ra")
     d.text((60, 135), "Daily Data Drop", font=font(34), fill=MUTED)
 
@@ -97,7 +99,7 @@ def make_post(site, rows, screenshot_path, path, date_text):
 
     # Headline numbers
     columns = list(site["fields"])
-    d.text((60, 835), site["name"], font=font(52, bold=True), fill=TEXT)
+    d.text((60, 835), site["name"], font=font(52, bold=True, serif=True), fill=TEXT)
     d.text((60, 905), f"{len(rows):,} records collected automatically  •  {len(columns)} data fields",
            font=font(28), fill=ACCENT)
 
@@ -115,7 +117,7 @@ def make_post(site, rows, screenshot_path, path, date_text):
 
     # Footer: the offer
     d.text((W // 2, 1260), "Need data from the web? I build custom scrapers.",
-           font=font(30, bold=True), fill=TEXT, anchor="ma")
+           font=font(30, bold=True, serif=True), fill=BRAND_COLOUR, anchor="ma")
     d.text((W // 2, 1302), "Web scraping  •  Automation  •  Python", font=font(24), fill=MUTED, anchor="ma")
 
     img.save(path)
