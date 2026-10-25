@@ -3,6 +3,15 @@
 A reusable Python scraper that follows "next page" links and saves results to a CSV spreadsheet.
 One engine, many websites: each site is a short entry in the `SITES` settings.
 
+## The app
+
+A point-and-click version of the scraper that runs in your browser:
+
+1. Start it: `./start_app.sh` (or `python app.py`)
+2. Your browser opens at http://127.0.0.1:5000
+3. Pick a website, choose how many pages, press **Start collecting**
+4. Watch it work live, then download the results as **Excel, CSV, PDF, JSON or Text**
+
 ## Supported sites
 
 | Command | Collects |

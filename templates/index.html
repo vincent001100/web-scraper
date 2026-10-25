@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solvix Scraper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232f4a3a'/><text x='16' y='23' font-family='Georgia' font-size='20' font-weight='700' text-anchor='middle' fill='%23f4efe6'>S</text></svg>">
+</head>
+<body>
+
+<!-- Icon set, drawn once and reused below -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14Z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 24 24"><path d="M7 7h4v4c0 3-1.5 5-4 6"/><path d="M14 7h4v4c0 3-1.5 5-4 6"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m13.5 4-3 16"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18Z"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></symbol>
+    <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></symbol>
+    <symbol id="i-tablet" viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="19" rx="2"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-columns" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="M15 4v16"/></symbol>
+    <symbol id="i-rows" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">S</span>
+      <span class="brand-name">Solvix <em>Scraper</em></span>
+    </a>
+    <span class="pill pill-calm"><svg class="ic"><use href="#i-shield"/></svg> Polite mode · respects site rules</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero reveal">
+    <p class="eyebrow">Web data, collected properly</p>
+    <h1>Turn a website into a<br><span class="underline">clean spreadsheet</span>.</h1>
+    <p class="lede">Pick a website, choose how much to collect, and download the results as Excel, CSV, PDF and more. No code needed.</p>
+
+    <ol class="steps" id="steps" aria-label="Progress">
+      <li class="step is-active" data-step="1"><span class="step-dot">1</span><span>Choose a website</span></li>
+      <li class="step-line"><span></span></li>
+      <li class="step" data-step="2"><span class="step-dot">2</span><span>Collect the data</span></li>
+      <li class="step-line"><span></span></li>
+      <li class="step" data-step="3"><span class="step-dot">3</span><span>Download</span></li>
+    </ol>
+  </section>
+
+  <!-- STEP 1: choose a site -->
+  <section class="panel reveal" id="choose">
+    <div class="panel-head">
+      <div>
+        <h2>Choose a website</h2>
+        <p class="muted">Every site here allows scraping. Each one is checked again before we start.</p>
+      </div>
+      <label class="search">
+        <svg class="ic"><use href="#i-search"/></svg>
+        <input id="site-filter" type="search" placeholder="Search websites" autocomplete="off">
+      </label>
+    </div>
+
+    <div class="grid" id="sites">
+      {% for s in sites %}
+      <button class="site" type="button" data-key="{{ s.key }}" style="--i: {{ loop.index0 }}"
+              data-search="{{ (s.name ~ ' ' ~ s.category ~ ' ' ~ s.about)|lower }}">
+        <span class="site-top">
+          <span class="site-icon"><svg class="ic"><use href="#i-{{ s.icon }}"/></svg></span>
+          <span class="tag {% if s.js %}tag-js{% endif %}">{{ s.category }}</span>
+          <span class="site-check"><svg class="ic"><use href="#i-check"/></svg></span>
+        </span>
+        <span class="site-name">{{ s.name }}</span>
+        <span class="site-about">{{ s.about }}</span>
+        <span class="site-url">{{ s.url.split('/')[2] }}</span>
+      </button>
+      {% endfor %}
+    </div>
+    <p class="empty muted" id="no-sites" hidden>No website matches that search.</p>
+
+    <!-- Options appear once a site is picked -->
+    <div class="options" id="options" hidden>
+      <div class="option">
+        <span class="option-label">Pages to collect</span>
+        <div class="stepper" id="stepper">
+          <button type="button" data-delta="-1" aria-label="Fewer pages">−</button>
+          <output id="pages">3</output>
+          <button type="button" data-delta="1" aria-label="More pages">+</button>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="all-pages">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          Every page
+        </label>
+        <span class="muted small" id="single-page-note" hidden>This website has one page.</span>
+      </div>
+      <div class="option option-grow">
+        <span class="option-label">You'll get these columns</span>
+        <div class="chips" id="field-chips"></div>
+      </div>
+      <button class="btn btn-primary btn-big" id="start" type="button">
+        Start collecting <svg class="ic"><use href="#i-arrow"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- STEP 2: live progress -->
+  <section class="panel run" id="run" hidden>
+    <div class="run-grid">
+      <div>
+        <h2 id="run-title">Collecting…</h2>
+        <ul class="timeline" id="timeline">
+          <li data-t="check"><span class="t-dot"></span><div><strong>Checking permission</strong><span class="muted">Reading the site's robots.txt rules</span></div></li>
+          <li data-t="collect"><span class="t-dot"></span><div><strong>Collecting pages</strong><span class="muted" id="collect-note">Waiting…</span></div></li>
+          <li data-t="ready"><span class="t-dot"></span><div><strong>Preparing your download</strong><span class="muted">Excel, CSV, PDF, JSON and Text</span></div></li>
+        </ul>
+      </div>
+      <div class="counter-card">
+        <span class="muted small">Records collected</span>
+        <span class="counter" id="counter">0</span>
+        <div class="bar"><span id="bar-fill"></span></div>
+        <ol class="log" id="log"></ol>
+      </div>
+    </div>
+    <div class="error" id="error" hidden></div>
+  </section>
+
+  <!-- STEP 3: results -->
+  <section class="panel results" id="results" hidden>
+    <div class="panel-head">
+      <div>
+        <h2 id="results-title">Your data is ready</h2>
+        <p class="muted" id="results-sub"></p>
+      </div>
+      <button class="btn btn-ghost" id="again" type="button"><svg class="ic"><use href="#i-redo"/></svg> Collect another</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><svg class="ic"><use href="#i-rows"/></svg><span class="stat-num" data-count id="s-rows">0</span><span class="muted small">records</span></div>
+      <div class="stat"><svg class="ic"><use href="#i-layers"/></svg><span class="stat-num" data-count id="s-pages">0</span><span class="muted small">pages</span></div>
+      <div class="stat"><svg class="ic"><use href="#i-columns"/></svg><span class="stat-num" data-count id="s-fields">0</span><span class="muted small">columns</span></div>
+      <div class="stat"><svg class="ic"><use href="#i-clock"/></svg><span class="stat-num" id="s-time">0s</span><span class="muted small">time taken</span></div>
+    </div>
+
+    <div class="download-bar">
+      <div class="formats" role="radiogroup" aria-label="File type" id="formats">
+        <button type="button" role="radio" aria-checked="true" data-ext="xlsx"><b>Excel</b><span>.xlsx</span></button>
+        <button type="button" role="radio" aria-checked="false" data-ext="csv"><b>CSV</b><span>.csv</span></button>
+        <button type="button" role="radio" aria-checked="false" data-ext="pdf"><b>PDF</b><span>.pdf</span></button>
+        <button type="button" role="radio" aria-checked="false" data-ext="json"><b>JSON</b><span>.json</span></button>
+        <button type="button" role="radio" aria-checked="false" data-ext="txt"><b>Text</b><span>.txt</span></button>
+      </div>
+      <a class="btn btn-primary btn-big" id="download" href="#">
+        <svg class="ic"><use href="#i-download"/></svg> <span>Download Excel</span>
+      </a>
+    </div>
+
+    <div class="table-tools">
+      <label class="search">
+        <svg class="ic"><use href="#i-search"/></svg>
+        <input id="row-filter" type="search" placeholder="Search the results" autocomplete="off">
+      </label>
+      <span class="muted small" id="showing"></span>
+    </div>
+    <div class="table-wrap">
+      <table id="table"><thead></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap footer">
+  <span><strong>Solvix</strong> · Collects public data only, and pauses between pages so websites aren't overloaded.</span>
+</footer>
+
+<script>window.SITES = {{ sites|tojson }};</script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

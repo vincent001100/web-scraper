@@ -177,15 +177,16 @@ def get_html(url, site, browser):
     return response.content
 
 
-def scrape(site_name, folder=".", max_pages=None):
-    """Scrape one site, save a CSV in `folder`, and return (rows, csv_path)."""
+def scrape(site_name, folder=".", max_pages=None, progress=None):
+    """Scrape one site, save a CSV in `folder`, and return (rows, csv_path).
+    `progress`, if given, is called after each page with (page, items_on_page, total_so_far)."""
     if SITES[site_name].get("js"):
         with Browser() as browser:
-            return _scrape(site_name, folder, max_pages, browser)
-    return _scrape(site_name, folder, max_pages, None)
+            return _scrape(site_name, folder, max_pages, browser, progress)
+    return _scrape(site_name, folder, max_pages, None, progress)
 
 
-def _scrape(site_name, folder, max_pages, browser):
+def _scrape(site_name, folder, max_pages, browser, progress):
     site = SITES[site_name]
     url = site["start_url"]
     visited = set()
@@ -201,6 +202,8 @@ def _scrape(site_name, folder, max_pages, browser):
 
         for box in items:
             data.append({name: get_value(box, rule) for name, rule in site["fields"].items()})
+        if progress:
+            progress(page, len(items), len(data))
 
         # Look for the "next" button; on the last page it doesn't exist, so we stop
         next_button = soup.select_one(site["next"]) if "next" in site else None
