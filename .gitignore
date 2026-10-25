@@ -4,3 +4,6 @@ __pycache__/
 
 # Scraped output files
 *.csv
+
+# ...except the daily results, which are published on purpose
+!results/**/*.csv

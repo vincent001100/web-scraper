@@ -1,11 +1,14 @@
-# Runs the scraper automatically on GitHub's computers.
-# Results appear on the "Actions" tab, under each run, as a downloadable zip.
-name: Daily scrape
+# Every morning: pick a random website from the menu, scrape it,
+# make a social media post image, and save everything in the results/ folder.
+name: Daily data drop
 
 on:
   schedule:
     - cron: "0 6 * * *"   # every day at 06:00 UTC (07:00 Lagos time)
   workflow_dispatch:       # adds a "Run workflow" button to run it any time
+
+permissions:
+  contents: write          # lets the robot save results into this project
 
 jobs:
   scrape:
@@ -18,17 +21,17 @@ jobs:
           python-version: "3.12"
 
       - name: Install helper tools
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
 
-      - name: Scrape books
-        run: python scraper.py books
+      - name: Scrape a random website
+        run: python daily.py
 
-      - name: Scrape quotes
-        run: python scraper.py quotes
-
-      - name: Save results for download
-        uses: actions/upload-artifact@v7
-        with:
-          name: scraped-data
-          path: "*.csv"
-          retention-days: 30
+      - name: Save results to GitHub
+        run: |
+          git config user.name "Solvix"
+          git config user.email "174953671+vincent001100@users.noreply.github.com"
+          git add results
+          git commit -m "Daily data drop $(date -u +%Y-%m-%d)"
+          git push
