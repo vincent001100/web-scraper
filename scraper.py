@@ -94,6 +94,7 @@ def scrape(site_name):
         print(f"✓ Saved to {filename}")
     except Exception as e:
         print(f"Error: {e}")
+        sys.exit(1)  # tell whoever ran us (e.g. GitHub) that it failed
 
 
 # Which site to scrape comes from the command, e.g.:  python scraper.py quotes

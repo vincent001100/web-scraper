@@ -28,3 +28,9 @@ Copy an entry in `SITES`, then set the start URL and the CSS selectors for the i
 - Waits 1 second between pages to be polite to the website
 - Missing fields become empty cells instead of crashing
 - Timestamped output files
+
+## Automatic daily runs
+
+GitHub runs both scrapers every day at 06:00 UTC (see `.github/workflows/scrape.yml`).
+Download the results from the **Actions** tab: open a run and click **scraped-data**.
+To run it right away, open **Actions → Daily scrape → Run workflow**.
