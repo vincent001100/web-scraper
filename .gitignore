@@ -1,0 +1,6 @@
+# Python virtual environment (each computer builds its own)
+.venv/
+__pycache__/
+
+# Scraped output files
+*.csv
