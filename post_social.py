@@ -2,11 +2,11 @@
 Post today's data drop to the Solvix Facebook Page and Instagram account.
 
 Runs on GitHub after daily.py has saved and pushed results/<date>_<site>/.
-It needs three secrets (set them in GitHub: Settings → Secrets and variables → Actions):
-  META_PAGE_TOKEN  the Facebook Page access token (lets us post as the Page)
-  FB_PAGE_ID       the Facebook Page's number
-  IG_USER_ID       the Instagram professional account's number
-If they're missing it skips posting instead of failing, so the scraping still runs.
+Two ways to post (set the secrets in GitHub: Settings → Secrets and variables → Actions):
+  1. MAKE_WEBHOOK_URL  hand the post to a Make.com scenario, which posts it for us
+                       (no Meta developer account needed)
+  2. META_PAGE_TOKEN + FB_PAGE_ID + IG_USER_ID  post straight to Meta's API ourselves
+If neither is set it skips posting instead of failing, so the scraping still runs.
 """
 import os
 import sys
@@ -58,12 +58,23 @@ def post_to_instagram(token, ig_user_id, image_url, caption):
     print(f"✓ Posted to Instagram (post {data['id']})")
 
 
+def send_to_make(webhook_url, image_url, caption, folder):
+    response = requests.post(webhook_url, timeout=60, json={
+        "image_url": image_url,
+        "caption": caption,
+        "title": os.path.basename(folder),
+    })
+    response.raise_for_status()
+    print(f"✓ Sent to Make.com, which posts it to Facebook and Instagram ({response.text.strip()})")
+
+
 def main():
+    webhook_url = os.environ.get("MAKE_WEBHOOK_URL")
     token = os.environ.get("META_PAGE_TOKEN")
     page_id = os.environ.get("FB_PAGE_ID")
     ig_user_id = os.environ.get("IG_USER_ID")
-    if not (token and page_id and ig_user_id):
-        print("Meta secrets not set yet: skipping social posting.")
+    if not (webhook_url or (token and page_id and ig_user_id)):
+        print("No posting secrets set yet: skipping social posting.")
         return
 
     folder = latest_folder()
@@ -75,6 +86,9 @@ def main():
     branch = os.environ.get("GITHUB_REF_NAME", "main")
     image_url = f"https://raw.githubusercontent.com/{repo}/{branch}/{folder}/post.jpg"
 
+    if webhook_url:
+        send_to_make(webhook_url, image_url, caption, folder)
+        return
     post_to_facebook(token, page_id, os.path.join(folder, "post.png"), caption)
     post_to_instagram(token, ig_user_id, image_url, caption)
 
