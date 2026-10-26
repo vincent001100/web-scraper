@@ -6,6 +6,7 @@ Everything for one day lands in results/<date>_<site>/:
   data.csv     the scraped data
   website.png  a screenshot of the website
   post.png     a ready-to-post image (Instagram / Facebook / TikTok photo)
+  post.jpg     the same image as JPEG (Instagram only accepts JPEG through its API)
   caption.txt  text to paste under the post
 """
 import os
@@ -121,6 +122,7 @@ def make_post(site, rows, screenshot_path, path, date_text):
     d.text((W // 2, 1302), "Web scraping  •  Automation  •  Python", font=font(24), fill=MUTED, anchor="ma")
 
     img.save(path)
+    img.save(path.replace(".png", ".jpg"), quality=92)
 
 
 def write_caption(site, rows, path):

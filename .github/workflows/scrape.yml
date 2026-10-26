@@ -35,3 +35,10 @@ jobs:
           git add results
           git commit -m "Daily data drop $(date -u +%Y-%m-%d)"
           git push
+
+      - name: Post to Facebook and Instagram
+        env:
+          META_PAGE_TOKEN: ${{ secrets.META_PAGE_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+        run: python post_social.py
