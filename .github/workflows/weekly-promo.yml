@@ -1,0 +1,25 @@
+# Once a week: post the Solvix advert ("we can automate your posting") to Facebook and Instagram.
+name: Weekly advert
+
+on:
+  schedule:
+    - cron: "0 12 * * 1"  # every Monday at 12:00 UTC (13:00 Lagos time), away from the morning data post
+  workflow_dispatch:       # adds a "Run workflow" button to run it any time
+
+jobs:
+  advert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install helper tools
+        run: pip install requests
+
+      - name: Post the advert to Facebook and Instagram
+        env:
+          MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
+        run: python post_promo.py

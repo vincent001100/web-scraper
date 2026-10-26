@@ -7,3 +7,6 @@ __pycache__/
 
 # ...except the daily results, which are published on purpose
 !results/**/*.csv
+
+# Video frames (made fresh by make_promo.py)
+brand/promo/slide*.png
