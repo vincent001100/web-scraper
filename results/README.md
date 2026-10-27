@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 27 Oct 2026: Job Listings (100 records)
+
+[Data (CSV)](2026-10-27_jobs/data.csv) · [Caption](2026-10-27_jobs/caption.txt)
+
+![Job Listings](2026-10-27_jobs/post.png)
+
 ## 26 Oct 2026: Tablet Store (21 records)
 
 [Data (CSV)](2026-10-26_tablets/data.csv) · [Caption](2026-10-26_tablets/caption.txt)
