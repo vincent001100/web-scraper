@@ -3,18 +3,51 @@
 name: Daily data drop
 
 on:
+  workflow_dispatch:       # the "Run workflow" button. Make.com presses it at 07:00 Lagos time every day
+    inputs:
+      force:
+        description: "Post again even if today's post already went out"
+        type: boolean
+        default: false
   schedule:
-    - cron: "0 6 * * *"   # every day at 06:00 UTC (07:00 Lagos time)
-  workflow_dispatch:       # adds a "Run workflow" button to run it any time
+    - cron: "23 6 * * *"  # backup at 06:23 UTC (07:23 Lagos time) in case Make.com's button press fails.
+                           # GitHub often starts scheduled runs hours late, so it isn't the main timer.
 
 permissions:
   contents: write          # lets the robot save results into this project
 
+concurrency:
+  group: daily-drop        # never run two copies at the same time
+  cancel-in-progress: false
+
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      done: ${{ steps.today.outputs.done }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main            # the newest version, so we see a post made by an earlier run today
+
+      - name: Stop if today's post already went out
+        id: today
+        run: |
+          if [ "${{ inputs.force }}" != "true" ] && ls -d results/$(date -u +%Y-%m-%d)_* > /dev/null 2>&1; then
+            echo "Today's data drop is already done, so this run stops here."
+            echo "done=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "done=false" >> "$GITHUB_OUTPUT"
+          fi
+
   scrape:
+    needs: check
+    if: needs.check.outputs.done != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: main
 
       - uses: actions/setup-python@v7
         with:
