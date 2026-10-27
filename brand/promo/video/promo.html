@@ -1,0 +1,431 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- The Solvix TikTok advert as one animated page. make_promo_video.py calls render(t) for every
+     frame (t = seconds) and films it, so the same moment always looks exactly the same. -->
+<style>
+  :root {
+    --paper: #f4efe6; --card: #e8e0d0; --ink: #1f2a24; --muted: #6b675c;
+    --forest: #2f4a3a; --terra: #b5532a; --skin: #7a4a2c; --hair: #191714;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--paper); }
+  body { font-family: "Fira Sans", sans-serif; color: var(--ink); }
+  .serif { font-family: "C059", serif; font-weight: 700; }
+  .scene { position: absolute; inset: 0; overflow: hidden; }
+  .abs { position: absolute; left: 0; top: 0; will-change: transform, opacity; }
+  .dots { position: absolute; inset: -60px; background-image: radial-gradient(#e0d8c7 3px, transparent 3.5px);
+          background-size: 54px 54px; }
+  .dots.dark { background-image: radial-gradient(rgba(244,239,230,.07) 3px, transparent 3.5px); }
+
+  .logo { width: 100px; height: 100px; border-radius: 22%; background: var(--forest); position: relative;
+          display: flex; align-items: center; justify-content: center; color: var(--paper);
+          box-shadow: 0 10px 30px rgba(31,42,36,.18); }
+  .logo b { font-family: "C059", serif; font-size: 62px; line-height: 1; margin-top: -4px; }
+  .logo i { position: absolute; width: 9%; height: 9%; border-radius: 50%; background: var(--terra); left: 68%; top: 58%; }
+  .brand { display: flex; align-items: center; gap: 22px; font-family: "C059", serif; font-weight: 700; font-size: 52px; }
+
+  .word { display: inline-block; white-space: nowrap; }
+  .headline { font-size: 118px; line-height: 1.04; letter-spacing: -2px; }
+
+  .bubble { background: #fff; border-radius: 26px; padding: 22px 30px 22px 22px; display: flex; align-items: center; gap: 18px;
+            box-shadow: 0 14px 34px rgba(31,42,36,.16); font-size: 32px; font-weight: 600; white-space: nowrap; }
+  .bubble .ic { width: 58px; height: 58px; border-radius: 16px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .badge { position: absolute; right: -12px; top: -12px; width: 40px; height: 40px; border-radius: 50%; background: #d93a2b;
+           color: #fff; font-size: 24px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+  .fb { background: #1877f2; border-radius: 50%; color: #fff; font-weight: 800; font-family: "Fira Sans", sans-serif;
+        display: flex; align-items: flex-end; justify-content: center; overflow: hidden; }
+  .ig { border-radius: 28%; background: linear-gradient(45deg, #f9b233 0%, #ee5a2f 30%, #d62976 60%, #962fbf 85%, #4f5bd5 100%);
+        display: flex; align-items: center; justify-content: center; }
+
+  .check-row { display: flex; align-items: center; gap: 30px; font-size: 50px; font-weight: 600; white-space: nowrap; }
+  .pill { border-radius: 999px; padding: 18px 34px; font-weight: 700; font-size: 32px; white-space: nowrap; }
+  .chat-in { background: var(--card); border-radius: 30px 30px 30px 8px; padding: 22px 28px; font-size: 32px; line-height: 1.3; }
+  .chat-out { background: var(--forest); color: var(--paper); border-radius: 30px 30px 8px 30px; padding: 22px 30px;
+              font-size: 34px; font-weight: 700; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+
+<script>
+// ---------- little animation helpers ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const prog = (t, start, dur) => clamp((t - start) / dur);          // 0 → 1 between start and start+dur
+const outCubic = x => 1 - Math.pow(1 - x, 3);
+const inOutCubic = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const outBack = x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const outElastic = x => x === 0 ? 0 : x === 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - .75) * 2.094) + 1;
+const lerp = (a, b, x) => a + (b - a) * x;
+const $ = id => document.getElementById(id);
+function put(el, { x = 0, y = 0, s = 1, r = 0, o = 1, sx, sy } = {}) {
+  el.style.transform = `translate(${x}px,${y}px) rotate(${r}deg) scale(${sx ?? s},${sy ?? s})`;
+  el.style.opacity = o;
+}
+// Pop in at time `at`: grows from nothing with a little overshoot
+const pop = (t, at, d = .45) => outBack(prog(t, at, d));
+
+// Every pop / whoosh the video makes, so make_promo_video.py can add matching sound effects
+window.SFX = [];
+const sfx = (t, kind) => SFX.push({ t, kind });
+
+// ---------- drawings ----------
+const C = { paper: "#f4efe6", card: "#e8e0d0", ink: "#1f2a24", forest: "#2f4a3a", terra: "#b5532a", skin: "#7a4a2c", hair: "#191714" };
+
+function logoHTML(size, extra = "") {
+  return `<div class="logo" style="width:${size}px;height:${size}px;${extra}"><b style="font-size:${size * .62}px">S</b><i></i></div>`;
+}
+function fbHTML(size) {
+  return `<div class="fb" style="width:${size}px;height:${size}px;font-size:${size * .95}px;line-height:.82">f</div>`;
+}
+function igHTML(size) {
+  const k = size / 100;
+  return `<div class="ig" style="width:${size}px;height:${size}px"><svg width="${62 * k}" height="${62 * k}" viewBox="0 0 62 62">
+    <rect x="4" y="4" width="54" height="54" rx="16" fill="none" stroke="#fff" stroke-width="6"/>
+    <circle cx="31" cy="31" r="12" fill="none" stroke="#fff" stroke-width="6"/><circle cx="46" cy="16" r="4" fill="#fff"/></svg></div>`;
+}
+function gearPath(cx, cy, rOut, rIn, teeth) {
+  let d = "";
+  for (let i = 0; i < teeth * 2; i++) {
+    const r = i % 2 ? rIn : rOut, a0 = (i / (teeth * 2)) * Math.PI * 2, a1 = ((i + 1) / (teeth * 2)) * Math.PI * 2;
+    d += `${i ? "L" : "M"}${cx + r * Math.cos(a0)},${cy + r * Math.sin(a0)} L${cx + r * Math.cos(a1)},${cy + r * Math.sin(a1)} `;
+  }
+  return d + "Z";
+}
+
+// The person. mode "busy" = hunched over the phone; "relaxed" = leaning back, hands behind the head.
+function personSVG(id, mode) {
+  const shirt = mode === "busy" ? C.terra : C.forest;
+  const arms = mode === "busy"
+    ? `<g id="${id}-hands">
+         <path d="M244 318 Q206 412 282 396" stroke="${shirt}" stroke-width="34" fill="none" stroke-linecap="round"/>
+         <path d="M356 318 Q394 412 318 396" stroke="${shirt}" stroke-width="34" fill="none" stroke-linecap="round"/>
+         <rect x="276" y="326" width="48" height="84" rx="9" fill="${C.ink}"/>
+         <rect x="281" y="333" width="38" height="66" rx="5" fill="#8fd1ad" id="${id}-screen"/>
+         <circle cx="282" cy="396" r="15" fill="${C.skin}"/><circle cx="318" cy="396" r="15" fill="${C.skin}"/>
+       </g>`
+    : `<path d="M244 318 Q168 262 236 182" stroke="${shirt}" stroke-width="34" fill="none" stroke-linecap="round"/>
+       <path d="M356 318 Q432 262 364 182" stroke="${shirt}" stroke-width="34" fill="none" stroke-linecap="round"/>`;
+  const face = mode === "busy"
+    ? `<g id="${id}-eyes"><ellipse cx="279" cy="220" rx="6" ry="8" fill="${C.ink}"/><ellipse cx="321" cy="220" rx="6" ry="8" fill="${C.ink}"/></g>
+       <path d="M266 196 L292 204 M334 196 L308 204" stroke="${C.hair}" stroke-width="6" stroke-linecap="round"/>
+       <path d="M284 252 Q300 241 316 252" stroke="${C.ink}" stroke-width="5" fill="none" stroke-linecap="round"/>`
+    : `<path d="M270 218 Q279 226 288 218 M312 218 Q321 226 330 218" stroke="${C.ink}" stroke-width="5" fill="none" stroke-linecap="round"/>
+       <path d="M268 200 L290 198 M332 200 L310 198" stroke="${C.hair}" stroke-width="6" stroke-linecap="round"/>
+       <path d="M280 240 Q300 262 320 240" stroke="${C.ink}" stroke-width="5" fill="#fff" stroke-linecap="round"/>`;
+  return `<svg width="700" height="747" viewBox="0 0 600 640">
+    <ellipse cx="300" cy="612" rx="250" ry="16" fill="rgba(31,42,36,.10)"/>
+    <rect x="196" y="236" width="208" height="250" rx="40" fill="#cbbfaa"/>
+    <rect x="286" y="486" width="28" height="104" fill="#a89c87"/><rect x="226" y="584" width="148" height="16" rx="8" fill="#a89c87"/>
+    <g id="${id}-body">
+      <rect x="284" y="248" width="32" height="46" rx="10" fill="${C.skin}"/>
+      <path d="M228 312 Q300 276 372 312 L392 476 L208 476 Z" fill="${shirt}"/>
+      ${mode === "relaxed" ? arms : ""}
+      <g id="${id}-head">
+        <circle cx="243" cy="214" r="13" fill="${C.skin}"/><circle cx="357" cy="214" r="13" fill="${C.skin}"/>
+        <circle cx="300" cy="208" r="58" fill="${C.skin}"/>
+        <path d="M242 200 Q238 140 300 136 Q362 140 358 200 Q350 168 300 166 Q254 168 242 200 Z" fill="${C.hair}"/>
+        ${face}
+      </g>
+      ${mode === "busy" ? arms : ""}
+    </g>
+    <rect x="40" y="476" width="520" height="26" rx="10" fill="${C.forest}"/>
+    <rect x="70" y="500" width="22" height="110" fill="#24392d"/><rect x="508" y="500" width="22" height="110" fill="#24392d"/>
+    <g id="${id}-laptop">
+      <path d="M78 476 L96 384 L226 384 L210 476 Z" fill="${C.ink}"/>
+      <path d="M88 470 L103 392 L219 392 L204 470 Z" fill="${mode === "busy" ? "#3d4d44" : "#e8e0d0"}" id="${id}-lapscreen"/>
+      <rect x="66" y="470" width="168" height="10" rx="4" fill="#3a4740"/>
+    </g>
+    ${mode === "relaxed" ? `
+      <g id="${id}-mug"><rect x="420" y="420" width="56" height="58" rx="10" fill="${C.terra}"/>
+        <path d="M476 434 q24 2 22 20 q-2 16 -22 14" stroke="${C.terra}" stroke-width="9" fill="none"/></g>
+      <g id="${id}-steam" stroke="#b9ad98" stroke-width="7" fill="none" stroke-linecap="round">
+        <path d="M436 406 q-12 -18 0 -34 q12 -16 0 -34"/><path d="M460 406 q-12 -18 0 -34 q12 -16 0 -34"/></g>
+      <g id="${id}-phone"><rect x="300" y="462" width="80" height="16" rx="6" fill="${C.ink}"/>
+        <rect x="306" y="464" width="68" height="6" rx="3" fill="#8fd1ad" id="${id}-phoneglow"/></g>` : ""}
+  </svg>`;
+}
+
+// ---------- build the four scenes ----------
+const stage = $("stage");
+stage.innerHTML = `
+<!-- 1. The problem -->
+<section class="scene" id="s1" style="background:var(--paper)">
+  <div class="dots" id="s1dots"></div>
+  <div class="abs brand" id="s1brand" style="left:70px;top:90px">${logoHTML(84)}Solvix</div>
+  <div class="abs headline serif" style="left:70px;top:250px">
+    <div><span class="word" id="w1">Still</span> <span class="word" id="w2">posting</span></div>
+    <div><span class="word" id="w3" style="color:var(--terra)">by hand</span></div>
+    <div><span class="word" id="w4">every</span> <span class="word" id="w5">day?</span></div>
+  </div>
+  <div class="abs" id="s1under" style="left:76px;top:482px;height:14px;width:460px;background:var(--terra);border-radius:7px;transform-origin:left"></div>
+  <div class="abs" id="p1" style="left:190px;top:800px">${personSVG("p1", "busy")}</div>
+  <div class="abs" id="sweat" style="left:588px;top:985px"><svg width="34" height="48" viewBox="0 0 34 48"><path d="M17 0 C17 0 34 24 34 32 A17 17 0 0 1 0 32 C0 24 17 0 17 0Z" fill="#7cc3e8"/></svg></div>
+  <div class="abs" id="clock" style="left:850px;top:1030px"><svg width="170" height="170" viewBox="0 0 170 170">
+    <circle cx="85" cy="85" r="74" fill="#fff" stroke="${C.ink}" stroke-width="10"/>
+    <line id="hrH" x1="85" y1="85" x2="85" y2="46" stroke="${C.ink}" stroke-width="10" stroke-linecap="round"/>
+    <line id="mnH" x1="85" y1="85" x2="85" y2="28" stroke="${C.terra}" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="85" cy="85" r="9" fill="${C.ink}"/></svg></div>
+  <div class="abs" id="cal" style="left:60px;top:1010px"><svg width="160" height="160" viewBox="0 0 160 160">
+    <rect x="8" y="18" width="144" height="134" rx="18" fill="#fff" stroke="${C.ink}" stroke-width="8"/>
+    <path d="M8 36 a18 18 0 0 1 18 -18 h108 a18 18 0 0 1 18 18 v20 h-144z" fill="${C.terra}"/>
+    <rect x="42" y="4" width="12" height="30" rx="6" fill="${C.ink}"/><rect x="106" y="4" width="12" height="30" rx="6" fill="${C.ink}"/>
+    <text id="calDay" x="80" y="126" text-anchor="middle" font-family="Fira Sans" font-weight="800" font-size="52" fill="${C.ink}">MON</text></svg></div>
+  <div class="abs bubble" id="b1"><div class="ic" style="background:#1877f2">${fbHTML(40)}</div>Post on Facebook<div class="badge">1</div></div>
+  <div class="abs bubble" id="b2"><div class="ic" style="background:none">${igHTML(58)}</div>Post on Instagram<div class="badge">2</div></div>
+  <div class="abs bubble" id="b3"><div class="ic" style="background:var(--card)">💬</div>Reply to comments<div class="badge">9</div></div>
+  <div class="abs bubble" id="b4"><div class="ic" style="background:var(--card)">⏰</div>Do it all again tomorrow…</div>
+</section>
+
+<!-- 2. The fix -->
+<section class="scene" id="s2" style="background:var(--forest)">
+  <div class="dots dark" id="s2dots"></div>
+  <div class="abs serif" id="meet" style="left:0;top:190px;width:1080px;text-align:center;font-size:64px;color:#c9d3cb">Meet Solvix.</div>
+  <div class="abs headline serif" id="automate" style="left:0;top:280px;width:1080px;text-align:center;color:var(--paper)">
+    <span class="word" id="a1">We</span> <span class="word" id="a2" style="color:#f0a07c">automate</span> <span class="word" id="a3">it.</span></div>
+  <div class="abs" id="gearBig" style="left:340px;top:700px"><svg width="400" height="400" viewBox="0 0 400 400">
+    <path d="${gearPath(200, 200, 196, 170, 16)}" fill="rgba(244,239,230,.10)"/></svg></div>
+  <div class="abs" id="gearSm" style="left:640px;top:640px"><svg width="170" height="170" viewBox="0 0 170 170">
+    <path d="${gearPath(85, 85, 82, 66, 10)}" fill="rgba(240,160,124,.35)"/><circle cx="85" cy="85" r="26" fill="${C.forest}"/></svg></div>
+  <div class="abs" id="ring" style="left:390px;top:750px;width:300px;height:300px;border-radius:50%;border:6px solid rgba(244,239,230,.5)"></div>
+  <div class="abs" id="hub" style="left:420px;top:780px">${logoHTML(240, "box-shadow:0 0 0 10px rgba(244,239,230,.18),0 24px 60px rgba(0,0,0,.35)")}</div>
+  <div class="abs" id="in1"><svg width="130" height="130" viewBox="0 0 130 130"><rect width="130" height="130" rx="22" fill="${C.paper}"/>
+    <rect x="14" y="14" width="102" height="72" rx="10" fill="#9cc6a9"/><circle cx="92" cy="36" r="11" fill="#f2c14e"/>
+    <path d="M14 86 L50 46 L76 72 L92 58 L116 86Z" fill="${C.forest}"/><rect x="14" y="98" width="70" height="12" rx="6" fill="${C.card}"/></svg></div>
+  <div class="abs" id="in2"><svg width="150" height="100" viewBox="0 0 150 100"><path d="M0 14 a14 14 0 0 1 14 -14 h96 l40 50 l-40 50 h-96 a14 14 0 0 1 -14 -14z" fill="#f2c14e"/>
+    <circle cx="112" cy="50" r="9" fill="${C.forest}"/><text x="50" y="64" text-anchor="middle" font-family="Fira Sans" font-weight="800" font-size="38" fill="${C.ink}">₦5k</text></svg></div>
+  <div class="abs" id="in3"><svg width="140" height="120" viewBox="0 0 140 120"><rect width="140" height="120" rx="22" fill="#fff"/>
+    <rect x="18" y="24" width="104" height="12" rx="6" fill="${C.terra}"/><rect x="18" y="50" width="88" height="10" rx="5" fill="${C.card}"/>
+    <rect x="18" y="70" width="100" height="10" rx="5" fill="${C.card}"/><rect x="18" y="90" width="64" height="10" rx="5" fill="${C.card}"/></svg></div>
+  <div class="abs" id="fbIcon" style="left:180px;top:1180px">${fbHTML(170)}</div>
+  <div class="abs" id="igIcon" style="left:730px;top:1180px">${igHTML(170)}</div>
+  <div class="abs" id="shot1"><svg width="90" height="90" viewBox="0 0 90 90"><rect width="90" height="90" rx="16" fill="${C.paper}"/><rect x="10" y="10" width="70" height="50" rx="8" fill="#9cc6a9"/><path d="M10 60 L34 32 L52 50 L80 60Z" fill="${C.forest}"/></svg></div>
+  <div class="abs" id="shot2"><svg width="90" height="90" viewBox="0 0 90 90"><rect width="90" height="90" rx="16" fill="${C.paper}"/><rect x="10" y="10" width="70" height="50" rx="8" fill="#9cc6a9"/><path d="M10 60 L34 32 L52 50 L80 60Z" fill="${C.forest}"/></svg></div>
+  <div class="abs pill" id="ok1" style="background:var(--paper);color:var(--forest)">✓ Posted 7:00</div>
+  <div class="abs pill" id="ok2" style="background:var(--paper);color:var(--forest)">✓ Posted 7:00</div>
+</section>
+
+<!-- 3. The result -->
+<section class="scene" id="s3" style="background:var(--paper)">
+  <div class="dots" id="s3dots"></div>
+  <div class="abs headline serif" id="relax" style="left:70px;top:200px;font-size:104px">
+    <span class="word" id="r1">While</span> <span class="word" id="r2">you</span> <span class="word" id="r3" style="color:var(--terra)">relax.</span></div>
+  ${["Posted on time, every day", "Facebook + Instagram together", "Set up once. It keeps going."].map((txt, i) => `
+  <div class="abs check-row" id="c${i}" style="left:80px;top:${380 + i * 120}px">
+    <svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="36" fill="${C.forest}"/>
+      <path id="tick${i}" d="M21 39 L33 51 L56 26" stroke="${C.paper}" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"
+        stroke-dasharray="60" stroke-dashoffset="60"/></svg>${txt}</div>`).join("")}
+  <div class="abs" id="p2" style="left:190px;top:800px">${personSVG("p2", "relaxed")}</div>
+  ${[0, 1, 2].map(i => `<div class="abs pill" id="n${i}" style="background:#fff;color:var(--forest);box-shadow:0 12px 30px rgba(31,42,36,.15);font-size:30px">✓ Posted for you</div>`).join("")}
+</section>
+
+<!-- 4. The offer -->
+<section class="scene" id="s4" style="background:var(--terra)">
+  <div class="dots dark" id="s4dots"></div>
+  <div class="abs headline serif" style="left:0;top:150px;width:1080px;text-align:center;color:var(--paper);font-size:104px">
+    <div><span class="word" id="q1">Want</span> <span class="word" id="q2">this</span> <span class="word" id="q3">for</span></div>
+    <div><span class="word" id="q4">your</span> <span class="word" id="q5">business?</span></div></div>
+  <div class="abs" id="phone" style="left:250px;top:440px;width:580px;height:840px;border-radius:70px;background:var(--ink);padding:22px;box-shadow:0 40px 80px rgba(0,0,0,.3)">
+    <div style="position:relative;width:100%;height:100%;border-radius:52px;background:var(--paper);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:20px;padding:56px 34px 26px;border-bottom:3px solid var(--card)">
+        ${logoHTML(70)}<div><div style="font-weight:700;font-size:34px">Solvix</div><div style="color:#3c9a5f;font-size:24px">● Active now</div></div></div>
+      <div class="abs chat-out" id="msgOut" style="left:auto;right:30px;top:200px;transform-origin:right bottom">AUTOMATE</div>
+      <div class="abs chat-in" id="typing" style="left:30px;top:320px;font-size:44px;letter-spacing:4px;padding:10px 28px;transform-origin:left bottom"><span id="t1">•</span><span id="t2">•</span><span id="t3">•</span></div>
+      <div class="abs chat-in" id="msgIn" style="left:30px;top:320px;width:440px;transform-origin:left bottom">Great! 🙌 Let's set up your automatic posting.</div>
+      <div style="position:absolute;left:24px;right:24px;bottom:28px;height:84px;border-radius:42px;background:#fff;border:3px solid var(--card);display:flex;align-items:center;padding:0 12px 0 30px;font-size:32px;font-weight:700">
+        <span id="typed" style="flex:1;letter-spacing:1px"></span>
+        <div id="sendBtn" style="width:62px;height:62px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center">
+          <svg width="30" height="30" viewBox="0 0 30 30"><path d="M3 15 L27 4 L20 27 L15 17Z" fill="${C.paper}"/></svg></div></div>
+    </div></div>
+  <div class="abs" id="tap" style="width:90px;height:90px;border-radius:50%;border:6px solid var(--paper)"></div>
+  <div class="abs pill" id="cta" style="left:0;top:1330px;background:var(--paper);color:var(--forest);font-size:40px;padding:26px 46px;box-shadow:0 18px 40px rgba(0,0,0,.25)">📩 Send us “AUTOMATE”</div>
+  <div class="abs brand" id="s4brand" style="color:var(--paper);font-size:44px">${logoHTML(64, "background:var(--paper);color:var(--forest)")}Solvix</div>
+  <div id="confetti"></div>
+</section>`;
+
+// Confetti pieces for the end (fixed "random" numbers so every render is the same)
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const confetti = Array.from({ length: 70 }, () => ({
+  a: rnd() * Math.PI * 2, v: 500 + rnd() * 900, spin: (rnd() - .5) * 1400, w: 14 + rnd() * 16,
+  col: ["#f4efe6", "#f2c14e", "#2f4a3a", "#9cc6a9", "#1f2a24"][Math.floor(rnd() * 5)],
+}));
+$("confetti").innerHTML = confetti.map((c, i) => `<div class="abs" id="cf${i}" style="width:${c.w}px;height:${c.w * .55}px;background:${c.col};border-radius:3px"></div>`).join("");
+
+// ---------- timeline ----------
+const T = { s2: 4.3, s3: 8.9, s4: 13.4, end: 18.5 };
+window.DURATION = T.end;
+
+// Scene changes: the next scene grows out of a circle
+const wipes = [["s2", T.s2, 540, 1140], ["s3", T.s3, 540, 960], ["s4", T.s4, 900, 300]];
+wipes.forEach(([, at]) => sfx(at, "whoosh"));
+
+function wipe(t) {
+  for (const [id, at, cx, cy] of wipes) {
+    const el = $(id), k = inOutCubic(prog(t, at, .6));
+    el.style.display = t >= at ? "block" : "none";
+    el.style.clipPath = `circle(${k * 2300}px at ${cx}px ${cy}px)`;
+  }
+}
+
+// Words that drop in one by one
+function words(t, ids, start, gap, kind = "drop") {
+  ids.forEach((id, i) => {
+    const k = pop(t, start + i * gap, .5);
+    if (kind === "drop") put($(id), { y: (1 - k) * -90, s: lerp(.4, 1, k), o: clamp(k * 2) });
+    else put($(id), { y: (1 - k) * 120, o: clamp(k * 2), r: (1 - k) * 6 });
+  });
+}
+
+function scene1(t) {
+  put($("s1dots"), { x: -t * 14, y: -t * 8 });
+  const b = outCubic(prog(t, 0, .6)); put($("s1brand"), { x: (1 - b) * -60, o: b });
+  words(t, ["w1", "w2", "w3", "w4", "w5"], .25, .22);
+  put($("s1under"), { sx: outCubic(prog(t, .9, .45)), sy: 1 });
+  // the person slides up, then works the phone faster and faster
+  const enter = outBack(prog(t, .3, .7));
+  const panic = prog(t, 2.6, 1.2);
+  const shake = Math.sin(t * 70) * 6 * panic;
+  put($("p1"), { y: (1 - enter) * 500, x: shake });
+  $("p1-head").setAttribute("transform", `rotate(${8 + Math.sin(t * 9) * 3} 300 240)`);
+  $("p1-hands").setAttribute("transform", `translate(0 ${Math.abs(Math.sin(t * (14 + panic * 12))) * -10})`);
+  $("p1-screen").setAttribute("fill", Math.sin(t * 20) > 0 ? "#8fd1ad" : "#b7e4cb");
+  $("p1-lapscreen").setAttribute("fill", Math.sin(t * 6) > 0 ? "#3d4d44" : "#4b5d53");
+  const blink = (t % 1.7) < .1 ? .1 : 1;
+  $("p1-eyes").setAttribute("transform", `translate(0 220) scale(1 ${blink}) translate(0 -220)`);
+  // sweat drops keep falling
+  const sp = (t % .9) / .9;
+  put($("sweat"), { y: sp * 120, o: t > 1 ? (1 - sp) : 0, s: .8 + sp * .3 });
+  // the clock spins, the calendar flips through the week
+  const ck = pop(t, 1.0); put($("clock"), { s: ck, r: Math.sin(t * 8) * 6 * ck });
+  $("mnH").setAttribute("transform", `rotate(${t * 720} 85 85)`);
+  $("hrH").setAttribute("transform", `rotate(${t * 60} 85 85)`);
+  const cl = pop(t, 1.2); put($("cal"), { s: cl, r: Math.sin(t * 7 + 1) * 5 * cl });
+  $("calDay").textContent = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"][Math.floor(Math.max(0, t - 1.2) * 3.2) % 7];
+  // to-do notifications pile up around the person
+  const spots = [[60, 1340, -4, 1.5], [560, 1420, 3, 1.95], [90, 1500, -2, 2.4], [470, 1580, 2, 2.85]];
+  spots.forEach(([x, y, r, at], i) => {
+    const k = pop(t, at, .4);
+    put($("b" + (i + 1)), { x, y: y - 700 + (1 - k) * 60, s: lerp(.5, 1, k), o: clamp(k * 2), r: r + Math.sin(t * 3 + i) * 1.5 + shake * .2 });
+  });
+}
+sfx(.25, "pop"); sfx(.47, "pop"); sfx(.69, "pop"); sfx(.91, "pop"); sfx(1.13, "pop");
+[1.5, 1.95, 2.4, 2.85].forEach(a => sfx(a, "ding"));
+
+function scene2(t) {
+  const s = T.s2;
+  put($("s2dots"), { x: -t * 14, y: -t * 8 });
+  const m = outCubic(prog(t, s + .35, .5)); put($("meet"), { y: (1 - m) * 40, o: m });
+  words(t, ["a1", "a2", "a3"], s + .6, .22, "rise");
+  // the Solvix hub springs in with gears turning behind it
+  const h = outElastic(prog(t, s + .5, 1.1));
+  let pulse = 0;
+  [s + 2.0, s + 2.3, s + 2.6].forEach(a => { const p = prog(t, a, .35); pulse = Math.max(pulse, Math.sin(p * Math.PI)); });
+  put($("hub"), { s: h * (1 + pulse * .12) });
+  put($("gearBig"), { s: h, r: t * 40 });
+  put($("gearSm"), { s: h, r: -t * 70 });
+  const rg = prog(t, s + 2.0, .9); put($("ring"), { s: 1 + rg * .6, o: rg > 0 && rg < 1 ? 1 - rg : 0 });
+  // three pieces of content fly into the hub along curves
+  const ins = [["in1", -150, 820, s + 1.3], ["in2", 1150, 700, s + 1.6], ["in3", -150, 1250, s + 1.9]];
+  ins.forEach(([id, x0, y0, at]) => {
+    const k = inOutCubic(prog(t, at, .7)), hub = [540, 900];
+    const el = $(id), w = el.firstChild.getAttribute("width") / 2, hh = el.firstChild.getAttribute("height") / 2;
+    const x = lerp(x0, hub[0], k), y = lerp(y0, hub[1], k) - Math.sin(k * Math.PI) * 260;
+    put(el, { x: x - w, y: y - hh, s: 1 - k * .7, r: (1 - k) * 25, o: k < .98 ? 1 : 0 });
+  });
+  // Facebook + Instagram appear, the hub fires a post at each, they bounce and say "Posted"
+  [["fbIcon", s + 2.4], ["igIcon", s + 2.55]].forEach(([id, at]) => {
+    const k = pop(t, at, .5);
+    const hit = prog(t, id === "fbIcon" ? s + 3.35 : s + 3.6, .5);
+    put($(id), { s: k * (1 + Math.sin(hit * Math.PI) * .18), y: Math.sin(hit * Math.PI) * -30 });
+  });
+  [["shot1", 265, s + 2.85], ["shot2", 815, s + 3.1]].forEach(([id, tx, at]) => {
+    const k = inOutCubic(prog(t, at, .5));
+    const x = lerp(540, tx, k) - 45, y = lerp(900, 1265, k) - 45 - Math.sin(k * Math.PI) * 220;
+    put($(id), { x, y, s: lerp(.6, 1, Math.sin(k * Math.PI)), r: k * 360, o: k > 0 && k < 1 ? 1 : 0 });
+  });
+  [["ok1", 265, s + 3.45], ["ok2", 815, s + 3.7]].forEach(([id, cx, at]) => {
+    const k = pop(t, at, .45), el = $(id);
+    put(el, { x: cx - el.offsetWidth / 2, y: 1390 + (1 - k) * 40, s: lerp(.4, 1, k), o: clamp(k * 2) });
+  });
+}
+sfx(T.s2 + .6, "pop"); sfx(T.s2 + .82, "pop"); sfx(T.s2 + 1.04, "pop");
+[2.0, 2.3, 2.6].forEach(a => sfx(T.s2 + a, "blip"));
+sfx(T.s2 + 2.85, "swish"); sfx(T.s2 + 3.1, "swish");
+sfx(T.s2 + 3.45, "ding"); sfx(T.s2 + 3.7, "ding");
+
+function scene3(t) {
+  const s = T.s3;
+  put($("s3dots"), { x: -t * 14, y: -t * 8 });
+  words(t, ["r1", "r2", "r3"], s + .35, .2);
+  [0, 1, 2].forEach(i => {
+    const at = s + 1.0 + i * .45, k = outCubic(prog(t, at, .5));
+    put($("c" + i), { x: (1 - k) * -700, o: k });
+    $("tick" + i).setAttribute("stroke-dashoffset", 60 * (1 - outCubic(prog(t, at + .3, .35))));
+  });
+  // the person leans back and breathes easy, coffee steaming
+  const enter = outBack(prog(t, s + .4, .8));
+  put($("p2"), { y: (1 - enter) * 500 });
+  $("p2-body").setAttribute("transform", `translate(0 ${Math.sin(t * 2.4) * 4}) rotate(${-3 + Math.sin(t * 1.6) * 2} 300 470)`);
+  $("p2-head").setAttribute("transform", `rotate(${-6 + Math.sin(t * 2) * 4} 300 250)`);
+  $("p2-steam").setAttribute("transform", `translate(0 ${-((t * 40) % 30)})`);
+  $("p2-steam").setAttribute("opacity", .5 + Math.sin(t * 5) * .3);
+  // the phone on the desk lights up: posts are going out on their own
+  const pings = [s + 1.6, s + 2.6, s + 3.6];
+  pings.forEach((at, i) => {
+    const k = prog(t, at, 1.4);
+    const up = outBack(clamp(k * 3)), fade = k < .75 ? 1 : 1 - (k - .75) / .25;
+    put($("n" + i), { x: 600 + i * 20 - 120, y: 1300 - up * 120 - k * 80, s: lerp(.4, 1, up), o: k > 0 && k < 1 ? fade : 0 });
+  });
+  const glow = pings.some(a => t > a && t < a + .5);
+  $("p2-phoneglow").setAttribute("fill", glow ? "#5fe39a" : "#8fd1ad");
+}
+sfx(T.s3 + .35, "pop"); sfx(T.s3 + .55, "pop"); sfx(T.s3 + .75, "pop");
+[0, 1, 2].forEach(i => sfx(T.s3 + 1.3 + i * .45, "tick"));
+[1.6, 2.6, 3.6].forEach(a => sfx(T.s3 + a, "ding"));
+
+function scene4(t) {
+  const s = T.s4;
+  put($("s4dots"), { x: -t * 14, y: -t * 8 });
+  words(t, ["q1", "q2", "q3", "q4", "q5"], s + .35, .16);
+  const ph = outBack(prog(t, s + .6, .7)); put($("phone"), { y: (1 - ph) * 900, r: (1 - ph) * 8 });
+  // "AUTOMATE" gets typed, sent, and answered
+  const word = "AUTOMATE", typeStart = s + 1.4;
+  const n = Math.floor(clamp((t - typeStart) / .09, 0, word.length));
+  const sent = s + 2.35;
+  $("typed").textContent = t < sent ? word.slice(0, n) + (t > typeStart && (t * 3) % 1 < .6 ? "|" : "") : "";
+  const tp = prog(t, sent - .25, .45);
+  put($("tap"), { x: 696, y: 1143, s: .4 + tp * 1.2, o: tp > 0 && tp < 1 ? 1 - tp : 0 });
+  put($("sendBtn"), { s: 1 - Math.sin(tp * Math.PI) * .2 });
+  const mo = outBack(prog(t, sent, .45)); put($("msgOut"), { s: mo, o: clamp(mo * 2), y: (1 - mo) * 400 });
+  const ty = prog(t, sent + .4, 1.0);
+  put($("typing"), { s: ty > 0 && ty < 1 ? outBack(clamp(ty * 4)) : 0 });
+  ["t1", "t2", "t3"].forEach((d, i) => $(d).style.opacity = .3 + .7 * Math.max(0, Math.sin(t * 9 - i * .9)));
+  const mi = outBack(prog(t, sent + 1.4, .5)); put($("msgIn"), { s: mi, o: clamp(mi * 2) });
+  // the call to action pulses; the brand settles at the bottom
+  const c = pop(t, s + 1.0, .6), el = $("cta");
+  put(el, { x: 540 - el.offsetWidth / 2, y: (1 - c) * 300, s: c * (1 + Math.max(0, Math.sin((t - s) * 5)) * .05) });
+  const bb = $("s4brand"), br = outCubic(prog(t, s + 1.3, .6));
+  put(bb, { x: 540 - bb.offsetWidth / 2, y: 1450 + (1 - br) * 40, o: br });
+  // confetti when the reply lands
+  const burst = sent + 1.4;
+  confetti.forEach((cf, i) => {
+    const age = t - burst, e = $("cf" + i);
+    if (age < 0 || age > 2.6) { e.style.opacity = 0; return; }
+    const x = 540 + Math.cos(cf.a) * cf.v * age, y = 760 + Math.sin(cf.a) * cf.v * age * .8 + 900 * age * age;
+    put(e, { x, y, r: cf.spin * age, o: 1 - age / 2.6 });
+  });
+}
+sfx(T.s4 + .35, "pop"); sfx(T.s4 + .51, "pop"); sfx(T.s4 + .67, "pop"); sfx(T.s4 + .83, "pop"); sfx(T.s4 + .99, "pop");
+for (let i = 0; i < 8; i++) sfx(T.s4 + 1.4 + i * .09, "key");
+sfx(T.s4 + 2.35, "swish"); sfx(T.s4 + 3.75, "ding"); sfx(T.s4 + 3.78, "confetti");
+
+window.render = function (t) {
+  wipe(t);
+  scene1(t); if (t >= T.s2) scene2(t); if (t >= T.s3) scene3(t); if (t >= T.s4) scene4(t);
+};
+render(0);
+</script>
+</body>
+</html>
