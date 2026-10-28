@@ -1,0 +1,8 @@
+📊 Daily Data Drop: Job Listings
+
+My scraper collected 100 records today, fully automatic (job, company, location, posted).
+Every morning it picks a website, checks it's allowed, collects the data and delivers a clean spreadsheet.
+
+Need prices, products, leads or listings collected for your business? DM me.
+
+#webscraping #python #automation #dataextraction #freelancer #solvix
