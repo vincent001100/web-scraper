@@ -4,9 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Solvix Scraper</title>
+  <!-- Solvix brand fonts (same as the business plan and the videos), all SIL Open Font Licence 1.1 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Public+Sans:wght@400..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
@@ -53,18 +54,49 @@
 
 <main class="wrap">
 
-  <section class="hero reveal">
-    <p class="eyebrow">Web data, collected properly</p>
-    <h1>Turn a website into a<br><span class="underline">clean spreadsheet</span>.</h1>
-    <p class="lede">Pick a website, choose how much to collect, and download the results as Excel, CSV, PDF and more. No code needed.</p>
+  <section class="hero">
+    <div class="hero-copy reveal">
+      <p class="eyebrow">Web data, collected properly</p>
+      <h1>Turn a website into a <br><span class="accent">clean spreadsheet</span>.</h1>
+      <p class="lede">Pick a website, choose how much to collect, and download the results as Excel, CSV, PDF and more. No code needed.</p>
 
-    <ol class="steps" id="steps" aria-label="Progress">
-      <li class="step is-active" data-step="1"><span class="step-dot">1</span><span>Choose a website</span></li>
-      <li class="step-line"><span></span></li>
-      <li class="step" data-step="2"><span class="step-dot">2</span><span>Collect the data</span></li>
-      <li class="step-line"><span></span></li>
-      <li class="step" data-step="3"><span class="step-dot">3</span><span>Download</span></li>
-    </ol>
+      <ul class="badges" aria-label="What this tool does">
+        <li><svg class="ic"><use href="#i-shield"/></svg> Checks site rules first</li>
+        <li><svg class="ic"><use href="#i-clock"/></svg> Pauses between pages</li>
+        <li><svg class="ic"><use href="#i-download"/></svg> 5 file types</li>
+      </ul>
+
+      <ol class="steps" id="steps" aria-label="Progress">
+        <li class="step is-active" data-step="1"><span class="step-dot">1</span><span>Choose a website</span></li>
+        <li class="step-line"><span></span></li>
+        <li class="step" data-step="2"><span class="step-dot">2</span><span>Collect the data</span></li>
+        <li class="step-line"><span></span></li>
+        <li class="step" data-step="3"><span class="step-dot">3</span><span>Download</span></li>
+      </ol>
+    </div>
+
+    <!-- A preview of what you get: real rows from the 26 Oct 2026 daily data drop (results/2026-10-26_tablets).
+         Decoration only, so it is one picture for screen readers and hidden on small screens. -->
+    <div class="hero-demo" role="img" aria-label="Example result: tablet names, prices and review counts in a spreadsheet, ready to download as Excel, CSV, PDF, JSON or Text">
+      <span class="shape shape-a"></span>
+      <span class="shape shape-b"></span>
+      <span class="shape shape-c"></span>
+      <div class="glass demo-card">
+        <div class="demo-top">
+          <span class="demo-site"><span class="demo-icon"><svg class="ic"><use href="#i-tablet"/></svg></span> Tablet Store</span>
+          <span class="demo-tag">Example</span>
+        </div>
+        <div class="demo-figure"><span class="demo-num">21</span><span class="demo-unit">products collected</span></div>
+        <div class="demo-table">
+          <div class="demo-row demo-head"><span>Product</span><span>Price</span><span>Reviews</span></div>
+          <div class="demo-row"><span>Lenovo IdeaTab</span><span>$69.99</span><span>7</span></div>
+          <div class="demo-row"><span>Acer Iconia</span><span>$96.99</span><span>7</span></div>
+          <div class="demo-row"><span>Asus MeMO Pad</span><span>$102.99</span><span>14</span></div>
+        </div>
+        <div class="demo-files"><span>.xlsx</span><span>.csv</span><span>.pdf</span><span>.json</span><span>.txt</span></div>
+      </div>
+      <p class="demo-note">Real rows from our 26 Oct test run</p>
+    </div>
   </section>
 
   <!-- STEP 1: choose a site -->
@@ -76,7 +108,7 @@
       </div>
       <label class="search">
         <svg class="ic"><use href="#i-search"/></svg>
-        <input id="site-filter" type="search" placeholder="Search websites" autocomplete="off">
+        <input id="site-filter" type="search" placeholder="Search websites" autocomplete="off" aria-label="Search websites">
       </label>
     </div>
 
@@ -84,14 +116,16 @@
       {% for s in sites %}
       <button class="site" type="button" data-key="{{ s.key }}" style="--i: {{ loop.index0 }}"
               data-search="{{ (s.name ~ ' ' ~ s.category ~ ' ' ~ s.about)|lower }}">
-        <span class="site-top">
-          <span class="site-icon"><svg class="ic"><use href="#i-{{ s.icon }}"/></svg></span>
-          <span class="tag {% if s.js %}tag-js{% endif %}">{{ s.category }}</span>
-          <span class="site-check"><svg class="ic"><use href="#i-check"/></svg></span>
+        <span class="site-icon"><svg class="ic"><use href="#i-{{ s.icon }}"/></svg></span>
+        <span class="site-body">
+          <span class="site-name">{{ s.name }}</span>
+          <span class="site-about">{{ s.about }}</span>
+          <span class="site-meta">
+            <span class="tag {% if s.js %}tag-js{% endif %}">{{ s.category }}</span>
+            <span class="site-url">{{ s.url.split('/')[2] }}</span>
+          </span>
         </span>
-        <span class="site-name">{{ s.name }}</span>
-        <span class="site-about">{{ s.about }}</span>
-        <span class="site-url">{{ s.url.split('/')[2] }}</span>
+        <span class="site-check"><svg class="ic"><use href="#i-check"/></svg></span>
       </button>
       {% endfor %}
     </div>
@@ -135,13 +169,13 @@
         </ul>
       </div>
       <div class="counter-card">
-        <span class="muted small">Records collected</span>
+        <span class="counter-label">Records collected</span>
         <span class="counter" id="counter">0</span>
         <div class="bar"><span id="bar-fill"></span></div>
         <ol class="log" id="log"></ol>
       </div>
     </div>
-    <div class="error" id="error" hidden></div>
+    <div class="error" id="error" role="alert" hidden></div>
   </section>
 
   <!-- STEP 3: results -->
@@ -155,10 +189,10 @@
     </div>
 
     <div class="stats">
-      <div class="stat"><svg class="ic"><use href="#i-rows"/></svg><span class="stat-num" data-count id="s-rows">0</span><span class="muted small">records</span></div>
-      <div class="stat"><svg class="ic"><use href="#i-layers"/></svg><span class="stat-num" data-count id="s-pages">0</span><span class="muted small">pages</span></div>
-      <div class="stat"><svg class="ic"><use href="#i-columns"/></svg><span class="stat-num" data-count id="s-fields">0</span><span class="muted small">columns</span></div>
-      <div class="stat"><svg class="ic"><use href="#i-clock"/></svg><span class="stat-num" id="s-time">0s</span><span class="muted small">time taken</span></div>
+      <div class="stat"><span class="stat-label"><svg class="ic"><use href="#i-rows"/></svg> Records</span><span class="stat-num" data-count id="s-rows">0</span></div>
+      <div class="stat"><span class="stat-label"><svg class="ic"><use href="#i-layers"/></svg> Pages</span><span class="stat-num" data-count id="s-pages">0</span></div>
+      <div class="stat"><span class="stat-label"><svg class="ic"><use href="#i-columns"/></svg> Columns</span><span class="stat-num" data-count id="s-fields">0</span></div>
+      <div class="stat"><span class="stat-label"><svg class="ic"><use href="#i-clock"/></svg> Time taken</span><span class="stat-num" id="s-time">0s</span></div>
     </div>
 
     <div class="download-bar">
@@ -177,7 +211,7 @@
     <div class="table-tools">
       <label class="search">
         <svg class="ic"><use href="#i-search"/></svg>
-        <input id="row-filter" type="search" placeholder="Search the results" autocomplete="off">
+        <input id="row-filter" type="search" placeholder="Search the results" autocomplete="off" aria-label="Search the results">
       </label>
       <span class="muted small" id="showing"></span>
     </div>

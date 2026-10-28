@@ -3,6 +3,7 @@ const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 const sites = Object.fromEntries(window.SITES.map((s) => [s.key, s]));
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const scrollMode = reduceMotion ? "auto" : "smooth"; // people who ask for less motion get instant jumps
 
 const state = { site: null, pages: 3, all: false, job: null, rows: [], fields: [], ext: "xlsx" };
 const FORMAT_NAMES = { xlsx: "Excel", csv: "CSV", pdf: "PDF", json: "JSON", txt: "Text" };
@@ -45,7 +46,7 @@ function selectSite(key) {
   state.site.fields.forEach((f, i) => {
     const chip = document.createElement("span");
     chip.className = "chip";
-    chip.style.animationDelay = `${i * 60}ms`;
+    chip.style.animationDelay = `${i * 40}ms`;
     chip.textContent = f.replace(/_/g, " ");
     chips.append(chip);
   });
@@ -57,7 +58,7 @@ function selectSite(key) {
   const options = $("#options");
   const firstTime = options.hidden;
   options.hidden = false;
-  if (firstTime) options.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  if (firstTime) options.scrollIntoView({ behavior: scrollMode, block: "nearest" });
 }
 
 function renderPages() {
@@ -111,7 +112,7 @@ function startRun() {
   const run = $("#run");
   run.hidden = false;
   run.style.animation = "none"; run.offsetHeight; run.style.animation = "";  // replay the entrance
-  run.scrollIntoView({ behavior: "smooth", block: "start" });
+  run.scrollIntoView({ behavior: scrollMode, block: "start" });
 
   const mark = (name, cls) => { $(`#timeline [data-t="${name}"]`).className = cls; };
   const source = new EventSource(`/api/scrape?site=${state.site.key}&pages=${pages}`);
@@ -179,7 +180,7 @@ function showResults(pages, seconds) {
   $("#row-filter").value = "";
   renderTable("");
   setFormat(state.ext);
-  setTimeout(() => results.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
+  setTimeout(() => results.scrollIntoView({ behavior: scrollMode, block: "start" }), 150);
 }
 
 const MAX_SHOWN = 300; // keep the page fast; the download always has everything
@@ -201,7 +202,7 @@ function renderTable(query) {
   tbody.innerHTML = "";
   matching.slice(0, MAX_SHOWN).forEach((row, i) => {
     const tr = document.createElement("tr");
-    if (!q && i < 25) { tr.className = "fade"; tr.style.animationDelay = `${i * 28}ms`; }
+    if (!q && i < 12) { tr.className = "fade"; tr.style.animationDelay = `${i * 30}ms`; } // short ripple, then the rest just appear
     state.fields.forEach((f) => {
       const td = document.createElement("td");
       highlight(td, String(row[f] ?? ""), q);
@@ -251,5 +252,5 @@ $("#again").addEventListener("click", () => {
   setStep(1);
   $("#run").hidden = true;
   $("#results").hidden = true;
-  $("#choose").scrollIntoView({ behavior: "smooth", block: "start" });
+  $("#choose").scrollIntoView({ behavior: scrollMode, block: "start" });
 });
