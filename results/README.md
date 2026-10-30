@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 30 Oct 2026: Countries of the World (250 records)
+
+[Data (CSV)](2026-10-30_countries/data.csv) · [Caption](2026-10-30_countries/caption.txt)
+
+![Countries of the World](2026-10-30_countries/post.png)
+
 ## 29 Oct 2026: Job Listings (100 records)
 
 [Data (CSV)](2026-10-29_jobs/data.csv) · [Caption](2026-10-29_jobs/caption.txt)
