@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 31 Oct 2026: Famous Quotes (50 records)
+
+[Data (CSV)](2026-10-31_quotes/data.csv) · [Caption](2026-10-31_quotes/caption.txt)
+
+![Famous Quotes](2026-10-31_quotes/post.png)
+
 ## 30 Oct 2026: Countries of the World (250 records)
 
 [Data (CSV)](2026-10-30_countries/data.csv) · [Caption](2026-10-30_countries/caption.txt)
