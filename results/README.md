@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 01 Nov 2026: Online Bookstore (100 records)
+
+[Data (CSV)](2026-11-01_books/data.csv) · [Caption](2026-11-01_books/caption.txt)
+
+![Online Bookstore](2026-11-01_books/post.png)
+
 ## 31 Oct 2026: Famous Quotes (50 records)
 
 [Data (CSV)](2026-10-31_quotes/data.csv) · [Caption](2026-10-31_quotes/caption.txt)
