@@ -1,4 +1,5 @@
 # Once a week: post the Solvix advert ("we can automate your posting") to Facebook and Instagram.
+# Through Make.com, or through Buffer if the BUFFER_API_KEY secret exists (it then posts right away).
 name: Weekly advert
 
 on:
@@ -22,4 +23,8 @@ jobs:
       - name: Post the advert to Facebook and Instagram
         env:
           MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
+          # Used only when the BUFFER_API_KEY secret exists (see buffer_post.py). Otherwise they are ignored.
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_FACEBOOK_CHANNEL_ID: ${{ secrets.BUFFER_FACEBOOK_CHANNEL_ID }}
+          BUFFER_INSTAGRAM_CHANNEL_ID: ${{ secrets.BUFFER_INSTAGRAM_CHANNEL_ID }}
         run: python post_promo.py

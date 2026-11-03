@@ -2,11 +2,14 @@
 Post today's data drop to the Solvix Facebook Page and Instagram account.
 
 Runs on GitHub after daily.py has saved and pushed results/<date>_<site>/.
-Two ways to post (set the secrets in GitHub: Settings → Secrets and variables → Actions):
+Ways to post (set the secrets in GitHub: Settings → Secrets and variables → Actions):
+  0. BUFFER_API_KEY    hand the post to Buffer, which publishes it at an exact time
+                       (see buffer_post.py and BUFFER-SETUP.md). If this secret exists it is used
+                       INSTEAD of the two ways below; if it does not exist, nothing changes.
   1. MAKE_WEBHOOK_URL  hand the post to a Make.com scenario, which posts it for us
                        (no Meta developer account needed)
   2. META_PAGE_TOKEN + FB_PAGE_ID + IG_USER_ID  post straight to Meta's API ourselves
-If neither is set it skips posting instead of failing, so the scraping still runs.
+If none is set it skips posting instead of failing, so the scraping still runs.
 """
 import os
 import sys
@@ -69,6 +72,12 @@ def send_to_make(webhook_url, image_url, caption, folder):
 
 
 def main():
+    # Buffer is switched on by one thing only: the BUFFER_API_KEY secret. buffer_post.py does the
+    # whole job, and any problem there ends the run with a red X on GitHub.
+    if os.environ.get("BUFFER_API_KEY", "").strip():
+        import buffer_post
+        sys.exit(buffer_post.main(["daily"]))
+
     webhook_url = os.environ.get("MAKE_WEBHOOK_URL")
     token = os.environ.get("META_PAGE_TOKEN")
     page_id = os.environ.get("FB_PAGE_ID")

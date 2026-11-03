@@ -45,6 +45,23 @@ def allowed_to_scrape(url):
     return rules.can_fetch("*", url)
 
 
+def post_day():
+    """The day this post is FOR.
+
+    Normally that is today (the moment the robot runs). But when posting through Buffer, the robot
+    runs the EVENING BEFORE, and the GitHub workflow sets POST_DATE (like 2026-10-29) to tomorrow's
+    date. Then the folder name and the date printed on the picture are tomorrow's, so they match the
+    morning the post actually goes out. With no POST_DATE set, nothing changes.
+    """
+    text = os.environ.get("POST_DATE", "").strip()
+    if not text:
+        return datetime.now(timezone.utc)
+    try:
+        return datetime.strptime(text, "%Y-%m-%d")
+    except ValueError:
+        sys.exit(f"POST_DATE must be written like 2026-10-29, but it is '{text}'.")
+
+
 def pick_site():
     """Try the menu in random order and return the first site that allows scraping."""
     names = list(SITES)
@@ -161,7 +178,7 @@ def main():
         print("No site in the menu allows scraping today.")
         sys.exit(1)
     site = SITES[name]
-    now = datetime.now(timezone.utc)
+    now = post_day()
     date_text = now.strftime("%d %b %Y")
     folder = os.path.join(RESULTS, f"{now:%Y-%m-%d}_{name}")
     print(f"🎲 Today's site: {site['name']} ({site['start_url']})")
@@ -178,6 +195,12 @@ def main():
     write_caption(site, rows, os.path.join(folder, "caption.txt"))
     add_to_index(folder, site, rows, date_text)
     print(f"✓ Results saved in {folder}")
+
+    # On GitHub, tell the later steps exactly which folder this is (does nothing on your own computer)
+    github_output = os.environ.get("GITHUB_OUTPUT")
+    if github_output:
+        with open(github_output, "a", encoding="utf-8") as f:
+            f.write(f"folder={folder}\n")
 
 
 if __name__ == "__main__":

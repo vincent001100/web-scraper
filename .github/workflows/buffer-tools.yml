@@ -1,0 +1,60 @@
+# Helpers for the Buffer way of posting (see BUFFER-SETUP.md). They do nothing until the
+# BUFFER_API_KEY secret exists.
+#
+#  * Every morning at 06:41 UTC (07:41 Lagos) it asks Buffer "did this morning's post really go out?"
+#    and shows a red X (and GitHub emails boss) if Buffer says it did not. This is the check that
+#    Make.com never had: it never told us when nothing was posted.
+#  * By hand ("Run workflow" button) you can also pick:
+#      list-channels  shows the Facebook and Instagram channels Buffer can see (changes nothing)
+#      rehearsal      saves two test DRAFTS in Buffer; nothing is published. Delete them afterwards.
+name: Buffer tools
+
+on:
+  schedule:
+    - cron: "41 6 * * *"
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "What do you want to do?"
+        type: choice
+        default: check-today
+        options:
+          - check-today
+          - list-channels
+          - rehearsal
+
+permissions:
+  contents: read
+
+concurrency:
+  group: buffer-tools
+  cancel-in-progress: false
+
+jobs:
+  buffer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main            # the newest version, including today's Buffer record
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install helper tools
+        run: pip install requests
+
+      - name: Run the chosen task
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_FACEBOOK_CHANNEL_ID: ${{ secrets.BUFFER_FACEBOOK_CHANNEL_ID }}
+          BUFFER_INSTAGRAM_CHANNEL_ID: ${{ secrets.BUFFER_INSTAGRAM_CHANNEL_ID }}
+          TASK: ${{ inputs.task }}        # empty when the timer starts this, which means check-today
+        run: |
+          case "${TASK:-check-today}" in
+            check-today)   python buffer_post.py check-today ;;
+            list-channels) python buffer_post.py channels ;;
+            rehearsal)     python buffer_post.py rehearsal ;;
+            *)             echo "I don't know the task '$TASK'."; exit 1 ;;
+          esac

@@ -1,9 +1,13 @@
 """
-Post the Solvix advert (brand/promo/) to Facebook and Instagram through Make.com.
+Post the Solvix advert (brand/promo/) to Facebook and Instagram.
 
-Runs on GitHub once a week (see .github/workflows/weekly-promo.yml). Needs the MAKE_WEBHOOK_URL secret.
+Runs on GitHub once a week (see .github/workflows/weekly-promo.yml).
+Two ways to post:
+  * BUFFER_API_KEY secret set  -> through Buffer (see buffer_post.py and BUFFER-SETUP.md)
+  * otherwise MAKE_WEBHOOK_URL -> through Make.com, exactly as before
 """
 import os
+import sys
 
 from post_social import send_to_make
 
@@ -11,6 +15,11 @@ FOLDER = "brand/promo"
 
 
 def main():
+    # Buffer is switched on by one thing only: the BUFFER_API_KEY secret.
+    if os.environ.get("BUFFER_API_KEY", "").strip():
+        import buffer_post
+        sys.exit(buffer_post.main(["promo"]))
+
     webhook_url = os.environ.get("MAKE_WEBHOOK_URL")
     if not webhook_url:
         print("No MAKE_WEBHOOK_URL set: skipping the advert.")

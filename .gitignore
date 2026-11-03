@@ -10,3 +10,6 @@ __pycache__/
 
 # Video frames (made fresh by make_promo.py)
 brand/promo/slide*.png
+
+# Secrets for running things on your own computer (never upload these)
+.env

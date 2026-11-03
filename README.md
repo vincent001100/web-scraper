@@ -57,3 +57,11 @@ Every morning at 06:00 UTC (07:00 Lagos time) GitHub runs `daily.py`, which:
 
 Everything is saved in the [`results`](results/README.md) folder, newest first.
 To run it right away, open **Actions → Daily data drop → Run workflow**.
+
+### Posting through Buffer (optional)
+
+By default the picture is posted through Make.com. If the GitHub secret `BUFFER_API_KEY` exists, the robot
+posts through [Buffer](https://buffer.com) instead: it runs the evening before and Buffer publishes at exactly
+07:00 Lagos (06:00 UTC). Setup for non-coders: [BUFFER-SETUP.md](BUFFER-SETUP.md).
+The code is in `buffer_post.py`; try it without sending anything: `python buffer_post.py daily --dry-run`.
+Check it with `python test_buffer_post.py` (uses a pretend Buffer, no internet).

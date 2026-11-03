@@ -1,5 +1,30 @@
-# Every morning: pick a random website from the menu, scrape it,
-# make a social media post image, and save everything in the results/ folder.
+# Every day: pick a random website from the menu, scrape it,
+# make a social media post image, save everything in the results/ folder, and post it.
+#
+# THERE ARE TWO WAYS THIS RUNS. The secret BUFFER_API_KEY decides which one.
+#
+#  A) No BUFFER_API_KEY secret (how it works today)
+#     Make.com's timer presses "Run workflow" at 07:00 Lagos, and the robot scrapes and posts straight
+#     away through the Make.com webhook. GitHub's own 06:23 UTC timer is only a backup.
+#     The evening timer (below) wakes up, sees Buffer is off, and goes straight back to sleep.
+#
+#  B) BUFFER_API_KEY secret exists (set it up with BUFFER-SETUP.md)
+#     GitHub's own timer starts the robot the EVENING BEFORE (about 18:17 UTC). It makes TOMORROW's
+#     picture and hands it to Buffer with the exact time 06:00 UTC (= 07:00 Lagos). Buffer then
+#     publishes on the dot. GitHub's timer can be many hours late and it still doesn't matter,
+#     because there are about 12 hours of slack before 06:00. Make.com's timer is no longer needed.
+#
+# THE TIMING LOGIC IN PLAIN ENGLISH
+#  * Every run works out one thing first: "which day is this post FOR?" (the "post date").
+#      - the evening run: the next 07:00 Lagos, so TOMORROW (or today, if GitHub is so late that it
+#        only starts after midnight);
+#      - any other run (Make.com's button, the "Run workflow" button, the 06:23 backup): TODAY.
+#  * The post date names the results folder (results/<post date>_<site>), is printed on the picture,
+#    and is what "has this post already been made?" looks at. So tomorrow's evening run is allowed
+#    to run, but if Make.com's 07:00 button press (or the backup) arrives after it has already
+#    made today's post, it finds today's folder and stops. Nothing is posted twice.
+#  * If 07:00 Lagos has already passed when the posting step runs (say a manual run at 09:00),
+#    the post goes out right away instead.
 name: Daily data drop
 
 on:
@@ -10,7 +35,9 @@ on:
         type: boolean
         default: false
   schedule:
-    - cron: "23 6 * * *"  # backup at 06:23 UTC (07:23 Lagos time) in case Make.com's button press fails.
+    - cron: "17 18 * * *"  # EVENING RUN: 18:17 UTC = 19:17 Lagos. Does something only when BUFFER_API_KEY exists.
+                           # (If you change this line, change the same text in the "check" job below.)
+    - cron: "23 6 * * *"   # backup at 06:23 UTC (07:23 Lagos time) in case Make.com's button press fails.
                            # GitHub often starts scheduled runs hours late, so it isn't the main timer.
 
 permissions:
@@ -25,16 +52,52 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       done: ${{ steps.today.outputs.done }}
+      buffer: ${{ steps.today.outputs.buffer }}
+      post_date: ${{ steps.today.outputs.post_date }}
+      post_when: ${{ steps.today.outputs.post_when }}
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: main            # the newest version, so we see a post made by an earlier run today
+          ref: main            # the newest version, so we see a post made by an earlier run
 
-      - name: Stop if today's post already went out
+      - name: Work out which day this post is for, and stop if it already went out
         id: today
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          EVENT_NAME: ${{ github.event_name }}
+          CRON: ${{ github.event.schedule }}        # which timer woke us up (empty for the button)
+          FORCE: ${{ inputs.force }}
         run: |
-          if [ "${{ inputs.force }}" != "true" ] && ls -d results/$(date -u +%Y-%m-%d)_* > /dev/null 2>&1; then
-            echo "Today's data drop is already done, so this run stops here."
+          # Is Buffer switched on? No secret means an empty text, and then the answer is no.
+          key="${BUFFER_API_KEY//[[:space:]]/}"
+
+          # Is this the evening run? (the same text as the first "cron" line at the top)
+          evening=false
+          if [ "$EVENT_NAME" = "schedule" ] && [ "$CRON" = "17 18 * * *" ]; then
+            evening=true
+          fi
+
+          if [ -z "$key" ]; then
+            # ---- Buffer is OFF: exactly the way it has always worked ----
+            if [ "$evening" = "true" ]; then
+              echo "This is the evening run, but Buffer is not switched on (there is no BUFFER_API_KEY secret). Nothing to do."
+              echo "done=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "buffer=false" >> "$GITHUB_OUTPUT"
+            post_date=$(date -u +%Y-%m-%d)         # the post is for today
+          else
+            # ---- Buffer is ON ----
+            echo "buffer=true" >> "$GITHUB_OUTPUT"
+            if [ "$evening" = "true" ]; then post_when=next; else post_when=today; fi
+            post_date=$(python3 buffer_post.py post-date "$post_when")    # a date like 2026-10-29
+            echo "post_date=$post_date" >> "$GITHUB_OUTPUT"
+            echo "post_when=$post_when" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Has the post for that day already been made?
+          if [ "$FORCE" != "true" ] && ls -d "results/${post_date}"_* > /dev/null 2>&1; then
+            echo "The post for ${post_date} is already done, so this run stops here."
             echo "done=true" >> "$GITHUB_OUTPUT"
           else
             echo "done=false" >> "$GITHUB_OUTPUT"
@@ -59,20 +122,61 @@ jobs:
           python -m playwright install --with-deps chromium
 
       - name: Scrape a random website
+        id: drop
+        env:
+          POST_DATE: ${{ needs.check.outputs.post_date }}   # empty = today (the Make.com way)
         run: python daily.py
 
       - name: Save results to GitHub
+        env:
+          POST_DATE: ${{ needs.check.outputs.post_date }}
         run: |
           git config user.name "Solvix"
           git config user.email "174953671+vincent001100@users.noreply.github.com"
           git add results
-          git commit -m "Daily data drop $(date -u +%Y-%m-%d)"
+          git commit -m "Daily data drop ${POST_DATE:-$(date -u +%Y-%m-%d)}"
           git push
 
       - name: Post to Facebook and Instagram
+        id: post
         env:
           MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
           META_PAGE_TOKEN: ${{ secrets.META_PAGE_TOKEN }}
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          # Used only when the BUFFER_API_KEY secret exists (see buffer_post.py). Otherwise they are ignored.
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_FACEBOOK_CHANNEL_ID: ${{ secrets.BUFFER_FACEBOOK_CHANNEL_ID }}
+          BUFFER_INSTAGRAM_CHANNEL_ID: ${{ secrets.BUFFER_INSTAGRAM_CHANNEL_ID }}
+          POST_WHEN: ${{ needs.check.outputs.post_when }}
+          POST_DATE: ${{ needs.check.outputs.post_date }}
+          DAILY_FOLDER: ${{ steps.drop.outputs.folder }}
+          FORCE_POST: ${{ inputs.force }}
         run: python post_social.py
+
+      # Buffer only: write down which Buffer posts were made (results/<day>_<site>/buffer-posts.json).
+      # It runs even if the posting step failed half-way, so a half-finished job is remembered and
+      # "Re-run failed jobs" cannot post the same channel twice. The morning check reads this file too.
+      # Only the record files are saved here, never anything else: if scraping broke half-way, a half-made
+      # results folder must NOT be saved, or tomorrow's check would think the post was already made.
+      - name: Save the Buffer record
+        if: always() && needs.check.outputs.buffer == 'true' && steps.post.outcome != 'skipped'
+        env:
+          POST_DATE: ${{ needs.check.outputs.post_date }}
+        run: |
+          shopt -s nullglob
+          records=(results/*/buffer-posts.json)
+          if [ ${#records[@]} -eq 0 ]; then
+            echo "No Buffer record to save."
+            exit 0
+          fi
+          git config user.name "Solvix"
+          git config user.email "174953671+vincent001100@users.noreply.github.com"
+          git add -- "${records[@]}"
+          if git diff --cached --quiet; then
+            echo "The Buffer record is already saved."
+          else
+            git commit -m "Buffer record for ${POST_DATE}"
+            git pull --rebase --autostash origin main
+            git push
+          fi
