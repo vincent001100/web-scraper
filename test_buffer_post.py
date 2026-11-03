@@ -100,8 +100,7 @@ class FakeBuffer:
         self.channels = [
             {"id": "ch_fb", "name": "Solvix Page", "service": "facebook", "isQueuePaused": False},
             {"id": "ch_ig", "name": "solvix0", "service": "instagram", "isQueuePaused": False},
-            {"id": "ch_tt", "name": "solvix", "service": "tiktok", "isQueuePaused": False},
-        ]
+        ]                                  # TikTok is added only by the TikTok tests below
         self.created = []                  # the 'input' of every post we were asked to create
         self.refuse = {}                   # channel id -> message: refuse to create a post there
         self.scripted = []                 # one-off answers: (text the question contains, (status, payload, headers))
@@ -141,13 +140,13 @@ class FakeBuffer:
         return 200, {"data": {"createPost": {"__typename": kind, "message": message}}}, {}
 
     def create_post(self, given):
-        for needed in ("channelId", "text", "schedulingType", "mode", "assets", "metadata"):
+        for needed in ("channelId", "text", "schedulingType", "mode", "assets"):
             if needed not in given:
                 return self.typed_error("InvalidInputError", f"{needed} is required")
         channel = next((c for c in self.channels if c["id"] == given["channelId"]), None)
         if channel is None:
             return self.typed_error("NotFoundError", "Channel not found")
-        if channel["service"] not in given["metadata"]:
+        if channel["service"] in ("facebook", "instagram") and channel["service"] not in given.get("metadata", {}):
             return self.typed_error("InvalidInputError",
                                     f"{channel['service'].capitalize()} posts require a type (post, story, or reel)")
         if not given["assets"] or "image" not in given["assets"][0] or not given["assets"][0]["image"].get("url"):
@@ -484,6 +483,28 @@ class WhenThingsGoWrong(InTempFolder):
         self.assertIn("no Instagram channel", message)
         self.assertIn("facebook 'Solvix Page'", message)
         self.assertEqual(self.server.created, [])
+
+    def test_tiktok_gets_the_post_too_when_buffer_has_it(self):
+        self.server.channels.append({"id": "ch_tt", "name": "solvix32", "service": "tiktok", "isQueuePaused": False})
+        self.daily()
+        self.assertEqual({c["channelId"] for c in self.server.created}, {"ch_ig", "ch_fb", "ch_tt"})
+        tiktok = next(c for c in self.server.created if c["channelId"] == "ch_tt")
+        self.assertNotIn("metadata", tiktok)
+
+    def test_no_tiktok_channel_is_fine(self):
+        self.daily()
+        self.assertEqual({c["channelId"] for c in self.server.created}, {"ch_ig", "ch_fb"})
+
+    def test_a_tiktok_refusal_does_not_stop_facebook_and_instagram(self):
+        self.server.channels.append({"id": "ch_tt", "name": "solvix32", "service": "tiktok", "isQueuePaused": False})
+        real = self.server.create_post
+        refuse = lambda given: (self.server.typed_error("InvalidInputError", "TikTok said no")
+                                if given["channelId"] == "ch_tt" else real(given))
+        with mock.patch.object(self.server, "create_post", refuse):
+            message = self.failure_of(bp.run_daily, env=self.env, now=at("2026-10-28 18:17"), when="next",
+                                      buffer=self.client(), image_url=self.picture)
+        self.assertIn("TikTok", message)
+        self.assertEqual({c["channelId"] for c in self.server.created}, {"ch_ig", "ch_fb"})
 
     def test_two_facebook_channels_are_not_guessed(self):
         self.server.channels.append({"id": "ch_fb2", "name": "Other Page", "service": "facebook", "isQueuePaused": False})

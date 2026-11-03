@@ -40,3 +40,6 @@ Open the run and read the message; it is written in plain words. The usual ones:
 ## What we could not check (28 Oct 2026)
 - The team could not reach Buffer's developer pages or `api.buffer.com` from the cloud session, so the code is built from Buffer's public docs and is **not yet tested against the real Buffer**. The rehearsal in step 6 is the first real test. Buffer's API is still "beta" and changed in May 2026; its old API closes on 1 Feb 2027 (we use the new one).
 - Free plan limit: 10 waiting posts per channel. We use 1 or 2.
+
+## TikTok (added 3 Nov 2026)
+If the Buffer account also has a TikTok channel, the daily post and the Monday advert go there too. No TikTok channel = it is simply skipped. A TikTok refusal never stops Facebook and Instagram. Two TikTok channels: set the secret `BUFFER_TIKTOK_CHANNEL_ID`. Not yet tested against the real Buffer (needs the API key).

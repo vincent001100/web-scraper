@@ -65,8 +65,9 @@ PROMO_PICTURE = "automation-post.jpg"
 
 POST_HOUR_UTC = 6                       # 07:00 Lagos = 06:00 UTC, all year round
 MIN_LEAD = timedelta(minutes=3)         # a scheduled time must still be in the future when Buffer gets it
-SERVICES = ("instagram", "facebook")    # Instagram first: it is the pickier one, so trouble shows up before anything is created
-LABEL = {"instagram": "Instagram", "facebook": "Facebook"}
+SERVICES = ("instagram", "facebook", "tiktok")    # Instagram first: it is the pickier one, so trouble shows up before anything is created
+OPTIONAL = ("tiktok",)                  # used when Buffer has it, quietly skipped when it does not
+LABEL = {"instagram": "Instagram", "facebook": "Facebook", "tiktok": "TikTok"}
 INSTAGRAM_MAX_CHARACTERS = 2200         # Instagram's own limits
 INSTAGRAM_MAX_HASHTAGS = 30
 WHEN_CHOICES = ("next", "today", "now")
@@ -195,6 +196,7 @@ def post_status_query(post_id, extras=True):
 POST_METADATA = {
     "facebook": {"facebook": {"type": "post"}},
     "instagram": {"instagram": {"type": "post", "shouldShareToFeed": True}},
+    "tiktok": None,      # no extra details known for a TikTok picture post; sent without "metadata"
 }
 
 
@@ -206,8 +208,9 @@ def build_input(service, channel_id, caption, image_url, plan, draft=False):
         "schedulingType": "automatic",              # Buffer posts it itself (not just a reminder)
         "mode": plan.mode,
         "assets": [{"image": {"url": image_url}}],  # a list; each item holds exactly one picture
-        "metadata": json.loads(json.dumps(POST_METADATA[service])),   # a private copy
     }
+    if POST_METADATA[service]:
+        post["metadata"] = json.loads(json.dumps(POST_METADATA[service]))   # a private copy
     if draft:
         # A draft is saved in Buffer but never published. Used only by the rehearsal.
         post["mode"] = "addToQueue"
@@ -431,6 +434,8 @@ def pick_channels(channels, wanted_ids=None):
                 raise BufferError(f"The secret {secret} is '{wanted}', but that is not one of the "
                                   f"{label} channels Buffer shows for this key. Run the 'Buffer tools' "
                                   "workflow with list-channels to see the right ids, or delete the secret.")
+        if not matches and service in OPTIONAL and not wanted:
+            continue
         if not matches:
             seen = ", ".join(f"{c['service']} '{c['name']}'" for c in channels) or "none"
             raise BufferError(f"Buffer has no {label} channel for this key. In Buffer, connect your "
@@ -631,7 +636,7 @@ def schedule_posts(buffer, targets, caption, image_url, plan, folder=None, clock
     skip = skip or {}
     earlier = read_record_posts(folder)      # posts a previous run already made for this folder
 
-    for service in SERVICES:
+    for service in [s for s in SERVICES if s in targets]:
         channel = targets[service]
         label = LABEL[service]
         if service in skip:
@@ -715,7 +720,8 @@ def read_text(path, what):
 def channel_ids_from(env):
     """Optional GitHub secrets that say exactly which channel to use."""
     return {"facebook": env.get("BUFFER_FACEBOOK_CHANNEL_ID", ""),
-            "instagram": env.get("BUFFER_INSTAGRAM_CHANNEL_ID", "")}
+            "instagram": env.get("BUFFER_INSTAGRAM_CHANNEL_ID", ""),
+            "tiktok": env.get("BUFFER_TIKTOK_CHANNEL_ID", "")}
 
 
 def show_dry_run(plan, folder, image_url, caption, wanted, draft=False):
@@ -732,9 +738,9 @@ def show_dry_run(plan, folder, image_url, caption, wanted, draft=False):
     say(f"  Picture     : {image_url}")
     first_line = caption.strip().splitlines()[0][:70].encode("ascii", "replace").decode()
     say(f"  Caption     : {len(caption)} characters; first line: {first_line}")
-    say("  Channels    : the Instagram and Facebook channels Buffer lists (looked up when it runs for real)")
+    say("  Channels    : the Instagram, Facebook (and TikTok, if connected) channels Buffer lists (looked up when it runs for real)")
     for service in SERVICES:
-        channel_id = wanted[service].strip() or f"<{LABEL[service]} channel id, looked up in Buffer>"
+        channel_id = wanted.get(service, "").strip() or f"<{LABEL[service]} channel id, looked up in Buffer>"
         say(f"\n  What would be sent to Buffer for {LABEL[service]}:")
         say(json.dumps(build_input(service, channel_id, caption, image_url, plan, draft), indent=4))
 
@@ -772,7 +778,7 @@ def run_daily(env=None, now=None, buffer=None, dry_run=False, when=None, folder=
     buffer = buffer or Buffer(env.get("BUFFER_API_KEY"))
     check_picture_is_public(image_url, sleep=buffer.sleep)
     targets = pick_channels(buffer.channels(), wanted)
-    for service in SERVICES:
+    for service in [s for s in SERVICES if s in targets]:
         say(f"Using {LABEL[service]} channel '{targets[service]['name']}' (id {targets[service]['id']}).")
         if targets[service]["paused"]:
             warn(f"The {LABEL[service]} queue in Buffer is PAUSED. Posts may not go out until you resume it in Buffer.")
@@ -825,7 +831,7 @@ def run_channels(env=None, buffer=None):
         say("  (none - connect your Facebook Page and Instagram in Buffer first)")
     targets = pick_channels(channels, channel_ids_from(env))    # raises a clear message if it cannot choose
     say("The daily post would go to:")
-    for service in SERVICES:
+    for service in [s for s in SERVICES if s in targets]:
         say(f"  {LABEL[service]:<10} -> '{targets[service]['name']}'")
     return channels
 
