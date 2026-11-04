@@ -92,7 +92,7 @@ class Timing(unittest.TestCase):
 
 class Rules(unittest.TestCase):
     def check(self, caption, hint=""):
-        return robot.rule_problems({"hook": "A hook", "caption": caption}, hint)
+        return robot.rule_problems({"hook": "A hook", "caption": caption, "picture_prompt": "A bowl."}, hint)
 
     def test_clean_words_pass(self):
         self.assertEqual(self.check(GOOD["caption"]), [])
@@ -197,6 +197,14 @@ class Pictures(unittest.TestCase):
         self.assertFalse(details["ai_picture"])
         self.assertIn("free card", details["picture_source"])
         self.assertNotIn("made with AI", details["caption"])
+
+    def test_the_brief_is_never_sent_to_the_picture_maker(self):
+        order = {"brief": "Advert words here", "type": "picture", "reference": ""}
+        with tempfile.TemporaryDirectory() as folder, \
+                mock.patch.object(robot, "write_post", return_value=dict(GOOD)), \
+                mock.patch.object(robot, "draw_cloudflare_picture", return_value=(None, "busy")) as draw:
+            robot.make_content(order, {}, folder)
+        self.assertEqual(draw.call_args[0][0], "A dog bowl.")
 
     def test_video_is_a_real_vertical_mp4(self):
         import imageio_ffmpeg

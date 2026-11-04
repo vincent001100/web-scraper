@@ -57,8 +57,8 @@ GEMINI_PAUSES = (10, 30, 60)                # seconds to wait between rounds whe
 CLOUDFLARE_MODEL = "@cf/black-forest-labs/flux-1-schnell"
 CLOUDFLARE_URL = "https://api.cloudflare.com/client/v4/accounts/{account}/ai/run/" + CLOUDFLARE_MODEL
 CLOUDFLARE_STEPS = 6                        # the model allows up to 8; more steps cost more Neurons
-PICTURE_STYLE = (" Warm, cosy storybook illustration, soft light, square. "
-                 "No words, no letters, no logos, no brand names, no real people.")
+PICTURE_STYLE = (" Original product picture, soft natural light, square. "
+                 "No words, no letters, no logos, no brand names, no people.")
 
 # The only channels this robot may use. Names are what Buffer shows; TikTok may show either name.
 PET_SHELF_NAMES = {"facebook": {"solvix pet shelf"}, "instagram": {"solvixpetshelf"},
@@ -203,7 +203,10 @@ Reply with JSON only, with these fields:
 "hook": a headline of at most 6 words,
 "caption": 2 to 4 short sentences,
 "hashtags": 3 to 5 topic words, lowercase, no company names,
-"picture_prompt": one or two sentences describing a picture of the idea, with no text in it."""
+"picture_prompt": one or two plain sentences saying what the camera sees: the single object, its
+shape, colour and material, and where it sits. Describe every physical feature the order names, such
+as ridges or a fold-out cup, and say exactly where it is on the object. Only physical description:
+no advert wording, no benefits, no slogans, no product names, no people, no hands, no mention of text."""
 
 
 def ask_gemini(prompt, key, post=None, sleep=time.sleep):
@@ -281,6 +284,8 @@ def rule_problems(writing, hint=""):
         problems.append("it contains a web link")
     if "#" in text:
         problems.append("it puts hashtags in the caption")
+    if not str(writing.get("picture_prompt", "")).strip():
+        problems.append("the picture_prompt is empty")
     if hint and copied_words(text, hint):
         problems.append("it copies words from the reference page")
     return problems
@@ -657,8 +662,8 @@ def make_content(order, env, folder_path):
     hint = reference_hint(order["reference"])
     writing = write_post(order, hint, env.get("GEMINI_API_KEY"))
 
-    # The brief goes in too: on its own, Gemini's description dropped the product's key detail.
-    picture, reason = draw_cloudflare_picture(f"{order['brief']}. {writing['picture_prompt']}",
+    # Never send the brief itself: advert wording makes the model draw garbled text into the picture.
+    picture, reason = draw_cloudflare_picture(writing["picture_prompt"],
                                               env.get("CLOUDFLARE_ACCOUNT_ID"), env.get("CLOUDFLARE_API_TOKEN"))
     ai_picture = picture is not None
     if ai_picture:
