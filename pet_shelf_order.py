@@ -546,8 +546,12 @@ def build_post(service, channel_id, caption, urls, hook, ai_picture, plan, draft
     post["metadata"] = {
         "facebook": {"facebook": {"type": kind}},
         "instagram": {"instagram": {"type": kind, "shouldShareToFeed": True, "isAiGenerated": ai_picture}},
-        "tiktok": {"tiktok": {"title": hook, "isAiGenerated": ai_picture}},
+        "tiktok": {"tiktok": {"title": hook}},
     }[service]
+    if service == "tiktok" and video:
+        # Buffer refuses this switch on TikTok photo posts ("do not support AI content disclosure",
+        # seen 4 Nov 2026). There the caption's "Picture made with AI" line is the label.
+        post["metadata"]["tiktok"]["isAiGenerated"] = ai_picture
     return post
 
 

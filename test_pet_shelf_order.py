@@ -277,6 +277,10 @@ class Sending(unittest.TestCase):
         tiktok = robot.build_post("tiktok", "tt", "#ad x", urls, "Hook", False, plan_now(NOW), True)
         self.assertFalse(tiktok["metadata"]["tiktok"]["isAiGenerated"])
 
+    def test_tiktok_photos_do_not_send_the_ai_switch(self):
+        post = robot.build_post("tiktok", "tt", "#ad x", URLS, "Hook", True, plan_now(NOW), True)
+        self.assertNotIn("isAiGenerated", post["metadata"]["tiktok"])
+
 
 if __name__ == "__main__":
     unittest.main()
