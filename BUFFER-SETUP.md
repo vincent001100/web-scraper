@@ -43,3 +43,18 @@ Open the run and read the message; it is written in plain words. The usual ones:
 
 ## TikTok (added 3 Nov 2026)
 If the Buffer account also has a TikTok channel, the daily post and the Monday advert go there too. No TikTok channel = it is simply skipped. A TikTok refusal never stops Facebook and Instagram. Two TikTok channels: set the secret `BUFFER_TIKTOK_CHANNEL_ID`. Not yet tested against the real Buffer (needs the API key).
+
+## Pet Shelf orders (added 4 Nov 2026)
+One order makes a Pet Shelf post and hands it to the **Pet Shelf** Buffer (Facebook, Instagram, TikTok). It uses only `PET_SHELF_BUFFER_API_KEY`, and stops if it ever sees a Solvix channel.
+
+**Send an order.** Phone: *Actions, Pet Shelf order, Run workflow*. Terminal:
+`gh workflow run pet-shelf-order.yml -R vincent001100/web-scraper -f brief="Your idea" -f type=picture`
+Add `-f mode=draft` to save Buffer drafts only. Add `-f when="2026-11-06 19:30"` (Lagos time) or `-f when=now`; blank means the next 19:30 Lagos. Add `-f reference="https://..."` for inspiration: only its title and short description are read, for the topic, and its words are never used.
+
+**Everything is public.** This project is public, so the order text and the files on the `pet-shelf-media` branch can be read by anyone. Do not delete that branch: Buffer can fetch the media again when it publishes.
+
+**Pictures.** Cloudflare Workers AI, model `@cf/black-forest-labs/flux-1-schnell`, free up to 10,000 Neurons a day (a hard stop on the Workers Free plan). That is about 40 pictures a day by a community formula (about 250 Neurons for 1024 x 1024 at 6 steps; not an official figure). Source: Cloudflare's [Workers AI pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/) as shown in search results on 4 Nov 2026, because the page could not be opened directly. If Cloudflare fails, the order uses our free picture card and shows a yellow warning.
+
+**If you see a red X,** read the message at the top of the run. It names the channel that refused and which posts were already made. *Re-run failed jobs* only retries the missing channels.
+
+**AI label.** Instagram and TikTok videos get Buffer's AI switch. Buffer refuses that switch on TikTok photo posts, so those rely on the "Picture made with AI" line in the caption. Facebook has no such switch through Buffer.
