@@ -272,10 +272,14 @@ class Sending(unittest.TestCase):
         urls = dict(URLS, video="https://example.com/v.mp4")
         post = robot.build_post("instagram", "ig", "#ad x", urls, "Hook", True, plan_now(NOW), True)
         self.assertEqual(post["assets"][0]["video"]["url"], urls["video"])
+        self.assertNotIn("thumbnailUrl", post["assets"][0]["video"])     # Buffer refuses it
         self.assertEqual(post["metadata"]["instagram"]["type"], "reel")
         self.assertTrue(post["metadata"]["instagram"]["isAiGenerated"])
         tiktok = robot.build_post("tiktok", "tt", "#ad x", urls, "Hook", False, plan_now(NOW), True)
         self.assertFalse(tiktok["metadata"]["tiktok"]["isAiGenerated"])
+
+    def test_health_hashtags_are_dropped(self):
+        self.assertEqual(robot.clean_hashtags(["doghealth", "VetTips", "slowfeeder"]), ["slowfeeder"])
 
     def test_tiktok_photos_do_not_send_the_ai_switch(self):
         post = robot.build_post("tiktok", "tt", "#ad x", URLS, "Hook", True, plan_now(NOW), True)

@@ -309,7 +309,8 @@ def clean_hashtags(tags):
         return []
     banned = {"ad", "ads", "amazon", "solvix", "solvixpetshelf", "sponsored"}
     words = [re.sub(r"[^a-z0-9]", "", str(tag).lower()) for tag in tags]
-    return list(dict.fromkeys(w for w in words if w and w not in banned))[:5]
+    health = re.compile(r"health|vet|cure|heal|medic")          # no health claims, even in a hashtag
+    return list(dict.fromkeys(w for w in words if w and w not in banned and not health.search(w)))[:5]
 
 
 def compose_caption(writing, ai_picture):
@@ -390,11 +391,11 @@ def square(picture):
 
 def add_band(picture, hook):
     """Our band under an AI picture: the headline, the shop name and the #ad label."""
-    from PIL import ImageDraw
-    canvas = square(picture)
-    draw = ImageDraw.Draw(canvas)
+    from PIL import Image, ImageDraw, ImageOps
     top = SIZE - 190
-    draw.rectangle((0, top, SIZE, SIZE), fill=FOREST)
+    canvas = Image.new("RGB", (SIZE, SIZE), FOREST)
+    canvas.paste(ImageOps.fit(picture, (SIZE, top)), (0, 0))       # above the band, so it hides nothing
+    draw = ImageDraw.Draw(canvas)
     chosen, wrapped = fit_text(draw, hook, SIZE - 100, 105, start=60)
     draw.multiline_text((50, top + 18), wrapped, font=chosen, fill=PAPER, spacing=8)
     draw.text((50, SIZE - 48), "#ad  ·  Solvix Pet Shelf", font=font(26, serif=False), fill=PAPER)
@@ -540,8 +541,7 @@ def build_post(service, channel_id, caption, urls, hook, ai_picture, plan, draft
     post = build_input(service, channel_id, caption, urls["picture"], plan, draft)
     video = "video" in urls
     if video:
-        post["assets"] = [{"video": {"url": urls["video"], "thumbnailUrl": urls["picture"],
-                                     "metadata": {"title": hook}}}]
+        post["assets"] = [{"video": {"url": urls["video"], "metadata": {"title": hook}}}]
     kind = "reel" if video else "post"
     post["metadata"] = {
         "facebook": {"facebook": {"type": kind}},
@@ -657,7 +657,8 @@ def make_content(order, env, folder_path):
     hint = reference_hint(order["reference"])
     writing = write_post(order, hint, env.get("GEMINI_API_KEY"))
 
-    picture, reason = draw_cloudflare_picture(writing["picture_prompt"] or order["brief"],
+    # The brief goes in too: on its own, Gemini's description dropped the product's key detail.
+    picture, reason = draw_cloudflare_picture(f"{order['brief']}. {writing['picture_prompt']}",
                                               env.get("CLOUDFLARE_ACCOUNT_ID"), env.get("CLOUDFLARE_API_TOKEN"))
     ai_picture = picture is not None
     if ai_picture:
