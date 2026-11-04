@@ -7,6 +7,7 @@
 #  * By hand ("Run workflow" button) you can also pick:
 #      list-channels  shows the Facebook and Instagram channels Buffer can see (changes nothing)
 #      rehearsal      saves two test DRAFTS in Buffer; nothing is published. Delete them afterwards.
+#    and which Buffer account: solvix (default) or pet-shelf (uses the PET_SHELF_BUFFER_API_KEY secret).
 name: Buffer tools
 
 on:
@@ -22,6 +23,13 @@ on:
           - check-today
           - list-channels
           - rehearsal
+      account:
+        description: "Which Buffer account?"
+        type: choice
+        default: solvix
+        options:
+          - solvix
+          - pet-shelf
 
 permissions:
   contents: read
@@ -47,7 +55,8 @@ jobs:
 
       - name: Run the chosen task
         env:
-          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          # Pet Shelf has its own free Buffer account, so it has its own key.
+          BUFFER_API_KEY: ${{ inputs.account == 'pet-shelf' && secrets.PET_SHELF_BUFFER_API_KEY || secrets.BUFFER_API_KEY }}
           BUFFER_FACEBOOK_CHANNEL_ID: ${{ secrets.BUFFER_FACEBOOK_CHANNEL_ID }}
           BUFFER_INSTAGRAM_CHANNEL_ID: ${{ secrets.BUFFER_INSTAGRAM_CHANNEL_ID }}
           TASK: ${{ inputs.task }}        # empty when the timer starts this, which means check-today
