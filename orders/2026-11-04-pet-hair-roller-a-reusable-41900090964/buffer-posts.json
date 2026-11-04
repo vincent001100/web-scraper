@@ -1,0 +1,32 @@
+{
+  "mode": "draft",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6aeb8bd1f67f30658c55b3c6",
+      "status": "draft",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-04-pet-hair-roller-a-reusable-41900090964/video.mp4",
+      "due_at": null
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6aeb8bd101a821141725c19d",
+      "status": "draft",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-04-pet-hair-roller-a-reusable-41900090964/video.mp4",
+      "due_at": null
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6aeb8bd2d0337bbdcd45a8bb",
+      "status": "draft",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-04-pet-hair-roller-a-reusable-41900090964/video.mp4",
+      "due_at": null
+    }
+  ]
+}
