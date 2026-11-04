@@ -1,0 +1,32 @@
+{
+  "mode": "draft",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6aeb8d4e60e67ef1d1cb028b",
+      "status": "draft",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-04-slow-feeder-bowl-for-dogs-41901130345/post.jpg",
+      "due_at": null
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6aeb8d4f8aec178794a2fc41",
+      "status": "draft",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-04-slow-feeder-bowl-for-dogs-41901130345/post.jpg",
+      "due_at": null
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6aeb8d4fa101dc5e772ff981",
+      "status": "draft",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-04-slow-feeder-bowl-for-dogs-41901130345/post.jpg",
+      "due_at": null
+    }
+  ]
+}
