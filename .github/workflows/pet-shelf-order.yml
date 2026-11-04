@@ -1,0 +1,50 @@
+# TEMPORARY read-only probe (replaced by the real workflow). Sends no posts, prints no keys.
+name: Pet Shelf order
+on:
+  push:
+    branches: [claude/pet-shelf-order]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read-only questions
+        env:
+          K: ${{ secrets.PET_SHELF_BUFFER_API_KEY }}
+          CF: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CFA: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          G: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import os, json, urllib.request, urllib.error
+          def http(url, body=None, headers={}):
+              req = urllib.request.Request(url, data=json.dumps(body).encode() if body else None, headers={"Content-Type":"application/json","User-Agent":"solvix-robot",**headers})
+              try:
+                  with urllib.request.urlopen(req, timeout=60) as r: return r.status, json.load(r)
+              except urllib.error.HTTPError as e:
+                  t = e.read()
+                  try: return e.code, json.loads(t)
+                  except Exception: return e.code, {"raw": t[:300].decode("utf8","replace")}
+          H = {"Authorization":"Bearer "+os.environ["K"].strip()}
+          def gql(q): return http("https://api.buffer.com", {"query":q}, H)
+          TYPE = "{ kind name inputFields { name type { kind name ofType { kind name ofType { kind name ofType { name kind } } } } } fields { name args { name type { kind name ofType { kind name ofType { name } } } } type { kind name ofType { kind name ofType { name } } } } enumValues { name } possibleTypes { name } }"
+          names = ["CreatePostInput","AssetsInput","VideoAssetInput","ImageAssetInput","PostInputMetaData","InstagramPostMetadataInput","FacebookPostMetadataInput","TikTokPostMetadataInput","PostType","PostTypeInstagram","PostTypeFacebook","SchedulingType","ShareMode","Mutation","Query","PostStatus","PostsInput","PostsFiltersInput","Post","Asset","VideoAsset","ImageAsset"]
+          s, r = gql("query { __schema { types { name kind } } }")
+          print("INTROSPECT status", s, "errors", json.dumps(r.get("errors"))[:300])
+          allt = [t["name"] for t in ((r.get("data") or {}).get("__schema") or {}).get("types", []) if not t["name"].startswith("__")]
+          print("ALLTYPES", allt)
+          want = set(names) | {n for n in allt if any(w in n.lower() for w in ("tiktok","instagram","facebook","metadata","asset","postfilter","postsinput","deletepost"))}
+          for n in sorted(want):
+              s, r = gql('query { __type(name: %s) %s }' % (json.dumps(n), TYPE))
+              t = (r.get("data") or {}).get("__type")
+              if t: print("TYPE", n, json.dumps(t, separators=(",",":")))
+          acct = os.environ["CFA"].strip()
+          print("CF account id present:", bool(acct))
+          s, r = http(f"https://api.cloudflare.com/client/v4/accounts/{acct}/ai/models/search?task=Text-to-Image&per_page=50", None, {"Authorization":"Bearer "+os.environ["CF"].strip()})
+          print("CF models status", s, json.dumps(r.get("errors"))[:300])
+          for m in r.get("result") or []:
+              print("CF", m.get("name"), "|", (m.get("description") or "")[:110], "|", json.dumps(m.get("properties"))[:300])
+          s, r = http("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200", None, {"x-goog-api-key":os.environ["G"].strip()})
+          print("GEMINI", s, [m["name"] for m in r.get("models",[]) if "generateContent" in m.get("supportedGenerationMethods",[]) and "flash" in m["name"] and "image" not in m["name"]])
+          PY
