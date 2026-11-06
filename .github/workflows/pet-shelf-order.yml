@@ -1,0 +1,76 @@
+# Send one order, and GitHub makes the Pet Shelf post and hands it to Buffer.
+# Buffer publishes it to Pet Shelf Facebook, Instagram and TikTok. The PC can be off.
+#
+# From the phone: Actions, Pet Shelf order, Run workflow.
+# From a terminal:
+#   gh workflow run pet-shelf-order.yml -R vincent001100/web-scraper -f brief="Your idea" -f type=picture
+#
+# This project is public, so anyone can read an order and its files. Keep private details out of it.
+# See pet_shelf_order.py for how it works and BUFFER-SETUP.md for what a red X means.
+name: Pet Shelf order
+
+on:
+  workflow_dispatch:
+    inputs:
+      brief:
+        description: "The idea: what should this post be about?"
+        type: string
+        required: true
+      type:
+        description: "Picture or video?"
+        type: choice
+        default: picture
+        options:
+          - picture
+          - video
+      reference:
+        description: "Reference link (optional, inspiration only, never copied)"
+        type: string
+        required: false
+      when:
+        description: "Blank = next 19:30 Lagos. Or: now. Or Lagos time like 2026-11-06 19:30"
+        type: string
+        required: false
+      mode:
+        description: "post = schedule it for real. draft = Buffer drafts only, nothing is published"
+        type: choice
+        default: post
+        options:
+          - post
+          - draft
+
+permissions:
+  contents: write          # saves the pictures and videos on the pet-shelf-media branch
+
+concurrency:
+  group: pet-shelf-order   # one order at a time, in the order they arrive
+  cancel-in-progress: false
+
+jobs:
+  order:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install helper tools
+        run: pip install requests==2.34.2 pillow==13.0.0 imageio-ffmpeg==0.6.0
+
+      # The order arrives as settings, never pasted into the command, so its words cannot run as code.
+      # Only the Pet Shelf Buffer key is given to this job. BUFFER_API_KEY (Solvix) must never be added.
+      - name: Make the post and send it to Buffer
+        env:
+          PET_SHELF_BUFFER_API_KEY: ${{ secrets.PET_SHELF_BUFFER_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          ORDER_BRIEF: ${{ inputs.brief }}
+          ORDER_TYPE: ${{ inputs.type }}
+          ORDER_REFERENCE: ${{ inputs.reference }}
+          ORDER_WHEN: ${{ inputs.when }}
+          ORDER_MODE: ${{ inputs.mode }}
+        run: python pet_shelf_order.py
