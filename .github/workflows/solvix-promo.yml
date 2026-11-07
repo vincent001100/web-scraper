@@ -1,0 +1,49 @@
+# Solvix official page: books the next 13:00 Lagos promo post in Buffer every evening.
+# The posts and their dates live on the solvix-media branch (promo/<set>/schedule.json).
+# By hand: Actions, Solvix promo, Run workflow.
+name: Solvix promo
+
+on:
+  schedule:
+    - cron: "23 17 * * *"      # 18:23 Lagos: books tomorrow's 13:00 post (GitHub's timer can be hours late)
+  workflow_dispatch:
+    inputs:
+      day:
+        description: "next = every post due in the next 36 hours not yet booked. Or one date, like 2026-11-08"
+        type: string
+        default: next
+      mode:
+        description: "post = book it for real. draft = Buffer drafts only, nothing is published"
+        type: choice
+        default: post
+        options:
+          - post
+          - draft
+
+permissions:
+  contents: write          # writes the booking record on the solvix-media branch
+
+concurrency:
+  group: solvix-promo
+  cancel-in-progress: false
+
+jobs:
+  book:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install helper tools
+        run: pip install requests==2.34.2
+      # Only the Solvix Buffer key. PET_SHELF_BUFFER_API_KEY must never be added here.
+      - name: Book the next Solvix promo post
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_FACEBOOK_CHANNEL_ID: ${{ secrets.BUFFER_FACEBOOK_CHANNEL_ID }}
+          BUFFER_INSTAGRAM_CHANNEL_ID: ${{ secrets.BUFFER_INSTAGRAM_CHANNEL_ID }}
+          PROMO_DAY: ${{ inputs.day }}
+          PROMO_MODE: ${{ inputs.mode }}
+        run: python solvix_promo.py
