@@ -604,7 +604,7 @@ def delete_post(buffer, post_id):
         raise BufferError(answer["message"])
 
 
-def check_post(buffer, item, plan, draft, caption, clock):
+def check_post(buffer, item, plan, draft, caption, clock, expected_assets=1):
     """Read one new post back from Buffer. Returns a problem sentence, or None if it is right."""
     label = LABEL[item["service"]]
     post = read_post(buffer, item["post_id"])
@@ -632,6 +632,9 @@ def check_post(buffer, item, plan, draft, caption, clock):
         return "Buffer's copy does not start with #ad"
     if not post.get("assets"):
         return "Buffer's copy has no picture or video"
+    item["asset_count"] = len(post["assets"])
+    if len(post["assets"]) != expected_assets:
+        return f"Buffer kept {len(post['assets'])} of the {expected_assets} slides"
     item["status"] = status
     item["asset"] = f"{post['assets'][0].get('type')}: {post['assets'][0].get('source')}"
     item["due_at"] = post.get("dueAt")
@@ -669,7 +672,7 @@ def send_to_buffer(buffer, targets, caption, urls, hook, ai_picture, plan, draft
 
     for item in new:
         try:
-            problem = check_post(buffer, item, plan, draft, caption, clock)
+            problem = check_post(buffer, item, plan, draft, caption, clock, len(urls.get("slides") or [1]))
         except BufferError as trouble:
             problem = f"it was created, but I could not confirm it ({trouble})"
         if problem:
