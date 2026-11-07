@@ -1,0 +1,36 @@
+# Cancel one Pet Shelf order that is booked in Buffer but not published yet.
+# From the phone: Actions, Pet Shelf cancel, Run workflow, paste the order folder name.
+name: Pet Shelf cancel
+
+on:
+  workflow_dispatch:
+    inputs:
+      folder:
+        description: "Order folder from orders/ on the pet-shelf-media branch, e.g. 2026-11-07-dog-paw-cleaner-cup-a-42333996838"
+        type: string
+        required: true
+
+permissions:
+  contents: write          # updates the order's record on the pet-shelf-media branch
+
+concurrency:
+  group: pet-shelf-order   # never at the same time as an order
+  cancel-in-progress: false
+
+jobs:
+  cancel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install helper tools
+        run: pip install requests==2.34.2 pillow==13.0.0
+      # Only the Pet Shelf Buffer key. BUFFER_API_KEY (Solvix) must never be added here.
+      - name: Cancel the booked posts
+        env:
+          PET_SHELF_BUFFER_API_KEY: ${{ secrets.PET_SHELF_BUFFER_API_KEY }}
+          CANCEL_FOLDER: ${{ inputs.folder }}
+        run: python pet_shelf_cancel.py
