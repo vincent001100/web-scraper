@@ -7,7 +7,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6aeea61faf7e526d43fc7393",
       "asset_count": 5,
-      "status": "draft",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-wobble-lick-bowl-for-dogs-42337454647/post.jpg",
       "due_at": null
     },
@@ -17,7 +17,7 @@
       "channel_name": "Solvix Pet Shelf",
       "post_id": "6aeea61fd6bbae6fa16465cd",
       "asset_count": 5,
-      "status": "draft",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-wobble-lick-bowl-for-dogs-42337454647/post.jpg",
       "due_at": null
     },
@@ -27,7 +27,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6aeea61fa7751de7c9c5a37f",
       "asset_count": 5,
-      "status": "draft",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-wobble-lick-bowl-for-dogs-42337454647/post.jpg",
       "due_at": null
     }
