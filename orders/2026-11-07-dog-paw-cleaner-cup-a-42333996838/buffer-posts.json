@@ -6,7 +6,7 @@
       "channel_id": "6aeb7b62e29c69a1716125e8",
       "channel_name": "solvixpetshelf",
       "post_id": "6aee9afa004e4879a72f5f1b",
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-dog-paw-cleaner-cup-a-42333996838/post.jpg",
       "due_at": "2026-11-07T08:00:00.000Z"
     },
@@ -15,7 +15,7 @@
       "channel_id": "6aeb79fde29c69a171610133",
       "channel_name": "Solvix Pet Shelf",
       "post_id": "6aee9afa9214322f68c979b7",
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-dog-paw-cleaner-cup-a-42333996838/post.jpg",
       "due_at": "2026-11-07T08:00:00.000Z"
     },
@@ -24,7 +24,7 @@
       "channel_id": "6aeb7bc0e29c69a171612d42",
       "channel_name": "solvixpetshelf",
       "post_id": "6aee9afaa7751de7c9c26c60",
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-dog-paw-cleaner-cup-a-42333996838/post.jpg",
       "due_at": "2026-11-07T08:00:00.000Z"
     }
