@@ -31,6 +31,17 @@ on:
         description: "Blank = next 19:30 Lagos. Or: now. Or Lagos time like 2026-11-06 19:30"
         type: string
         required: false
+      picture:
+        description: "Optional: a finished advert in ready/ on the pet-shelf-media branch (e.g. ready/2026-11-08-cat-window.jpg). Blank = the robot draws one"
+        type: string
+        required: false
+      picture_ai:
+        description: "Does that ready picture contain AI-made images? (adds 'Picture made with AI.')"
+        type: choice
+        default: "yes"
+        options:
+          - "yes"
+          - "no"
       mode:
         description: "post = schedule it for real. draft = Buffer drafts only, nothing is published"
         type: choice
@@ -73,4 +84,6 @@ jobs:
           ORDER_REFERENCE: ${{ inputs.reference }}
           ORDER_WHEN: ${{ inputs.when }}
           ORDER_MODE: ${{ inputs.mode }}
+          ORDER_PICTURE: ${{ inputs.picture }}
+          ORDER_PICTURE_AI: ${{ inputs.picture_ai }}
         run: python pet_shelf_order.py

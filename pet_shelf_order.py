@@ -43,6 +43,9 @@ SITE = "https://solvix-shelf.pages.dev/"
 MEDIA_BRANCH = "pet-shelf-media"
 MEDIA_DIR = "pet-shelf-media-checkout"
 RECORD = "buffer-posts.json"
+# A finished advert the team designed (boss, 7 Nov 2026: more creative adverts, real product pictures).
+# It is saved first in ready/ on the media branch; the robot then only writes the words and posts it.
+READY_PICTURE = re.compile(r"ready/[A-Za-z0-9][A-Za-z0-9._-]*\.(?:jpg|jpeg|png)$")
 LAGOS = timezone(timedelta(hours=1))        # Nigeria has no summer time
 DEFAULT_HOUR, DEFAULT_MINUTE = 19, 30       # "next sensible time": 19:30 Lagos, marketing/calendar.md
 DEFAULT_LEAD = timedelta(minutes=30)
@@ -114,6 +117,8 @@ def read_order(env):
         "reference": (env.get("ORDER_REFERENCE") or "").strip(),
         "when": (env.get("ORDER_WHEN") or "").strip(),
         "mode": (env.get("ORDER_MODE") or "").strip().lower(),
+        "picture": (env.get("ORDER_PICTURE") or "").strip(),
+        "picture_ai": (env.get("ORDER_PICTURE_AI") or "yes").strip().lower(),
     }
     if not order["brief"]:
         raise OrderProblem("The order has no idea or brief, so there is nothing to make.")
@@ -123,6 +128,11 @@ def read_order(env):
         raise OrderProblem(f"The mode must be post or draft, not '{order['mode']}'.")
     if order["reference"] and not re.match(r"https?://\S+$", order["reference"]):
         raise OrderProblem("The reference link must be a full web address starting with http.")
+    if order["picture"] and not READY_PICTURE.match(order["picture"]):
+        raise OrderProblem("A ready picture must be a file in the ready/ folder of the pet-shelf-media branch, "
+                           "like ready/2026-11-08-cat-window.jpg.")
+    if order["picture_ai"] not in ("yes", "no"):
+        raise OrderProblem(f"picture_ai must be yes or no, not '{order['picture_ai']}'.")
     return order
 
 
@@ -658,10 +668,41 @@ def send_to_buffer(buffer, targets, caption, urls, hook, ai_picture, plan, draft
 # 6. THE WHOLE ORDER
 # =============================================================================================
 
+def load_ready_picture(name, base=None):
+    """Open a team advert from ready/ on the media branch: a real picture, saved as a plain RGB image."""
+    from PIL import Image
+    path = os.path.join(base or MEDIA_DIR, name)
+    if not READY_PICTURE.match(name) or not os.path.isfile(path):
+        raise OrderProblem(f"The ready picture {name} is not on the pet-shelf-media branch, so I have not posted.")
+    try:
+        with Image.open(path) as img:
+            picture = img.convert("RGB")
+    except Exception:
+        raise OrderProblem(f"{name} is not a picture I can open, so I have not posted.")
+    if picture.width < 600 or not 0.5 <= picture.width / picture.height <= 1.25:
+        raise OrderProblem(f"{name} is {picture.width}x{picture.height}; use a square or 4:5 picture at least 600 wide.")
+    if picture.width > SIZE:
+        picture = picture.resize((SIZE, round(picture.height * SIZE / picture.width)), Image.LANCZOS)
+    return picture
+
+
 def make_content(order, env, folder_path):
     """Write the words and make the media. Returns the details that the Buffer step needs."""
     hint = reference_hint(order["reference"])
     writing = write_post(order, hint, env.get("GEMINI_API_KEY"))
+
+    if order.get("picture"):
+        final = load_ready_picture(order["picture"])
+        ai_picture = order.get("picture_ai", "yes") == "yes"
+        os.makedirs(folder_path, exist_ok=True)
+        final.save(os.path.join(folder_path, "post.jpg"), quality=92)
+        if order["type"] == "video":
+            make_video(final, writing["hook"], ai_picture, os.path.join(folder_path, "video.mp4"))
+        caption = compose_caption(writing, ai_picture)
+        with open(os.path.join(folder_path, "caption.txt"), "w", encoding="utf-8") as f:
+            f.write(caption)
+        return {"hook": writing["hook"], "caption": caption, "ai_picture": ai_picture,
+                "picture_source": f"team advert ({order['picture']})"}
 
     # Never send the brief itself: advert wording makes the model draw garbled text into the picture.
     picture, reason = draw_cloudflare_picture(writing["picture_prompt"],

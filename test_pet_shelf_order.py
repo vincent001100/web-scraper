@@ -135,6 +135,32 @@ class Rules(unittest.TestCase):
         self.assertNotIn("#Amazon", ai.lower().replace("amazon associate", ""))
 
 
+class ReadyPictures(unittest.TestCase):
+    """Boss, 7 Nov 2026: the team can hand the robot a finished advert instead of an AI drawing."""
+
+    def test_only_files_in_ready_are_accepted(self):
+        base = {"ORDER_BRIEF": "x", "ORDER_MODE": "draft"}
+        self.assertEqual(robot.read_order(dict(base, ORDER_PICTURE="ready/ad-1.jpg"))["picture"], "ready/ad-1.jpg")
+        for bad in ("../secret.jpg", "ready/../x.jpg", "orders/x.jpg", "https://example.com/a.jpg", "ready/a.gif"):
+            with self.assertRaises(robot.OrderProblem):
+                robot.read_order(dict(base, ORDER_PICTURE=bad))
+        with self.assertRaises(robot.OrderProblem):
+            robot.read_order(dict(base, ORDER_PICTURE="ready/a.jpg", ORDER_PICTURE_AI="maybe"))
+
+    def test_ready_picture_is_opened_and_sized(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as tmp:
+            os.makedirs(os.path.join(tmp, "ready"))
+            Image.new("RGBA", (2160, 2700), "white").save(os.path.join(tmp, "ready", "ad.png"))
+            picture = robot.load_ready_picture("ready/ad.png", base=tmp)
+            self.assertEqual((picture.mode, picture.size), ("RGB", (1080, 1350)))
+            Image.new("RGB", (1600, 400)).save(os.path.join(tmp, "ready", "wide.jpg"))
+            with self.assertRaises(robot.OrderProblem):
+                robot.load_ready_picture("ready/wide.jpg", base=tmp)
+            with self.assertRaises(robot.OrderProblem):
+                robot.load_ready_picture("ready/missing.jpg", base=tmp)
+
+
 class Reply:
     def __init__(self, status, payload=None, content=b"", kind="application/json"):
         self.status_code, self.payload, self.content = status, payload, content
