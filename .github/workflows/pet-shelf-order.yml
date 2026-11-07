@@ -42,6 +42,14 @@ on:
         options:
           - "yes"
           - "no"
+      caption:
+        description: "Optional: the team's own caption (no #ad, links or hashtags; the robot adds #ad and 'Link in bio'). Use \\n for a new line. Blank = Gemini writes it"
+        type: string
+        required: false
+      hashtags:
+        description: "Optional: hashtags for the team's caption, like: dogs, roadtrip, petcare"
+        type: string
+        required: false
       mode:
         description: "post = schedule it for real. draft = Buffer drafts only, nothing is published"
         type: choice
@@ -86,4 +94,6 @@ jobs:
           ORDER_MODE: ${{ inputs.mode }}
           ORDER_PICTURE: ${{ inputs.picture }}
           ORDER_PICTURE_AI: ${{ inputs.picture_ai }}
+          ORDER_CAPTION: ${{ inputs.caption }}
+          ORDER_HASHTAGS: ${{ inputs.hashtags }}
         run: python pet_shelf_order.py

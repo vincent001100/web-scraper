@@ -124,6 +124,8 @@ def read_order(env):
         "mode": (env.get("ORDER_MODE") or "").strip().lower(),
         "picture": (env.get("ORDER_PICTURE") or "").strip(),
         "picture_ai": (env.get("ORDER_PICTURE_AI") or "yes").strip().lower(),
+        "caption": (env.get("ORDER_CAPTION") or "").strip(),
+        "hashtags": (env.get("ORDER_HASHTAGS") or "").strip(),
     }
     if not order["brief"]:
         raise OrderProblem("The order has no idea or brief, so there is nothing to make.")
@@ -233,7 +235,8 @@ Rules you must follow:
 
 Reply with JSON only, with these fields:
 "hook": a headline of at most 6 words,
-"caption": 2 to 4 short sentences,
+"caption": 3 to 4 very short, simple sentences that a 12-year-old understands: the problem, what the
+product does, who it is for. Everyday words, no fancy words,
 "hashtags": 3 to 5 topic words, lowercase, no company names,
 "picture_prompt": one or two plain sentences saying what the camera sees: the single object, its
 shape, colour and material, and where it sits. Describe every physical feature the order names, such
@@ -355,7 +358,7 @@ def compose_caption(writing, ai_picture):
     Boss, 7 Nov 2026: no "Picture made with AI" line in captions or on pictures. Where the platform has
     its own AI switch (Instagram; TikTok videos), the robot still turns it on, see build_post."""
     tags = " ".join(f"#{tag}" for tag in clean_hashtags(writing["hashtags"]))
-    caption = f"#ad {writing['caption']}\n\nFind more on the shelf: {SITE}"
+    caption = f"#ad {writing['caption']}\n\n👉 Link in bio"      # boss, 7 Nov 2026: say "link in bio"
     return f"{caption}\n\n{tags}" if tags else caption
 
 
@@ -716,7 +719,17 @@ def load_ready_picture(name, base=None):
 def make_content(order, env, folder_path):
     """Write the words and make the media. Returns the details that the Buffer step needs."""
     hint = reference_hint(order["reference"])
-    writing = write_post(order, hint, env.get("GEMINI_API_KEY"))
+    if order.get("caption"):
+        # The team wrote the words (boss saw them before booking). Same rules as Gemini's words.
+        words = order["caption"].replace("\\n", "\n")
+        writing = {"hook": " ".join(re.split(r"[.!?]", words)[0].split()[:6]), "caption": words,
+                   "hashtags": [t.strip().lstrip("#") for t in re.split(r"[,\s]+", order.get("hashtags", "")) if t.strip()],
+                   "picture_prompt": "team advert"}
+        problems = rule_problems(writing, hint)
+        if problems:
+            raise OrderProblem("The caption breaks our rules: " + "; ".join(problems) + ".")
+    else:
+        writing = write_post(order, hint, env.get("GEMINI_API_KEY"))
 
     if order.get("picture"):
         pictures = order.get("ready_pictures") or [order["picture"]]

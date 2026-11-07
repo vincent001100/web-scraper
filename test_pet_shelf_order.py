@@ -161,6 +161,29 @@ class ReadyPictures(unittest.TestCase):
                 robot.load_ready_picture("ready/missing.jpg", base=tmp)
 
 
+class TeamCaptions(unittest.TestCase):
+    """Boss, 7 Nov 2026: 'link in bio' in the caption, and easy words (the team may write them)."""
+
+    def test_team_caption_is_used_with_link_in_bio(self):
+        from PIL import Image
+        env = {"ORDER_BRIEF": "x", "ORDER_MODE": "draft", "ORDER_PICTURE": "ready/a.png",
+               "ORDER_CAPTION": "Muddy paws in the car?\\nYour seats stay clean.", "ORDER_HASHTAGS": "dogs, roadtrip"}
+        with tempfile.TemporaryDirectory() as media, tempfile.TemporaryDirectory() as out, \
+                mock.patch.object(robot, "MEDIA_DIR", media), \
+                mock.patch.object(robot, "write_post", side_effect=AssertionError("Gemini not needed")):
+            os.makedirs(os.path.join(media, "ready"))
+            Image.new("RGB", (1080, 1350)).save(os.path.join(media, "ready", "a.png"))
+            details = robot.make_content(robot.read_order(env), {}, out)
+        self.assertEqual(details["caption"],
+                         "#ad Muddy paws in the car?\nYour seats stay clean.\n\n👉 Link in bio\n\n#dogs #roadtrip")
+
+    def test_team_caption_follows_the_rules(self):
+        env = {"ORDER_BRIEF": "x", "ORDER_MODE": "draft", "ORDER_PICTURE": "ready/a.png",
+               "ORDER_CAPTION": "Only $5 today! Visit https://example.com"}
+        with tempfile.TemporaryDirectory() as out, self.assertRaises(robot.OrderProblem):
+            robot.make_content(robot.read_order(env), {}, out)
+
+
 class TeamAdvertsOnly(unittest.TestCase):
     def test_a_post_without_a_team_advert_is_refused(self):
         with self.assertRaises(robot.OrderProblem):
