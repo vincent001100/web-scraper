@@ -1,0 +1,35 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6aeef7d6d6bbae6fa17ba088",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-back-seat-hammock-car-cover-42362409425/post.jpg",
+      "due_at": "2026-11-07T14:00:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6aeef7d7004e4879a7498a1e",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-back-seat-hammock-car-cover-42362409425/post.jpg",
+      "due_at": "2026-11-07T14:00:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6aeef7d7d6bbae6fa17ba0cc",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-back-seat-hammock-car-cover-42362409425/post.jpg",
+      "due_at": "2026-11-07T14:00:00.000Z"
+    }
+  ]
+}
