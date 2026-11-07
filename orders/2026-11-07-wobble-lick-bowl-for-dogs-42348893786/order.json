@@ -1,0 +1,19 @@
+{
+  "hook": "Blink and dinner is already gone?",
+  "caption": "#ad Spreading wet food or treat paste into this rubber bowl slows down enthusiastic eaters by turning meals into a game. It works great for distraction during bath time or quiet afternoons. Please note this soft material is meant for licking, not for dogs that chew.\n\nFind more on the shelf: https://solvix-shelf.pages.dev/",
+  "ai_picture": true,
+  "slides": 1,
+  "picture_source": "team advert (ready/2026-11-08-lick-bowl/slides-video.mp4,ready/2026-11-08-lick-bowl/cover.jpg)",
+  "brief": "Wobble lick bowl for dogs, short video version: a rubber bowl full of small bumps. Spread wet food or a treat paste into the bumps, and licking it up takes longer, so fast eaters slow down and mealtime lasts. Good for fast eaters, bath time and quiet time. Not for dogs that chew or tear soft rubber. Playful tone: dinner served, dinner gone.",
+  "type": "video",
+  "reference": "",
+  "when": "2026-11-09 09:00",
+  "mode": "post",
+  "picture": "ready/2026-11-08-lick-bowl/slides-video.mp4,ready/2026-11-08-lick-bowl/cover.jpg",
+  "picture_ai": "yes",
+  "ready_pictures": [
+    "ready/2026-11-08-lick-bowl/cover.jpg"
+  ],
+  "ready_video": "ready/2026-11-08-lick-bowl/slides-video.mp4",
+  "due_at": "2026-11-09T08:00:00.000Z"
+}
