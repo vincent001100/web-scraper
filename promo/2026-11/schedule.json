@@ -1,0 +1,119 @@
+{
+  "about": "Solvix official promo posts, 13:00 Lagos daily. Approved by boss 6-7 Nov 2026. Booked one day ahead by solvix_promo.py.",
+  "posts": [
+    {
+      "date": "2026-11-08",
+      "title": "post-01-scraper",
+      "image": "post-01-scraper.jpg",
+      "caption": "Still copying data from websites by hand?\n\nOur Solvix Scraper collects public data and turns it into a clean spreadsheet.\nPick a website, press start, download Excel, CSV and more.\nNo code needed. (Sample data shown.)\n\nMessage us to get data collected for your business.\n\n#webscraping #dataautomation #python #smallbusiness"
+    },
+    {
+      "date": "2026-11-09",
+      "title": "post-02-bulk-updater",
+      "image": "post-02-bulk-updater.jpg",
+      "caption": "Changing shop prices one by one?\n\nThe Bulk Product Updater changes prices, stock and details for hundreds of shop products from one spreadsheet.\nEdit the sheet, check the preview, update.\n(Shown on a practice shop with made-up products, for example.)\n\nMessage us to try it on your shop.\n\n#shopify #ecommerce #dropshipping #productivity"
+    },
+    {
+      "date": "2026-11-10",
+      "title": "post-03-ad-maker",
+      "image": "post-03-ad-maker.jpg",
+      "caption": "No time to make a video ad?\n\nGive the Solvix Ad Maker a product photo.\nIt makes a short video ad: the problem, then the fix, then what to do next.\nThe picture shows an example ad.\n\nMessage us and we will make one for your product.\n\n#videoad #ecommerce #smallbusiness #contentcreation"
+    },
+    {
+      "date": "2026-11-11",
+      "title": "post-15-website-ad-01",
+      "image": "post-15-website-ad-01.jpg",
+      "caption": "Your shop closes at night. Your website doesn't.\n\nA website keeps showing your products and taking messages while you sleep, on every phone.\nShown: our own live site, Solvix Pet Shelf.\n\nMessage us to start yours.\n\n#webdesign #website #smallbusiness #solvix"
+    },
+    {
+      "date": "2026-11-12",
+      "title": "post-04-websites",
+      "image": "post-04-websites.jpg",
+      "caption": "Your business deserves a modern website.\n\nClean design, fast pages, works on phones and computers.\nThe picture is our own site, Solvix Pet Shelf.\nTell us about your business and we will plan yours.\n\nMessage us to start.\n\n#webdesign #website #smallbusiness #solvix"
+    },
+    {
+      "date": "2026-11-13",
+      "title": "post-05-auto-posting",
+      "image": "post-05-auto-posting.jpg",
+      "caption": "Posting every day by hand? Not us.\n\nThis Page posts itself every day.\nWrite it once, schedule it, and it goes out on time.\nWe can set up automatic posting for your business too.\n\nMessage us to ask how.\n\n#automation #socialmediamarketing #smallbusiness #productivity"
+    },
+    {
+      "date": "2026-11-14",
+      "title": "post-06-scraper",
+      "image": "post-06-scraper.jpg",
+      "caption": "Data is online, but not in a table.\n\nPrices, titles and ratings sit on many pages.\nThe Solvix Scraper collects public data into rows you can sort and filter.\nExample: 1,000 rows of practice data. It follows each site's rules.\n\nMessage us about your data needs.\n\n#webscraping #data #python #spreadsheet"
+    },
+    {
+      "date": "2026-11-15",
+      "title": "post-16-website-ad-02",
+      "image": "post-16-website-ad-02.jpg",
+      "caption": "Everything you sell, on one neat shelf.\n\nProducts, prices, opening hours and a way to reach you, all in one place customers can find any time.\n\nTell us what you sell and we will plan your website.\n\n#webdesign #smallbusiness #onlinebusiness #solvix"
+    },
+    {
+      "date": "2026-11-16",
+      "title": "post-07-bulk-updater",
+      "image": "post-07-bulk-updater.jpg",
+      "caption": "Big sale tonight? Update everything at once.\n\nFill in a \"was price\" column once.\nPreview every change, then update. Changed your mind? Undo.\n(Practice shop with made-up products, for example.)\n\nMessage us to try the Bulk Product Updater.\n\n#shopify #ecommerce #saleseason #dropshipping"
+    },
+    {
+      "date": "2026-11-17",
+      "title": "post-08-ad-maker",
+      "image": "post-08-ad-maker.jpg",
+      "caption": "A photo alone is not an ad.\n\nA still picture is easy to scroll past.\nThe Solvix Ad Maker turns a product photo into a short video: hook, problem, fix, call to action.\nFrames from an example ad shown.\n\nMessage us for your product video.\n\n#videoad #shortvideo #ecommerce #marketing"
+    },
+    {
+      "date": "2026-11-18",
+      "title": "post-09-websites",
+      "image": "post-09-websites.jpg",
+      "caption": "Does your website look good on a phone?\n\nMany people browse on their phones, so small text and broken layouts send them away.\nWe build websites that fit every screen.\nShown: our own site, Solvix Pet Shelf.\n\nMessage us for a website that works everywhere.\n\n#webdesign #mobilefirst #smallbusiness #website"
+    },
+    {
+      "date": "2026-11-19",
+      "title": "post-17-website-ad-03",
+      "image": "post-17-website-ad-03.jpg",
+      "caption": "Still sending prices from a notebook?\n\nIf customers have to call to ask a price, many won't. We turn your price list into a clean page anyone can browse on their phone.\nSample design, not a client. Prices shown are examples.\n\nSend us your list. We'll show you how it could look.\n\n#webdesign #smallbusiness #bakery #solvix"
+    },
+    {
+      "date": "2026-11-20",
+      "title": "post-10-auto-posting",
+      "image": "post-10-auto-posting.jpg",
+      "caption": "Busy week? Your page can still post.\n\nScheduled posts go out on time, every day, even when you are busy.\nThis Page does it: a data post at 07:00 and a tool post at 13:00 (Lagos time).\nWe can build the same for you.\n\nMessage us to set it up.\n\n#automation #socialmedia #smallbusiness #consistency"
+    },
+    {
+      "date": "2026-11-21",
+      "title": "post-11-scraper",
+      "image": "post-11-scraper.jpg",
+      "caption": "Scraping that follows the rules.\n\nThe Solvix Scraper collects public data only and works in polite mode, respecting each site's rules.\nPick a website, press start, download your spreadsheet.\n\nLink in bio, or message us.\n\n#webscraping #dataautomation #python #nocode"
+    },
+    {
+      "date": "2026-11-22",
+      "title": "post-12-bulk-updater",
+      "image": "post-12-bulk-updater.jpg",
+      "caption": "One typo in 200 prices?\n\nEditing by hand makes mistakes.\nWith the Bulk Product Updater you see a preview of every change before it goes live, and you can undo.\n(Practice shop with made-up products, for example.)\n\nMessage us to try it.\n\n#shopify #ecommerce #dropshipping #smallbusiness"
+    },
+    {
+      "date": "2026-11-23",
+      "title": "post-18-website-ad-04",
+      "image": "post-18-website-ad-04.jpg",
+      "caption": "It's 3 a.m. You're asleep. Your website isn't.\n\nIt shows your work, answers common questions and collects messages from customers in other time zones.\nMessages in the picture are examples.\n\nMessage us to hire your night shift.\n\n#webdesign #website #smallbusiness #solvix"
+    },
+    {
+      "date": "2026-11-24",
+      "title": "post-13-ad-maker",
+      "image": "post-13-ad-maker.jpg",
+      "caption": "Cat scratching the sofa?\n\nThat is the hook of a good ad: one short, clear problem.\nOur Ad Maker writes the hook, the fix and the caption for your product.\nExample ad shown.\n\nMessage us to get yours.\n\n#videoad #petproducts #ecommerce #contentcreation"
+    },
+    {
+      "date": "2026-11-25",
+      "title": "post-14-websites",
+      "image": "post-14-websites.jpg",
+      "caption": "Light or dark, your site can fit.\n\nEvery brand is different, so we design the look to match your business, including a dark mode if you want one.\nShown: our own site, Solvix Pet Shelf, in dark mode.\n\nMessage us to plan your website.\n\n#webdesign #darkmode #website #smallbusiness"
+    },
+    {
+      "date": "2026-11-26",
+      "title": "post-19-website-ad-05",
+      "image": "post-19-website-ad-05.jpg",
+      "caption": "People are searching for what you sell right now.\n\nWith no website, they find someone else. A website gives them a way to find you, see your prices and book.\nIllustration only: a website helps people find you, but no one can promise the top spot in search.\n\nMessage us to get found online.\n\n#webdesign #localbusiness #smallbusiness #solvix"
+    }
+  ]
+}
