@@ -125,7 +125,10 @@ class Rules(unittest.TestCase):
     def test_caption_starts_with_ad_and_says_ai_only_when_true(self):
         ai, card = robot.compose_caption(GOOD, True), robot.compose_caption(GOOD, False)
         self.assertTrue(ai.startswith("#ad "))
-        self.assertIn("As an Amazon Associate", ai)
+        for text in (ai, card):     # boss, 7 Nov 2026: no earnings or Amazon lines in captions
+            self.assertNotIn("earn", text.lower())
+            self.assertNotIn("commission", text.lower())
+            self.assertNotIn("amazon", text.lower())
         self.assertIn("Picture made with AI", ai)
         self.assertNotIn("made with AI", card)
         self.assertIn("#dogs #petcare", ai)

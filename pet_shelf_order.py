@@ -70,8 +70,8 @@ PAPER, INK, FOREST, TERRACOTTA = "#f4efe6", "#1f2a24", "#2f4a3a", "#b5532a"
 SIZE = 1080
 VIDEO_SECONDS, VIDEO_FPS = 10, 30
 
-DISCLOSURE = ("Affiliate links on our shelf may earn us a small commission. "
-              "As an Amazon Associate I earn from qualifying purchases.")
+# Boss, 7 Nov 2026: no lines about earnings or Amazon in posts or captions. "#ad" at the very start
+# of every caption (and on every picture) is the label. The Amazon Associates statement lives on the website.
 
 def post_detail_query(post_id):
     """Written the same way as the status question in buffer_post.py, which is proven on the real Buffer."""
@@ -320,9 +320,10 @@ def clean_hashtags(tags):
 
 def compose_caption(writing, ai_picture):
     """The final caption. #ad comes first, because the UK rule wants it at the very start."""
-    note = DISCLOSURE + (" Picture made with AI." if ai_picture else "")
     tags = " ".join(f"#{tag}" for tag in clean_hashtags(writing["hashtags"]))
-    caption = f"#ad {writing['caption']}\n\nFind more on the shelf: {SITE}\n\n{note}"
+    caption = f"#ad {writing['caption']}\n\nFind more on the shelf: {SITE}"
+    if ai_picture:
+        caption += "\n\nPicture made with AI."
     return f"{caption}\n\n{tags}" if tags else caption
 
 
@@ -431,7 +432,7 @@ def video_frame(picture, hook, ai_picture):
     frame.paste(square(picture).resize((900, 900)), (90, 310))
     chosen, wrapped = fit_text(draw, hook, 900, 300, start=84)
     draw.multiline_text((90, 1250), wrapped, font=chosen, fill=INK, spacing=16)
-    small = "#ad  We may earn a commission from links." + ("  Picture made with AI." if ai_picture else "")
+    small = "#ad" + ("  ·  Picture made with AI." if ai_picture else "")
     chosen, wrapped = fit_text(draw, small, 900, 90, start=32, serif=False)
     draw.multiline_text((90, 1640), wrapped, font=chosen, fill=FOREST, spacing=8)
     return frame
