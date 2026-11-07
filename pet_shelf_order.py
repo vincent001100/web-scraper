@@ -45,7 +45,12 @@ MEDIA_DIR = "pet-shelf-media-checkout"
 RECORD = "buffer-posts.json"
 # A finished advert the team designed (boss, 7 Nov 2026: more creative adverts, real product pictures).
 # It is saved first in ready/ on the media branch; the robot then only writes the words and posts it.
-READY_PICTURE = re.compile(r"ready/[A-Za-z0-9][A-Za-z0-9._-]*\.(?:jpg|jpeg|png)$")
+READY_PICTURE = re.compile(r"ready/[A-Za-z0-9][A-Za-z0-9._/-]*\.(?:jpg|jpeg|png)$")
+# Boss, 7 Nov 2026: slides and sound. A ready order can list several files, separated by commas:
+#   several pictures         -> a slides post (carousel), first picture first
+#   one .mp4 + pictures      -> a video post with that video (our slideshow with music); first picture = cover
+READY_VIDEO = re.compile(r"ready/[A-Za-z0-9][A-Za-z0-9._/-]*\.mp4$")
+MAX_SLIDES = 10                             # Instagram's carousel limit
 LAGOS = timezone(timedelta(hours=1))        # Nigeria has no summer time
 DEFAULT_HOUR, DEFAULT_MINUTE = 19, 30       # "next sensible time": 19:30 Lagos, marketing/calendar.md
 DEFAULT_LEAD = timedelta(minutes=30)
@@ -128,9 +133,21 @@ def read_order(env):
         raise OrderProblem(f"The mode must be post or draft, not '{order['mode']}'.")
     if order["reference"] and not re.match(r"https?://\S+$", order["reference"]):
         raise OrderProblem("The reference link must be a full web address starting with http.")
-    if order["picture"] and not READY_PICTURE.match(order["picture"]):
-        raise OrderProblem("A ready picture must be a file in the ready/ folder of the pet-shelf-media branch, "
-                           "like ready/2026-11-08-cat-window.jpg.")
+    files = [f.strip() for f in order["picture"].split(",") if f.strip()]
+    if any(".." in f or not (READY_PICTURE.match(f) or READY_VIDEO.match(f)) for f in files):
+        raise OrderProblem("Ready files must be in the ready/ folder of the pet-shelf-media branch, "
+                           "like ready/2026-11-08-cat-window.jpg (pictures) or ready/x/slides-video.mp4 (video).")
+    videos = [f for f in files if READY_VIDEO.match(f)]
+    pictures = [f for f in files if READY_PICTURE.match(f)]
+    if len(videos) > 1:
+        raise OrderProblem("Give at most one ready video.")
+    if videos and not pictures:
+        raise OrderProblem("A ready video also needs one picture for its cover (list it after the video).")
+    if len(pictures) > MAX_SLIDES:
+        raise OrderProblem(f"At most {MAX_SLIDES} slides in one post.")
+    order["ready_pictures"], order["ready_video"] = pictures, (videos[0] if videos else "")
+    if videos:
+        order["type"] = "video"
     if order["picture_ai"] not in ("yes", "no"):
         raise OrderProblem(f"picture_ai must be yes or no, not '{order['picture_ai']}'.")
     return order
@@ -558,6 +575,8 @@ def build_post(service, channel_id, caption, urls, hook, ai_picture, plan, draft
     video = "video" in urls
     if video:
         post["assets"] = [{"video": {"url": urls["video"], "metadata": {"title": hook}}}]
+    elif urls.get("slides"):
+        post["assets"] = [{"image": {"url": url}} for url in urls["slides"]]    # one picture per item
     kind = "reel" if video else "post"
     post["metadata"] = {
         "facebook": {"facebook": {"type": kind}},
@@ -672,7 +691,7 @@ def load_ready_picture(name, base=None):
     """Open a team advert from ready/ on the media branch: a real picture, saved as a plain RGB image."""
     from PIL import Image
     path = os.path.join(base or MEDIA_DIR, name)
-    if not READY_PICTURE.match(name) or not os.path.isfile(path):
+    if ".." in name or not READY_PICTURE.match(name) or not os.path.isfile(path):
         raise OrderProblem(f"The ready picture {name} is not on the pet-shelf-media branch, so I have not posted.")
     try:
         with Image.open(path) as img:
@@ -692,16 +711,25 @@ def make_content(order, env, folder_path):
     writing = write_post(order, hint, env.get("GEMINI_API_KEY"))
 
     if order.get("picture"):
-        final = load_ready_picture(order["picture"])
+        pictures = order.get("ready_pictures") or [order["picture"]]
         ai_picture = order.get("picture_ai", "yes") == "yes"
         os.makedirs(folder_path, exist_ok=True)
+        final = load_ready_picture(pictures[0])
         final.save(os.path.join(folder_path, "post.jpg"), quality=92)
-        if order["type"] == "video":
+        for number, name in enumerate(pictures[1:], start=2):
+            load_ready_picture(name).save(os.path.join(folder_path, f"slide-{number}.jpg"), quality=92)
+        if order.get("ready_video"):
+            source = os.path.join(MEDIA_DIR, order["ready_video"])
+            if not os.path.isfile(source):
+                raise OrderProblem(f"The ready video {order['ready_video']} is not on the pet-shelf-media branch.")
+            shutil.copyfile(source, os.path.join(folder_path, "video.mp4"))
+        elif order["type"] == "video":
             make_video(final, writing["hook"], ai_picture, os.path.join(folder_path, "video.mp4"))
         caption = compose_caption(writing, ai_picture)
         with open(os.path.join(folder_path, "caption.txt"), "w", encoding="utf-8") as f:
             f.write(caption)
         return {"hook": writing["hook"], "caption": caption, "ai_picture": ai_picture,
+                "slides": len(pictures) if not order.get("ready_video") else 1,
                 "picture_source": f"team advert ({order['picture']})"}
 
     # Never send the brief itself: advert wording makes the model draw garbled text into the picture.
@@ -782,8 +810,12 @@ def run_order(env, clock=now_utc):
     urls = {"picture": media_url(env, folder, "post.jpg")}
     if order["type"] == "video":
         urls["video"] = media_url(env, folder, "video.mp4")
+    elif details.get("slides", 1) > 1:
+        urls["slides"] = [urls["picture"]] + [media_url(env, folder, f"slide-{n}.jpg")
+                                              for n in range(2, details["slides"] + 1)]
     try:
-        check_picture_is_public(urls["picture"])
+        for url in urls.get("slides", [urls["picture"]]):
+            check_picture_is_public(url)
     except BufferError as problem:
         raise OrderProblem(str(problem))
     if "video" in urls:

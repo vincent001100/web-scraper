@@ -32,7 +32,7 @@ on:
         type: string
         required: false
       picture:
-        description: "Optional: a finished advert in ready/ on the pet-shelf-media branch (e.g. ready/2026-11-08-cat-window.jpg). Blank = the robot draws one"
+        description: "Optional ready files in ready/ on pet-shelf-media, comma separated. One picture = picture post; several = slides; a .mp4 + a cover picture = video with sound. Blank = the robot draws one"
         type: string
         required: false
       picture_ai:

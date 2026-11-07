@@ -161,6 +161,49 @@ class ReadyPictures(unittest.TestCase):
                 robot.load_ready_picture("ready/missing.jpg", base=tmp)
 
 
+class SlidesAndSound(unittest.TestCase):
+    """Boss, 7 Nov 2026: post slides, and add sound (our slideshow video with our own music)."""
+    base = {"ORDER_BRIEF": "x", "ORDER_MODE": "draft"}
+
+    def test_reading_slides_and_video_orders(self):
+        o = robot.read_order(dict(self.base, ORDER_PICTURE="ready/a/s1.png, ready/a/s2.png,ready/a/s3.png"))
+        self.assertEqual((o["ready_pictures"], o["ready_video"], o["type"]),
+                         (["ready/a/s1.png", "ready/a/s2.png", "ready/a/s3.png"], "", "picture"))
+        o = robot.read_order(dict(self.base, ORDER_PICTURE="ready/a/v.mp4,ready/a/s1.png"))
+        self.assertEqual((o["ready_video"], o["type"]), ("ready/a/v.mp4", "video"))
+        for bad in ("ready/a/v.mp4", "ready/a/v.mp4,ready/b/w.mp4,ready/c.png", "ready/a/../../x.png",
+                    ",".join(f"ready/s{i}.png" for i in range(11))):
+            with self.assertRaises(robot.OrderProblem):
+                robot.read_order(dict(self.base, ORDER_PICTURE=bad))
+
+    def test_slides_become_one_picture_per_item(self):
+        plan = robot.Plan("customScheduled", datetime(2030, 1, 1, tzinfo=timezone.utc), None)
+        urls = {"picture": "https://x/1.jpg", "slides": ["https://x/1.jpg", "https://x/2.jpg"]}
+        post = robot.build_post("instagram", "ig1", "#ad hi", urls, "hook", True, plan, False)
+        self.assertEqual(post["assets"], [{"image": {"url": "https://x/1.jpg"}}, {"image": {"url": "https://x/2.jpg"}}])
+
+    def test_ready_video_and_slides_are_saved(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as media, tempfile.TemporaryDirectory() as out, \
+                mock.patch.object(robot, "MEDIA_DIR", media), \
+                mock.patch.object(robot, "write_post", return_value=dict(GOOD)), \
+                mock.patch.object(robot, "draw_cloudflare_picture", side_effect=AssertionError("no drawing")):
+            os.makedirs(os.path.join(media, "ready", "a"))
+            for n in (1, 2):
+                Image.new("RGB", (1080, 1350), "white").save(os.path.join(media, "ready", "a", f"s{n}.png"))
+            with open(os.path.join(media, "ready", "a", "v.mp4"), "wb") as f:
+                f.write(b"fake video")
+            slides = robot.read_order(dict(self.base, ORDER_PICTURE="ready/a/s1.png,ready/a/s2.png"))
+            details = robot.make_content(slides, {}, os.path.join(out, "one"))
+            self.assertEqual(details["slides"], 2)
+            self.assertTrue(os.path.exists(os.path.join(out, "one", "slide-2.jpg")))
+            video = robot.read_order(dict(self.base, ORDER_PICTURE="ready/a/v.mp4,ready/a/s1.png"))
+            details = robot.make_content(video, {}, os.path.join(out, "two"))
+            with open(os.path.join(out, "two", "video.mp4"), "rb") as f:
+                self.assertEqual(f.read(), b"fake video")
+            self.assertNotIn("made with AI", details["caption"])
+
+
 class Reply:
     def __init__(self, status, payload=None, content=b"", kind="application/json"):
         self.status_code, self.payload, self.content = status, payload, content
