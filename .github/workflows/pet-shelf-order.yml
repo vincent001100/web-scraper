@@ -36,7 +36,7 @@ on:
         type: string
         required: false
       picture_ai:
-        description: "Does that ready picture contain AI-made images? (adds 'Picture made with AI.')"
+        description: "Does that ready picture contain AI-made images? (turns on the platform's own AI switch where it has one)"
         type: choice
         default: "yes"
         options:

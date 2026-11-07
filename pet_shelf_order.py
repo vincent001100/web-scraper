@@ -329,11 +329,11 @@ def clean_hashtags(tags):
 
 
 def compose_caption(writing, ai_picture):
-    """The final caption. #ad comes first, because the UK rule wants it at the very start."""
+    """The final caption. #ad comes first, because the UK rule wants it at the very start.
+    Boss, 7 Nov 2026: no "Picture made with AI" line in captions or on pictures. Where the platform has
+    its own AI switch (Instagram; TikTok videos), the robot still turns it on, see build_post."""
     tags = " ".join(f"#{tag}" for tag in clean_hashtags(writing["hashtags"]))
     caption = f"#ad {writing['caption']}\n\nFind more on the shelf: {SITE}"
-    if ai_picture:
-        caption += "\n\nPicture made with AI."
     return f"{caption}\n\n{tags}" if tags else caption
 
 
@@ -442,7 +442,7 @@ def video_frame(picture, hook, ai_picture):
     frame.paste(square(picture).resize((900, 900)), (90, 310))
     chosen, wrapped = fit_text(draw, hook, 900, 300, start=84)
     draw.multiline_text((90, 1250), wrapped, font=chosen, fill=INK, spacing=16)
-    small = "#ad" + ("  ·  Picture made with AI." if ai_picture else "")
+    small = "#ad"
     chosen, wrapped = fit_text(draw, small, 900, 90, start=32, serif=False)
     draw.multiline_text((90, 1640), wrapped, font=chosen, fill=FOREST, spacing=8)
     return frame
@@ -566,7 +566,7 @@ def build_post(service, channel_id, caption, urls, hook, ai_picture, plan, draft
     }[service]
     if service == "tiktok" and video:
         # Buffer refuses this switch on TikTok photo posts ("do not support AI content disclosure",
-        # seen 4 Nov 2026). There the caption's "Picture made with AI" line is the label.
+        # seen 4 Nov 2026), so TikTok photo posts carry no AI switch.
         post["metadata"]["tiktok"]["isAiGenerated"] = ai_picture
     return post
 

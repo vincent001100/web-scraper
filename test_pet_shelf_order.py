@@ -122,14 +122,14 @@ class Rules(unittest.TestCase):
         with self.assertRaises(robot.OrderProblem):
             robot.write_post({"brief": "x"}, "", "k", lambda p, k: bad)
 
-    def test_caption_starts_with_ad_and_says_ai_only_when_true(self):
+    def test_caption_starts_with_ad_and_has_no_earnings_or_ai_lines(self):
         ai, card = robot.compose_caption(GOOD, True), robot.compose_caption(GOOD, False)
         self.assertTrue(ai.startswith("#ad "))
         for text in (ai, card):     # boss, 7 Nov 2026: no earnings or Amazon lines in captions
             self.assertNotIn("earn", text.lower())
             self.assertNotIn("commission", text.lower())
             self.assertNotIn("amazon", text.lower())
-        self.assertIn("Picture made with AI", ai)
+        self.assertNotIn("made with AI", ai)      # boss, 7 Nov 2026: no visible AI line
         self.assertNotIn("made with AI", card)
         self.assertIn("#dogs #petcare", ai)
         self.assertNotIn("#Amazon", ai.lower().replace("amazon associate", ""))
