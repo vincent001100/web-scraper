@@ -161,6 +161,13 @@ class ReadyPictures(unittest.TestCase):
                 robot.load_ready_picture("ready/missing.jpg", base=tmp)
 
 
+class TeamAdvertsOnly(unittest.TestCase):
+    def test_a_post_without_a_team_advert_is_refused(self):
+        with self.assertRaises(robot.OrderProblem):
+            robot.read_order({"ORDER_BRIEF": "x", "ORDER_MODE": "post"})
+        self.assertEqual(robot.read_order({"ORDER_BRIEF": "x", "ORDER_MODE": "post", "ORDER_ALLOW_DRAWING": "yes"})["picture"], "")
+
+
 class SlidesAndSound(unittest.TestCase):
     """Boss, 7 Nov 2026: post slides, and add sound (our slideshow video with our own music)."""
     base = {"ORDER_BRIEF": "x", "ORDER_MODE": "draft"}

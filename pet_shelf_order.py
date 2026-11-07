@@ -133,6 +133,11 @@ def read_order(env):
         raise OrderProblem(f"The mode must be post or draft, not '{order['mode']}'.")
     if order["reference"] and not re.match(r"https?://\S+$", order["reference"]):
         raise OrderProblem("The reference link must be a full web address starting with http.")
+    # Boss, 7 Nov 2026: he did not like the robot's own AI drawings. Every post must be a finished
+    # advert the team designed (in ready/), so a blank picture is refused unless a test allows drawing.
+    if not order["picture"] and env.get("ORDER_ALLOW_DRAWING") != "yes":
+        raise OrderProblem("Every Pet Shelf post must use a finished team advert from ready/ (boss, 7 Nov 2026). "
+                           "Give the picture field, for example ready/2026-11-08-cat-window-v2.jpg.")
     files = [f.strip() for f in order["picture"].split(",") if f.strip()]
     if any(".." in f or not (READY_PICTURE.match(f) or READY_VIDEO.match(f)) for f in files):
         raise OrderProblem("Ready files must be in the ready/ folder of the pet-shelf-media branch, "
