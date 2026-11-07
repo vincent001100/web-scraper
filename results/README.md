@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 08 Nov 2026: Tablet Store (21 records)
+
+[Data (CSV)](2026-11-08_tablets/data.csv) · [Caption](2026-11-08_tablets/caption.txt)
+
+![Tablet Store](2026-11-08_tablets/post.png)
+
 ## 07 Nov 2026: Countries of the World (250 records)
 
 [Data (CSV)](2026-11-07_countries/data.csv) · [Caption](2026-11-07_countries/caption.txt)
