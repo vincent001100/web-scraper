@@ -124,8 +124,8 @@ def read_order(env):
         "mode": (env.get("ORDER_MODE") or "").strip().lower(),
         "picture": (env.get("ORDER_PICTURE") or "").strip(),
         "picture_ai": (env.get("ORDER_PICTURE_AI") or "yes").strip().lower(),
-        "caption": (env.get("ORDER_CAPTION") or "").strip(),
-        "hashtags": (env.get("ORDER_HASHTAGS") or "").strip(),
+        "team_caption": (env.get("ORDER_CAPTION") or "").strip(),
+        "team_hashtags": (env.get("ORDER_HASHTAGS") or "").strip(),
     }
     if not order["brief"]:
         raise OrderProblem("The order has no idea or brief, so there is nothing to make.")
@@ -719,11 +719,11 @@ def load_ready_picture(name, base=None):
 def make_content(order, env, folder_path):
     """Write the words and make the media. Returns the details that the Buffer step needs."""
     hint = reference_hint(order["reference"])
-    if order.get("caption"):
+    if order.get("team_caption"):
         # The team wrote the words (boss saw them before booking). Same rules as Gemini's words.
-        words = order["caption"].replace("\\n", "\n")
+        words = order["team_caption"].replace("\\n", "\n")
         writing = {"hook": " ".join(re.split(r"[.!?]", words)[0].split()[:6]), "caption": words,
-                   "hashtags": [t.strip().lstrip("#") for t in re.split(r"[,\s]+", order.get("hashtags", "")) if t.strip()],
+                   "hashtags": [t.strip().lstrip("#") for t in re.split(r"[,\s]+", order.get("team_hashtags", "")) if t.strip()],
                    "picture_prompt": "team advert"}
         problems = rule_problems(writing, hint)
         if problems:

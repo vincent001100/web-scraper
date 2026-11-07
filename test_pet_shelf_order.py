@@ -177,6 +177,14 @@ class TeamCaptions(unittest.TestCase):
         self.assertEqual(details["caption"],
                          "#ad Muddy paws in the car?\nYour seats stay clean.\n\n👉 Link in bio\n\n#dogs #roadtrip")
 
+    def test_order_details_never_overwrite_the_final_caption(self):
+        # 7 Nov 2026: details.update(order) once replaced the caption with the bare team words (no #ad).
+        order = robot.read_order({"ORDER_BRIEF": "x", "ORDER_MODE": "draft", "ORDER_PICTURE": "ready/a.png",
+                                  "ORDER_CAPTION": "Hello there."})
+        details = {"caption": "#ad Hello there.\n\n👉 Link in bio"}
+        details.update(order)
+        self.assertTrue(details["caption"].startswith("#ad "))
+
     def test_team_caption_follows_the_rules(self):
         env = {"ORDER_BRIEF": "x", "ORDER_MODE": "draft", "ORDER_PICTURE": "ready/a.png",
                "ORDER_CAPTION": "Only $5 today! Visit https://example.com"}
