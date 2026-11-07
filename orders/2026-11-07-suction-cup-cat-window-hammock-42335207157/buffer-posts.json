@@ -1,0 +1,32 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6aee9e95229bf05daf26da8d",
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-suction-cup-cat-window-hammock-42335207157/post.jpg",
+      "due_at": "2026-11-08T08:00:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6aee9e95004e4879a7303e7f",
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-suction-cup-cat-window-hammock-42335207157/post.jpg",
+      "due_at": "2026-11-08T08:00:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6aee9e96d6bbae6fa16258f3",
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-07-suction-cup-cat-window-hammock-42335207157/post.jpg",
+      "due_at": "2026-11-08T08:00:00.000Z"
+    }
+  ]
+}
