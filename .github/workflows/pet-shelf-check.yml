@@ -1,0 +1,26 @@
+# Read-only: asks Buffer what really happened to every Pet Shelf post we booked (sent, error...).
+# From the phone: Actions, Pet Shelf check, Run workflow. Changes nothing.
+name: Pet Shelf check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install helper tools
+        run: pip install requests==2.34.2 pillow==13.0.0
+      # Only the Pet Shelf Buffer key. BUFFER_API_KEY (Solvix) must never be added here.
+      - name: Ask Buffer about every booked post
+        env:
+          PET_SHELF_BUFFER_API_KEY: ${{ secrets.PET_SHELF_BUFFER_API_KEY }}
+        run: python pet_shelf_check.py
