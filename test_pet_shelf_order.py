@@ -192,6 +192,19 @@ class TeamCaptions(unittest.TestCase):
             robot.make_content(robot.read_order(env), {}, out)
 
 
+class TikTokGetsVideo(unittest.TestCase):
+    """7-9 Nov 2026: TikTok refused every single-picture post, but took videos and slides."""
+
+    def test_tiktok_gets_the_video_while_facebook_and_instagram_keep_the_picture(self):
+        plan = robot.Plan("customScheduled", datetime(2030, 1, 1, tzinfo=timezone.utc), None)
+        urls = {"picture": "https://x/post.jpg", "tiktok_video": "https://x/tiktok.mp4"}
+        tiktok = robot.build_post("tiktok", "tt1", "#ad hi", urls, "hook", True, plan, False)
+        self.assertEqual(tiktok["assets"][0]["video"]["url"], "https://x/tiktok.mp4")
+        for service in ("facebook", "instagram"):
+            post = robot.build_post(service, "c1", "#ad hi", urls, "hook", True, plan, False)
+            self.assertEqual(post["assets"], [{"image": {"url": "https://x/post.jpg"}}])
+
+
 class TeamAdvertsOnly(unittest.TestCase):
     def test_a_post_without_a_team_advert_is_refused(self):
         with self.assertRaises(robot.OrderProblem):

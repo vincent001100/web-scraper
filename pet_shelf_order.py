@@ -491,6 +491,42 @@ def make_video(picture, hook, ai_picture, path):
         raise OrderProblem(f"FFmpeg could not make the video: {result.stderr[-300:]}")
 
 
+TIKTOK_VIDEO_SECONDS = 8
+
+
+def make_tiktok_video(advert, path, seconds=TIKTOK_VIDEO_SECONDS):
+    """TikTok refused every single-picture post from Buffer (7-9 Nov 2026: "media hit some delays while
+    processing") but took videos and slides. So a picture advert also becomes a short vertical video for
+    TikTok: the whole advert on our paper background, a gentle zoom, and our own music."""
+    import wave
+    import imageio_ffmpeg
+    import numpy as np
+    from PIL import Image
+    import pet_shelf_music
+    frames = seconds * VIDEO_FPS
+    with tempfile.TemporaryDirectory() as work:
+        frame = Image.new("RGB", (SIZE, 1920), PAPER)
+        picture = advert.convert("RGB")
+        picture = picture.resize((SIZE, round(picture.height * SIZE / picture.width)))
+        if picture.height > 1920:
+            picture = picture.crop((0, 0, SIZE, 1920))
+        frame.paste(picture, (0, (1920 - picture.height) // 2))
+        still = os.path.join(work, "frame.png")
+        frame.save(still)
+        music = os.path.join(work, "music.wav")
+        data = (pet_shelf_music.song(seconds) * 32767).astype(np.int16)
+        with wave.open(music, "wb") as w:
+            w.setnchannels(1); w.setsampwidth(2); w.setframerate(pet_shelf_music.SR); w.writeframes(data.tobytes())
+        zoom = (f"scale=2160:3840,zoompan=z='min(1+0.04*on/{frames},1.04)':d={frames}:"
+                f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s=1080x1920:fps={VIDEO_FPS}")
+        command = [imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", still, "-i", music,
+                   "-vf", zoom, "-frames:v", str(frames), "-t", str(seconds), "-c:v", "libx264",
+                   "-pix_fmt", "yuv420p", "-c:a", "aac", "-ac", "2", "-movflags", "+faststart", path]
+        result = subprocess.run(command, capture_output=True, text=True)
+    if result.returncode != 0 or not os.path.exists(path):
+        raise OrderProblem(f"FFmpeg could not make the TikTok video: {result.stderr[-300:]}")
+
+
 # =============================================================================================
 # 4. THE PUBLIC MEDIA BRANCH
 # =============================================================================================
@@ -580,9 +616,9 @@ def pick_channels(channels):
 def build_post(service, channel_id, caption, urls, hook, ai_picture, plan, draft):
     """Start from the Solvix post shape, then swap in the video and the Pet Shelf details."""
     post = build_input(service, channel_id, caption, urls["picture"], plan, draft)
-    video = "video" in urls
+    video = "video" in urls or (service == "tiktok" and "tiktok_video" in urls)
     if video:
-        post["assets"] = [{"video": {"url": urls["video"], "metadata": {"title": hook}}}]
+        post["assets"] = [{"video": {"url": urls.get("video") or urls["tiktok_video"], "metadata": {"title": hook}}}]
     elif urls.get("slides"):
         post["assets"] = [{"image": {"url": url}} for url in urls["slides"]]    # one picture per item
     kind = "reel" if video else "post"
@@ -746,11 +782,15 @@ def make_content(order, env, folder_path):
             shutil.copyfile(source, os.path.join(folder_path, "video.mp4"))
         elif order["type"] == "video":
             make_video(final, writing["hook"], ai_picture, os.path.join(folder_path, "video.mp4"))
+        tiktok_video = order["type"] == "picture" and len(pictures) == 1
+        if tiktok_video:
+            make_tiktok_video(final, os.path.join(folder_path, "tiktok.mp4"))
         caption = compose_caption(writing, ai_picture)
         with open(os.path.join(folder_path, "caption.txt"), "w", encoding="utf-8") as f:
             f.write(caption)
         return {"hook": writing["hook"], "caption": caption, "ai_picture": ai_picture,
                 "slides": len(pictures) if not order.get("ready_video") else 1,
+                "tiktok_video": tiktok_video,
                 "picture_source": f"team advert ({order['picture']})"}
 
     # Never send the brief itself: advert wording makes the model draw garbled text into the picture.
@@ -831,7 +871,9 @@ def run_order(env, clock=now_utc):
     urls = {"picture": media_url(env, folder, "post.jpg")}
     if order["type"] == "video":
         urls["video"] = media_url(env, folder, "video.mp4")
-    elif details.get("slides", 1) > 1:
+    elif details.get("tiktok_video"):
+        urls["tiktok_video"] = media_url(env, folder, "tiktok.mp4")
+    if order["type"] != "video" and details.get("slides", 1) > 1:
         urls["slides"] = [urls["picture"]] + [media_url(env, folder, f"slide-{n}.jpg")
                                               for n in range(2, details["slides"] + 1)]
     try:
@@ -839,8 +881,9 @@ def run_order(env, clock=now_utc):
             check_picture_is_public(url)
     except BufferError as problem:
         raise OrderProblem(str(problem))
-    if "video" in urls:
-        check_video_is_public(urls["video"])
+    for key in ("video", "tiktok_video"):
+        if key in urls:
+            check_video_is_public(urls[key])
 
     def save(posts):
         with open(os.path.join(path, RECORD), "w", encoding="utf-8") as f:
