@@ -1,0 +1,45 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af4fa2b3d8c751bfdff5341",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-leash-clip-poop-bag-and-43119998462q3/post.jpg",
+      "due_at": "2026-11-12T15:00:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6af4fa2b77f44b6536020bbd",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-leash-clip-poop-bag-and-43119998462q3/post.jpg",
+      "due_at": "2026-11-12T15:00:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af4fa2cbc9f3773a1a9043b",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-leash-clip-poop-bag-and-43119998462q3/tiktok.mp4",
+      "due_at": "2026-11-12T15:00:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6af4fa2c304f8985c4705ded",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-leash-clip-poop-bag-and-43119998462q3/post.jpg",
+      "due_at": "2026-11-12T15:00:00.000Z"
+    }
+  ]
+}
