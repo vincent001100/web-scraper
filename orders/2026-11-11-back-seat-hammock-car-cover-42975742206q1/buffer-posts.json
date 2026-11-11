@@ -7,7 +7,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6af41155095081ea08bed8f9",
       "asset_count": 3,
-      "status": "draft",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-back-seat-hammock-car-cover-42975742206q1/post.jpg",
       "due_at": null
     },
@@ -17,7 +17,7 @@
       "channel_name": "Solvix Pet Shelf",
       "post_id": "6af41155a9d779009b8d40b6",
       "asset_count": 3,
-      "status": "draft",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-back-seat-hammock-car-cover-42975742206q1/post.jpg",
       "due_at": null
     },
@@ -27,7 +27,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6af41155e324ad28736fde85",
       "asset_count": 3,
-      "status": "draft",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-back-seat-hammock-car-cover-42975742206q1/post.jpg",
       "due_at": null
     }
