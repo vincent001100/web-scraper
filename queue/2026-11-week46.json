@@ -35,14 +35,14 @@
       "status": "approved"
     },
     {
-      "id": "2026-11-12-1930-cat-harness",
+      "id": "2026-11-12-1930-video-car-seat-hammock",
       "date": "2026-11-12",
       "time": "19:30",
-      "type": "picture",
-      "picture": "ready/2026-11-12-cat-harness.jpg",
-      "brief": "Escape-resistant cat harness and leash.",
-      "caption": "Does your indoor cat want to explore outside?\nThis snug harness and leash let you take short walks together.\nAlways stay with your cat, and stop if they panic.",
-      "hashtags": "cats, indoorcats, catowners, adventurecat",
+      "type": "video",
+      "picture": "ready/videos/car-seat-hammock.mp4,ready/videos/car-seat-hammock-cover.jpg",
+      "brief": "Motion video with voiceover: car seat hammock",
+      "caption": "Muddy paws in the car? 🐾\nThis cover goes over your back seat like a hammock.\nYour dog can jump in dirty. Your seats stay clean.\nMeasure your back seat first.",
+      "hashtags": "dogs, cartrips, dogowners, petcare",
       "status": "approved"
     }
   ]
