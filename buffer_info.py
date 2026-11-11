@@ -39,6 +39,13 @@ def main():
                              f"disconnected={c.get('isDisconnected')}")
                 for bd in ((c.get("metadata") or {}).get("boards") or []):
                     lines.append(f"      board '{bd.get('name')}' serviceId {bd.get('serviceId')}")
+                if c.get("service") == "pinterest":   # show exactly what Buffer returns
+                    try:
+                        raw = b.ask("query { channels(input: { organizationId: " + json.dumps(o["id"]) + " }) { id service "
+                                    "metadata { __typename ... on PinterestMetadata { boards { id serviceId name url } } } } }")
+                        lines.append("      raw: " + json.dumps([x for x in raw.get("channels") or [] if x.get("id") == c.get("id")]))
+                    except BufferError as e:
+                        lines.append(f"      raw metadata not available: {e}")
     except (BufferError, KeyError, TypeError) as e:
         lines.append(f"(channel details not available: {e})")
     for n in ("CreatePostInput", "PostInputMetaData", "PinterestPostMetaDataInput", "PinterestMetaDataInput", "PinterestPostInput", "Channel", "Service"):
