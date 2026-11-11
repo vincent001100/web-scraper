@@ -1,10 +1,10 @@
 {
-  "about": "Pet Shelf queue. Booked automatically the evening before by pet_shelf_queue.py. Boss rule 11 Nov 2026: previews go to boss; no reply by 08:00 = posts go out. Stop a post: status hold.",
+  "about": "Pet Shelf queue. Booked automatically the evening before by pet_shelf_queue.py. Boss rule 11 Nov 2026: previews go to boss; no reply by 08:00 = posts go out. Stop a post: status hold. 11 Nov: the 09:00 post moved to 02:00 Lagos (8 pm New York) for US shoppers (boss approved idea 3).",
   "posts": [
     {
-      "id": "2026-11-12-0900-raised-bowls",
+      "id": "2026-11-12-0200-raised-bowls",
       "date": "2026-11-12",
-      "time": "09:00",
+      "time": "02:00",
       "type": "picture",
       "picture": "ready/2026-11-12-raised-bowls.jpg",
       "brief": "Height-adjustable raised dog bowls.",

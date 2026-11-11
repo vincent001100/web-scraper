@@ -1,10 +1,10 @@
 {
-  "about": "Pet Shelf queue, Fri 13 - Wed 18 Nov 2026. Booked automatically the evening before. Boss rule: no reply by 08:00 = posts go out.",
+  "about": "Pet Shelf queue, Fri 13 - Wed 18 Nov 2026. Booked automatically the evening before. Boss rule: no reply by 08:00 = posts go out. 11 Nov: the 09:00 post moved to 02:00 Lagos (8 pm New York) for US shoppers (boss approved idea 3).",
   "posts": [
     {
-      "id": "2026-11-13-0900-honest-paw-cleaner-cup",
+      "id": "2026-11-13-0200-honest-paw-cleaner-cup",
       "date": "2026-11-13",
-      "time": "09:00",
+      "time": "02:00",
       "type": "picture",
       "picture": "ready/2026-11-13-honest-paw-cleaner-cup.jpg",
       "brief": "Dog paw cleaner cup (medium)",
@@ -46,9 +46,9 @@
       "status": "approved"
     },
     {
-      "id": "2026-11-14-0900-kit-walk-kit",
+      "id": "2026-11-14-0200-kit-walk-kit",
       "date": "2026-11-14",
-      "time": "09:00",
+      "time": "02:00",
       "type": "picture",
       "picture": "ready/2026-11-14-kit-walk-kit.jpg",
       "brief": "Collapsible silicone travel bowl with clip and Leash-clip bag and treat holder",
@@ -90,9 +90,9 @@
       "status": "approved"
     },
     {
-      "id": "2026-11-15-0900-swipe-lick-mat",
+      "id": "2026-11-15-0200-swipe-lick-mat",
       "date": "2026-11-15",
-      "time": "09:00",
+      "time": "02:00",
       "type": "picture",
       "picture": "ready/2026-11-15-swipe-lick-mat-s1.jpg,ready/2026-11-15-swipe-lick-mat-s2.jpg,ready/2026-11-15-swipe-lick-mat-s3.jpg",
       "brief": "Wobble lick bowl for treats and wet food",
@@ -134,9 +134,9 @@
       "status": "approved"
     },
     {
-      "id": "2026-11-16-0900-honest-travel-water-bowl",
+      "id": "2026-11-16-0200-honest-travel-water-bowl",
       "date": "2026-11-16",
-      "time": "09:00",
+      "time": "02:00",
       "type": "picture",
       "picture": "ready/2026-11-16-honest-travel-water-bowl.jpg",
       "brief": "Collapsible silicone travel bowl with clip",
@@ -178,9 +178,9 @@
       "status": "approved"
     },
     {
-      "id": "2026-11-17-0900-swipe-cat-litter-mat",
+      "id": "2026-11-17-0200-swipe-cat-litter-mat",
       "date": "2026-11-17",
-      "time": "09:00",
+      "time": "02:00",
       "type": "picture",
       "picture": "ready/2026-11-17-swipe-cat-litter-mat-s1.jpg,ready/2026-11-17-swipe-cat-litter-mat-s2.jpg,ready/2026-11-17-swipe-cat-litter-mat-s3.jpg",
       "brief": "Double-layer cat litter mat",
@@ -222,9 +222,9 @@
       "status": "approved"
     },
     {
-      "id": "2026-11-18-0900-honest-lick-mat",
+      "id": "2026-11-18-0200-honest-lick-mat",
       "date": "2026-11-18",
-      "time": "09:00",
+      "time": "02:00",
       "type": "picture",
       "picture": "ready/2026-11-18-honest-lick-mat.jpg",
       "brief": "Wobble lick bowl for treats and wet food",
