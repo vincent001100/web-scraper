@@ -7,7 +7,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6af40ca19a3abc82a1d4e3d9",
       "asset_count": 1,
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-collapsible-silicone-travel-water-bowl-42973427000/post.jpg",
       "due_at": "2026-11-11T08:00:00.000Z"
     },
@@ -17,7 +17,7 @@
       "channel_name": "Solvix Pet Shelf",
       "post_id": "6af40ca1095081ea08bdaf56",
       "asset_count": 1,
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-collapsible-silicone-travel-water-bowl-42973427000/post.jpg",
       "due_at": "2026-11-11T08:00:00.000Z"
     },
@@ -27,7 +27,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6af40ca2a9d779009b8c0fec",
       "asset_count": 1,
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-collapsible-silicone-travel-water-bowl-42973427000/tiktok.mp4",
       "due_at": "2026-11-11T08:00:00.000Z"
     }
