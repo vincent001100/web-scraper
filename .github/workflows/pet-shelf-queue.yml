@@ -39,10 +39,11 @@ jobs:
           python-version: "3.12"
       - name: Install helper tools
         run: pip install requests==2.34.2 pillow==13.0.0 imageio-ffmpeg==0.6.0 numpy==2.5.3
-      # Only the Pet Shelf Buffer key. BUFFER_API_KEY (Solvix) must never be added here.
+      # Only the Pet Shelf Buffer keys. BUFFER_API_KEY (Solvix) must never be added here.
       - name: Book the next queued posts
         env:
           PET_SHELF_BUFFER_API_KEY: ${{ secrets.PET_SHELF_BUFFER_API_KEY }}
+          PINTEREST_BUFFER_API_KEY: ${{ secrets.PINTEREST_BUFFER_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           QUEUE_ONLY: ${{ inputs.only }}
           QUEUE_MODE: ${{ inputs.mode }}

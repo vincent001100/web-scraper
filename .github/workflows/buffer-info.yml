@@ -7,7 +7,7 @@ on:
         description: "Which Buffer account"
         type: choice
         default: pet-shelf
-        options: [pet-shelf, solvix]
+        options: [pet-shelf, pinterest, solvix]
 permissions:
   contents: read
 jobs:
@@ -24,5 +24,6 @@ jobs:
         env:
           WHICH: ${{ inputs.which }}
           PET_SHELF_BUFFER_API_KEY: ${{ inputs.which == 'pet-shelf' && secrets.PET_SHELF_BUFFER_API_KEY || '' }}
+          PINTEREST_BUFFER_API_KEY: ${{ inputs.which == 'pinterest' && secrets.PINTEREST_BUFFER_API_KEY || '' }}
           BUFFER_API_KEY: ${{ inputs.which == 'solvix' && secrets.BUFFER_API_KEY || '' }}
         run: python buffer_info.py

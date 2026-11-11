@@ -22,7 +22,8 @@ def describe(b, name):
 
 def main():
     which = (os.environ.get("WHICH") or "pet-shelf").strip()
-    key = os.environ.get("PET_SHELF_BUFFER_API_KEY" if which == "pet-shelf" else "BUFFER_API_KEY")
+    key = os.environ.get({"pet-shelf": "PET_SHELF_BUFFER_API_KEY", "pinterest": "PINTEREST_BUFFER_API_KEY"}
+                         .get(which, "BUFFER_API_KEY"))
     b = Buffer(key)
     lines = [f"Buffer account: {which}", "Channels:"]
     for c in b.channels():

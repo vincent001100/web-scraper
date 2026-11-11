@@ -80,10 +80,11 @@ jobs:
         run: pip install requests==2.34.2 pillow==13.0.0 imageio-ffmpeg==0.6.0 numpy==2.5.3
 
       # The order arrives as settings, never pasted into the command, so its words cannot run as code.
-      # Only the Pet Shelf Buffer key is given to this job. BUFFER_API_KEY (Solvix) must never be added.
+      # Only the Pet Shelf Buffer keys are given to this job. BUFFER_API_KEY (Solvix) must never be added.
       - name: Make the post and send it to Buffer
         env:
           PET_SHELF_BUFFER_API_KEY: ${{ secrets.PET_SHELF_BUFFER_API_KEY }}
+          PINTEREST_BUFFER_API_KEY: ${{ secrets.PINTEREST_BUFFER_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

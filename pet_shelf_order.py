@@ -9,8 +9,10 @@ THE FLOW (all on GitHub Actions, the PC can be off)
   -> Buffer gets one post each for Pet Shelf Facebook, Instagram and TikTok.
 
 SAFETY
-  * Key: only PET_SHELF_BUFFER_API_KEY. The Solvix key never reaches this robot, and if a Solvix
-    channel ever shows up the robot stops before making anything.
+  * Keys: PET_SHELF_BUFFER_API_KEY (Facebook, Instagram, TikTok) and, optional, PINTEREST_BUFFER_API_KEY
+    (the 3rd free Buffer account that holds only the Pet Shelf Pinterest, 11 Nov 2026). The Solvix key
+    never reaches this robot, and if a Solvix channel ever shows up the robot stops before making anything.
+    A Pinterest problem never stops the other posts: Pinterest is skipped with a warning.
   * mode=draft saves Buffer drafts. A post that does not come back as a draft is deleted at once.
   * Every post starts with #ad. Prices, reviews and copied words are refused (see rule_problems).
   * A reference link is inspiration only: we read its title and short description to learn the
@@ -71,7 +73,9 @@ PICTURE_STYLE = (" Original product picture, soft natural light, square. "
 # The only channels this robot may use. Names are what Buffer shows; TikTok may show either name.
 PET_SHELF_NAMES = {"facebook": {"solvix pet shelf"}, "instagram": {"solvixpetshelf"},
                    "tiktok": {"solvixpetshelf", "small problems"}}
-# Pinterest is extra: used when the Pet Shelf Buffer has it, skipped when it does not. Its name must start with "solvix".
+# Pinterest is extra: used when the Pet Shelf Buffer has it, or else when PINTEREST_BUFFER_API_KEY is set
+# (a separate free Buffer account, because the free plan allows only 3 channels). Skipped when neither has it.
+# Its name must start with "solvix".
 PINTEREST = "pinterest"
 PIN_LINK = SITE + "?src=pin"                 # the pin itself links to the shop, so no "link in bio" there
 PIN_TITLE_MAX, PIN_TEXT_MAX = 100, 500       # Pinterest's own limits
@@ -632,6 +636,36 @@ def pick_channels(channels):
     return chosen
 
 
+def pick_pinterest_channel(channels):
+    """The one Pet Shelf Pinterest channel in the separate Pinterest Buffer account. Any doubt stops Pinterest."""
+    if any(c["id"] in SOLVIX_CHANNEL_IDS for c in channels):
+        raise OrderProblem("The PINTEREST_BUFFER_API_KEY can see a Solvix channel, so Pinterest was skipped. "
+                           "It must be the key from the Pinterest-only Buffer account.")
+    matches = [c for c in channels if c["service"] == PINTEREST]
+    if len(matches) != 1:
+        raise OrderProblem(f"I need exactly one Pinterest channel in the Pinterest Buffer account and found "
+                           f"{len(matches)}, so Pinterest was skipped.")
+    if not matches[0]["name"].strip().lower().startswith("solvix"):
+        raise OrderProblem(f"The Pinterest channel is called '{matches[0]['name']}', which is not a Pet Shelf "
+                           "name I know, so Pinterest was skipped.")
+    return matches[0]
+
+
+def connect_pinterest(env, targets, make_buffer=None):
+    """Add the Pinterest channel from the separate Pinterest Buffer account, when it is set up.
+    Returns that account's Buffer helper (or None). Never raises: Pinterest trouble is only a warning."""
+    key = (env.get("PINTEREST_BUFFER_API_KEY") or "").strip()
+    if not key or PINTEREST in targets:
+        return None
+    try:
+        pin_buffer = (make_buffer or Buffer)(key)
+        targets[PINTEREST] = pick_pinterest_channel(pin_buffer.channels())
+        return pin_buffer
+    except (BufferError, OrderProblem) as problem:
+        warn(f"Pinterest skipped: {str(problem).replace('BUFFER_API_KEY', 'PINTEREST_BUFFER_API_KEY')}")
+        return None
+
+
 def pinterest_boards(buffer, channel_id):
     """The boards of one Pinterest channel in Buffer: a list of {serviceId, name}."""
     fields = "id metadata { ... on PinterestMetadata { boards { serviceId name } } }"
@@ -754,9 +788,12 @@ def check_post(buffer, item, plan, draft, caption, clock, expected_assets=1):
 
 
 def send_to_buffer(buffer, targets, caption, urls, hook, ai_picture, plan, draft, earlier, save, clock=now_utc,
-                   pin=None):
+                   pin=None, pin_buffer=None):
     """Create one post per channel, then confirm each with Buffer. Tries every channel, then raises
-    if any one failed. save(posts) writes the record after each post, so a re-run never doubles up."""
+    if any one failed. save(posts) writes the record after each post, so a re-run never doubles up.
+    pin_buffer: the separate Pinterest Buffer account, when Pinterest lives there."""
+    def account(service):
+        return pin_buffer if service == PINTEREST and pin_buffer is not None else buffer
     posts = list(earlier)
     failed = []
     done = {p["service"] for p in earlier}
@@ -767,7 +804,7 @@ def send_to_buffer(buffer, targets, caption, urls, hook, ai_picture, plan, draft
             continue
         channel = targets[service]
         try:
-            post = buffer.create_post(build_post(service, channel["id"], caption, urls, hook,
+            post = account(service).create_post(build_post(service, channel["id"], caption, urls, hook,
                                                  ai_picture, plan, draft, pin))
         except BufferError as problem:
             failed.append(f"{LABEL[service]}: {problem}")
@@ -784,7 +821,7 @@ def send_to_buffer(buffer, targets, caption, urls, hook, ai_picture, plan, draft
     for item in new:
         try:
             assets = 1 if item["service"] == PINTEREST else len(urls.get("slides") or [1])
-            problem = check_post(buffer, item, plan, draft, caption, clock, assets)
+            problem = check_post(account(item["service"]), item, plan, draft, caption, clock, assets)
         except BufferError as trouble:
             problem = f"it was created, but I could not confirm it ({trouble})"
         if problem:
@@ -900,10 +937,11 @@ def run_order(env, clock=now_utc):
     except BufferError as problem:
         raise OrderProblem(str(problem).replace("BUFFER_API_KEY", "PET_SHELF_BUFFER_API_KEY"))
     targets = pick_channels(channels)
+    pin_buffer = connect_pinterest(env, targets)
     pin = None
     if PINTEREST in targets:
         try:
-            boards = pinterest_boards(buffer, targets[PINTEREST]["id"])
+            boards = pinterest_boards(pin_buffer or buffer, targets[PINTEREST]["id"])
         except BufferError as problem:
             boards = []
             warn(f"I could not read the Pinterest boards ({problem}).")
@@ -974,7 +1012,7 @@ def run_order(env, clock=now_utc):
 
     try:
         posts = send_to_buffer(buffer, targets, caption, urls, details["hook"], details["ai_picture"],
-                               plan, draft, earlier, save, clock, pin)
+                               plan, draft, earlier, save, clock, pin, pin_buffer)
     finally:
         save_media(f"Buffer record for {folder}")   # saved even after a failure, so a re-run cannot double up
 

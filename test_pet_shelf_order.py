@@ -486,5 +486,62 @@ class Pinterest(unittest.TestCase):
         self.assertEqual(queue.order_env(entry, {}, "1", 1, "draft")["ORDER_BOARD"], "Indoor Cat Must-Haves")
 
 
+class SecondPinterestAccountTest(unittest.TestCase):
+    """Pinterest in its own free Buffer account (PINTEREST_BUFFER_API_KEY), 11 Nov 2026."""
+
+    def pin_account(self, channels):
+        class Account(FakeBuffer):
+            def channels(self_inner):
+                return channels
+        return Account()
+
+    def test_pinterest_comes_from_the_second_account(self):
+        account = self.pin_account([PIN_CHANNEL])
+        targets = robot.pick_channels(CHANNELS)
+        got = robot.connect_pinterest({"PINTEREST_BUFFER_API_KEY": "k"}, targets, lambda key: account)
+        self.assertIs(got, account)
+        self.assertEqual(targets["pinterest"]["id"], "pin")
+
+    def test_no_key_means_no_pinterest_and_no_change(self):
+        targets = robot.pick_channels(CHANNELS)
+        self.assertIsNone(robot.connect_pinterest({}, targets, lambda key: self.fail("no account wanted")))
+        self.assertNotIn("pinterest", targets)
+
+    def test_pinterest_in_the_main_account_wins(self):
+        targets = robot.pick_channels(CHANNELS + [PIN_CHANNEL])
+        self.assertIsNone(robot.connect_pinterest({"PINTEREST_BUFFER_API_KEY": "k"}, targets,
+                                                  lambda key: self.fail("not needed")))
+
+    def test_trouble_only_skips_pinterest(self):
+        solvix = {"id": next(iter(robot.SOLVIX_CHANNEL_IDS)), "name": "solvix", "service": "facebook", "paused": False}
+        bad_sets = [[], [solvix, PIN_CHANNEL], [dict(PIN_CHANNEL, name="someone else")],
+                    [PIN_CHANNEL, dict(PIN_CHANNEL, id="pin2")]]
+        for channels in bad_sets:
+            targets = robot.pick_channels(CHANNELS)
+            with mock.patch.object(robot, "warn") as warned:
+                self.assertIsNone(robot.connect_pinterest({"PINTEREST_BUFFER_API_KEY": "k"}, targets,
+                                                          lambda key: self.pin_account(channels)))
+            self.assertNotIn("pinterest", targets)
+            warned.assert_called_once()
+
+        def broken(key):
+            raise BufferError("Buffer did not accept the key")
+        targets = robot.pick_channels(CHANNELS)
+        with mock.patch.object(robot, "warn"):
+            self.assertIsNone(robot.connect_pinterest({"PINTEREST_BUFFER_API_KEY": "k"}, targets, broken))
+
+    def test_pin_goes_to_the_second_account_and_the_rest_to_the_main_one(self):
+        main, pins = FakeBuffer(), FakeBuffer()
+        targets = robot.pick_channels(CHANNELS)
+        targets["pinterest"] = PIN_CHANNEL
+        posts = robot.send_to_buffer(main, targets, "#ad hello\n\n👉 Link in bio", URLS, "Hook", True,
+                                     plan_now(NOW), True, [], lambda p: None, lambda: NOW,
+                                     {"board": BOARDS[0], "title": "T"}, pins)
+        self.assertEqual({p["service"] for p in posts}, {"facebook", "instagram", "tiktok", "pinterest"})
+        self.assertEqual([p["channelId"] for p in pins.created], ["pin"])
+        self.assertEqual(sorted(p["channelId"] for p in main.created), ["fb", "ig", "tt"])
+        self.assertNotIn("Link in bio", pins.created[0]["text"])
+
+
 if __name__ == "__main__":
     unittest.main()
