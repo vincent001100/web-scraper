@@ -7,7 +7,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6af40ce41da76fd3d2c72b07",
       "asset_count": 1,
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-ceramic-slow-feeder-cat-bowl-42973566112/post.jpg",
       "due_at": "2026-11-11T15:00:00.000Z"
     },
@@ -17,7 +17,7 @@
       "channel_name": "Solvix Pet Shelf",
       "post_id": "6af40ce4e324ad28736eaf89",
       "asset_count": 1,
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-ceramic-slow-feeder-cat-bowl-42973566112/post.jpg",
       "due_at": "2026-11-11T15:00:00.000Z"
     },
@@ -27,7 +27,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6af40ce49a3abc82a1d4f087",
       "asset_count": 1,
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-ceramic-slow-feeder-cat-bowl-42973566112/tiktok.mp4",
       "due_at": "2026-11-11T15:00:00.000Z"
     }
