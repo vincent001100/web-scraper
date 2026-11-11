@@ -1,0 +1,49 @@
+# Pet Shelf weekly queue: books the next day's approved posts by itself (boss, 11 Nov 2026).
+# The posts live in queue/*.json on the pet-shelf-media branch. Each one goes through the normal
+# order robot, so every rule and check applies. By hand: Actions, Pet Shelf queue, Run workflow.
+name: Pet Shelf queue
+
+on:
+  schedule:
+    - cron: "13 17 * * *"      # 18:13 Lagos: books tomorrow's posts
+    - cron: "17 5 * * *"       # 06:17 Lagos: backup, in case the evening run was late or failed
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "Optional: book just this queue id now (blank = everything due in the next 36 hours)"
+        type: string
+        required: false
+      mode:
+        description: "post = book for real. draft = Buffer drafts only"
+        type: choice
+        default: post
+        options:
+          - post
+          - draft
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pet-shelf-order       # never at the same time as a single order or a cancel
+  cancel-in-progress: false
+
+jobs:
+  queue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install helper tools
+        run: pip install requests==2.34.2 pillow==13.0.0 imageio-ffmpeg==0.6.0 numpy==2.5.3
+      # Only the Pet Shelf Buffer key. BUFFER_API_KEY (Solvix) must never be added here.
+      - name: Book the next queued posts
+        env:
+          PET_SHELF_BUFFER_API_KEY: ${{ secrets.PET_SHELF_BUFFER_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          QUEUE_ONLY: ${{ inputs.only }}
+          QUEUE_MODE: ${{ inputs.mode }}
+        run: python pet_shelf_queue.py

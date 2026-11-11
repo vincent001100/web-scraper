@@ -126,6 +126,7 @@ def read_order(env):
         "picture_ai": (env.get("ORDER_PICTURE_AI") or "yes").strip().lower(),
         "team_caption": (env.get("ORDER_CAPTION") or "").strip(),
         "team_hashtags": (env.get("ORDER_HASHTAGS") or "").strip(),
+        "queue_id": (env.get("ORDER_QUEUE_ID") or "").strip(),     # set by pet_shelf_queue.py
     }
     if not order["brief"]:
         raise OrderProblem("The order has no idea or brief, so there is nothing to make.")
