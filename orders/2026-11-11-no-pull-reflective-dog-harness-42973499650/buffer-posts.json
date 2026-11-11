@@ -7,7 +7,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6af40cc59a3abc82a1d4eaa5",
       "asset_count": 1,
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-no-pull-reflective-dog-harness-42973499650/post.jpg",
       "due_at": "2026-11-11T11:30:00.000Z"
     },
@@ -17,7 +17,7 @@
       "channel_name": "Solvix Pet Shelf",
       "post_id": "6af40cc5095081ea08bdb8ba",
       "asset_count": 1,
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-no-pull-reflective-dog-harness-42973499650/post.jpg",
       "due_at": "2026-11-11T11:30:00.000Z"
     },
@@ -27,7 +27,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6af40cc51da76fd3d2c723f3",
       "asset_count": 1,
-      "status": "scheduled",
+      "status": "deleted",
       "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-no-pull-reflective-dog-harness-42973499650/tiktok.mp4",
       "due_at": "2026-11-11T11:30:00.000Z"
     }
