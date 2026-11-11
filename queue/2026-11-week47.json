@@ -1,0 +1,269 @@
+{
+  "about": "Pet Shelf queue, Fri 13 - Wed 18 Nov 2026. Booked automatically the evening before. Boss rule: no reply by 08:00 = posts go out.",
+  "posts": [
+    {
+      "id": "2026-11-13-0900-honest-paw-cleaner-cup",
+      "date": "2026-11-13",
+      "time": "09:00",
+      "type": "picture",
+      "picture": "ready/2026-11-13-honest-paw-cleaner-cup.jpg",
+      "brief": "Dog paw cleaner cup (medium)",
+      "caption": "Muddy paws at the door?\nThis dog paw cleaner cup (medium): twist the paw in the cup and wipe it clean.\nGood for: muddy walks, medium-size paws. Not for: dogs with paws wider than the cup, so measure first.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-13-1230-swipe-car-seat-hammock",
+      "date": "2026-11-13",
+      "time": "12:30",
+      "type": "picture",
+      "picture": "ready/2026-11-13-swipe-car-seat-hammock-s1.jpg,ready/2026-11-13-swipe-car-seat-hammock-s2.jpg,ready/2026-11-13-swipe-car-seat-hammock-s3.jpg",
+      "brief": "Back-seat hammock car cover",
+      "caption": "Swipe through 👉 Muddy paws in the car?\nCovers the back seat like a hammock.\nGood for car trips with a dog.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-13-1600-kit-cat-play",
+      "date": "2026-11-13",
+      "time": "16:00",
+      "type": "picture",
+      "picture": "ready/2026-11-13-kit-cat-play.jpg",
+      "brief": "Retractable cat wand with feather refills and Tall sisal cat scratching post (50 inch)",
+      "caption": "A feather wand for playtime and a tall post for scratching, so the sofa gets a break.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-13-1930-honest-cat-backpack-carrier",
+      "date": "2026-11-13",
+      "time": "19:30",
+      "type": "picture",
+      "picture": "ready/2026-11-13-honest-cat-backpack-carrier.jpg",
+      "brief": "Expandable cat backpack carrier",
+      "caption": "Vet trip stress?\nThis expandable cat backpack carrier: soft backpack carrier that expands.\nGood for: vet trips, short travel. Not for: anyone flying, until you check your airline's size rules.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-14-0900-kit-walk-kit",
+      "date": "2026-11-14",
+      "time": "09:00",
+      "type": "picture",
+      "picture": "ready/2026-11-14-kit-walk-kit.jpg",
+      "brief": "Collapsible silicone travel bowl with clip and Leash-clip bag and treat holder",
+      "caption": "Two small things for better walks: a folding water bowl and a pouch for bags and treats, both clip to the lead.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-14-1230-honest-slow-feeder-cat-bowl",
+      "date": "2026-11-14",
+      "time": "12:30",
+      "type": "picture",
+      "picture": "ready/2026-11-14-honest-slow-feeder-cat-bowl.jpg",
+      "brief": "Ceramic slow-feeder cat bowl",
+      "caption": "Cat gulps food?\nThis ceramic slow-feeder cat bowl: wide, shallow bowl with a maze pattern slows each bite.\nGood for: fast eaters, whisker-friendly shallow bowl. Not for: cats that ignore maze bowls, and anyone who needs a bigger portion.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-14-1600-swipe-cat-window-hammock",
+      "date": "2026-11-14",
+      "time": "16:00",
+      "type": "picture",
+      "picture": "ready/2026-11-14-swipe-cat-window-hammock-s1.jpg,ready/2026-11-14-swipe-cat-window-hammock-s2.jpg,ready/2026-11-14-swipe-cat-window-hammock-s3.jpg",
+      "brief": "Suction-cup cat window hammock",
+      "caption": "Swipe through 👉 Cat loves the window?\nWindow-mounted seat for watching outside.\nGood for indoor cats, sunny windows.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-14-1930-honest-raised-double-bowls",
+      "date": "2026-11-14",
+      "time": "19:30",
+      "type": "picture",
+      "picture": "ready/2026-11-14-honest-raised-double-bowls.jpg",
+      "brief": "Height-adjustable raised dog bowls",
+      "caption": "Big dog, low bowl?\nThis height-adjustable raised dog bowls: stand lifts the bowls, with several height settings.\nGood for: medium and large dogs. Not for: very small dogs, if the lowest setting is still too high.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-15-0900-swipe-lick-mat",
+      "date": "2026-11-15",
+      "time": "09:00",
+      "type": "picture",
+      "picture": "ready/2026-11-15-swipe-lick-mat-s1.jpg,ready/2026-11-15-swipe-lick-mat-s2.jpg,ready/2026-11-15-swipe-lick-mat-s3.jpg",
+      "brief": "Wobble lick bowl for treats and wet food",
+      "caption": "Swipe through 👉 Dinner gone in seconds?\nSpread food in the bowl so licking takes longer.\nGood for mealtime, bath time and quiet time.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-15-1230-honest-cat-wand-toy",
+      "date": "2026-11-15",
+      "time": "12:30",
+      "type": "picture",
+      "picture": "ready/2026-11-15-honest-cat-wand-toy.jpg",
+      "brief": "Retractable cat wand with feather refills",
+      "caption": "Bored indoor cat?\nThis retractable cat wand with feather refills: wand toy with spare feather and worm heads.\nGood for: play sessions with an indoor cat. Not for: cats that chew toys, so put it away after play.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-15-1600-kit-mud-season",
+      "date": "2026-11-15",
+      "time": "16:00",
+      "type": "picture",
+      "picture": "ready/2026-11-15-kit-mud-season.jpg",
+      "brief": "Dog paw cleaner cup (medium) and Back-seat hammock car cover",
+      "caption": "Rainy days mean muddy paws. A paw cup cleans them at the door, and a seat cover keeps the car clean.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-15-1930-honest-folding-dog-ramp",
+      "date": "2026-11-15",
+      "time": "19:30",
+      "type": "picture",
+      "picture": "ready/2026-11-15-honest-folding-dog-ramp.jpg",
+      "brief": "Folding wooden dog ramp",
+      "caption": "Hard to jump up?\nThis folding wooden dog ramp: a ramp gives a gentler way up.\nGood for: small and older dogs, beds and couches. Not for: furniture taller than the ramp reaches, so check the heights.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-16-0900-honest-travel-water-bowl",
+      "date": "2026-11-16",
+      "time": "09:00",
+      "type": "picture",
+      "picture": "ready/2026-11-16-honest-travel-water-bowl.jpg",
+      "brief": "Collapsible silicone travel bowl with clip",
+      "caption": "No water on walks?\nThis collapsible silicone travel bowl with clip: folds flat and clips to a bag or leash.\nGood for: hikes, car trips and parks. Not for: very big dogs on the small size, so check the cup size.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-16-1230-kit-cat-explorer",
+      "date": "2026-11-16",
+      "time": "12:30",
+      "type": "picture",
+      "picture": "ready/2026-11-16-kit-cat-explorer.jpg",
+      "brief": "Escape-resistant cat harness and leash and Suction-cup cat window hammock",
+      "caption": "A harness for short supervised walks outside, and a window seat for watching the world inside.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-16-1600-swipe-tall-scratching-post",
+      "date": "2026-11-16",
+      "time": "16:00",
+      "type": "picture",
+      "picture": "ready/2026-11-16-swipe-tall-scratching-post-s1.jpg,ready/2026-11-16-swipe-tall-scratching-post-s2.jpg,ready/2026-11-16-swipe-tall-scratching-post-s3.jpg",
+      "brief": "Tall sisal cat scratching post (50 inch)",
+      "caption": "Swipe through 👉 Sofa scratched again?\nTall, heavy-based post cats can stretch against.\nGood for large cats, scratching on the sofa.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-16-1930-honest-walk-bag-holder",
+      "date": "2026-11-16",
+      "time": "19:30",
+      "type": "picture",
+      "picture": "ready/2026-11-16-honest-walk-bag-holder.jpg",
+      "brief": "Leash-clip bag and treat holder",
+      "caption": "Hands full on walks?\nThis leash-clip bag and treat holder: clips to the leash and holds bags and treats.\nGood for: daily walks. Not for: anyone who wants a big pouch, since it is small.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-17-0900-swipe-cat-litter-mat",
+      "date": "2026-11-17",
+      "time": "09:00",
+      "type": "picture",
+      "picture": "ready/2026-11-17-swipe-cat-litter-mat-s1.jpg,ready/2026-11-17-swipe-cat-litter-mat-s2.jpg,ready/2026-11-17-swipe-cat-litter-mat-s3.jpg",
+      "brief": "Double-layer cat litter mat",
+      "caption": "Swipe through 👉 Litter on the floor?\nMat catches litter from paws before it spreads.\nGood for cats that kick litter.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-17-1230-honest-no-pull-harness",
+      "date": "2026-11-17",
+      "time": "12:30",
+      "type": "picture",
+      "picture": "ready/2026-11-17-honest-no-pull-harness.jpg",
+      "brief": "No-pull reflective dog harness",
+      "caption": "Dark evening walks?\nThis no-pull reflective dog harness: padded harness with reflective trim and a handle.\nGood for: daily walks, evening walks. Not for: dogs between sizes, so measure chest and neck first.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-17-1600-kit-dog-dinner",
+      "date": "2026-11-17",
+      "time": "16:00",
+      "type": "picture",
+      "picture": "ready/2026-11-17-kit-dog-dinner.jpg",
+      "brief": "Wobble lick bowl for treats and wet food and Height-adjustable raised dog bowls",
+      "caption": "A lick bowl makes food last longer. A raised stand helps bigger dogs eat without bending low.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-17-1930-honest-cat-harness",
+      "date": "2026-11-17",
+      "time": "19:30",
+      "type": "picture",
+      "picture": "ready/2026-11-17-honest-cat-harness.jpg",
+      "brief": "Escape-resistant cat harness and leash",
+      "caption": "Cat wants outside?\nThis escape-resistant cat harness and leash: snug harness and leash for supervised walks.\nGood for: calm cats, supervised time outside. Not for: cats that panic in a harness, or loose fits.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-18-0900-honest-lick-mat",
+      "date": "2026-11-18",
+      "time": "09:00",
+      "type": "picture",
+      "picture": "ready/2026-11-18-honest-lick-mat.jpg",
+      "brief": "Wobble lick bowl for treats and wet food",
+      "caption": "Dinner gone in seconds?\nThis wobble lick bowl for treats and wet food: spread food in the bowl so licking takes longer.\nGood for: mealtime, bath time and quiet time. Not for: dogs that chew or tear soft rubber.",
+      "hashtags": "dogs, dogowners, doglovers, dogwalks",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-18-1230-swipe-cat-backpack-carrier",
+      "date": "2026-11-18",
+      "time": "12:30",
+      "type": "picture",
+      "picture": "ready/2026-11-18-swipe-cat-backpack-carrier-s1.jpg,ready/2026-11-18-swipe-cat-backpack-carrier-s2.jpg,ready/2026-11-18-swipe-cat-backpack-carrier-s3.jpg",
+      "brief": "Expandable cat backpack carrier",
+      "caption": "Swipe through 👉 Vet trip stress?\nSoft backpack carrier that expands.\nGood for vet trips, short travel.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-18-1600-kit-cat-tidy",
+      "date": "2026-11-18",
+      "time": "16:00",
+      "type": "picture",
+      "picture": "ready/2026-11-18-kit-cat-tidy.jpg",
+      "brief": "Double-layer cat litter mat and Ceramic slow-feeder cat bowl",
+      "caption": "A litter mat catches most of the mess by the box, and a slow-feeder bowl helps fast eaters.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    },
+    {
+      "id": "2026-11-18-1930-honest-cat-window-hammock",
+      "date": "2026-11-18",
+      "time": "19:30",
+      "type": "picture",
+      "picture": "ready/2026-11-18-honest-cat-window-hammock.jpg",
+      "brief": "Suction-cup cat window hammock",
+      "caption": "Cat loves the window?\nThis suction-cup cat window hammock: window-mounted seat for watching outside.\nGood for: indoor cats, sunny windows. Not for: very heavy cats, or windows the cups cannot grip.",
+      "hashtags": "cats, catowners, indoorcats, catlovers",
+      "status": "approved"
+    }
+  ]
+}
