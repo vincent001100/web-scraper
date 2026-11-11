@@ -27,6 +27,19 @@ def main():
     lines = [f"Buffer account: {which}", "Channels:"]
     for c in b.channels():
         lines.append(f"  - {c['service']:<10} '{c['name']}'  id {c['id']}")
+    try:   # every channel with its locked/disconnected state, and Pinterest boards
+        orgs = (b.ask("query { account { organizations { id name } } }").get("account") or {}).get("organizations") or []
+        for o in orgs:
+            lines.append(f"Organization '{o.get('name')}' ({o.get('id')}):")
+            q = ("query { channels(input: { organizationId: " + json.dumps(o["id"]) + " }) { id name service "
+                 "isLocked isDisconnected metadata { ... on PinterestMetadata { boards { serviceId name } } } } }")
+            for c in b.ask(q).get("channels") or []:
+                lines.append(f"  - {c.get('service')} '{c.get('name')}' locked={c.get('isLocked')} "
+                             f"disconnected={c.get('isDisconnected')}")
+                for bd in ((c.get("metadata") or {}).get("boards") or []):
+                    lines.append(f"      board '{bd.get('name')}' serviceId {bd.get('serviceId')}")
+    except (BufferError, KeyError, TypeError) as e:
+        lines.append(f"(channel details not available: {e})")
     for n in ("CreatePostInput", "PostInputMetaData", "PinterestPostMetaDataInput", "PinterestMetaDataInput", "PinterestPostInput", "Channel", "Service"):
         lines.append(describe(b, n))
     # find every input type whose name mentions Pinterest

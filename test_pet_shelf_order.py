@@ -417,5 +417,74 @@ class Sending(unittest.TestCase):
         self.assertNotIn("isAiGenerated", post["metadata"]["tiktok"])
 
 
+BOARDS = [{"serviceId": "b-dog", "name": "Dog Gear That Fixes Things"},
+          {"serviceId": "b-cat", "name": "Indoor Cat Must-Haves"},
+          {"serviceId": "b-walk", "name": "Dog Walking Essentials"},
+          {"serviceId": "b-small", "name": "Small Pet & Hamster Cage Ideas"}]
+PIN_CHANNEL = {"id": "pin", "name": "solvixpetsupplies", "service": "pinterest", "paused": False}
+
+
+class Pinterest(unittest.TestCase):
+    def test_pinterest_is_optional_and_must_be_ours(self):
+        self.assertNotIn("pinterest", robot.pick_channels(CHANNELS))
+        self.assertEqual(robot.pick_channels(CHANNELS + [PIN_CHANNEL])["pinterest"]["id"], "pin")
+        with self.assertRaises(robot.OrderProblem):
+            robot.pick_channels(CHANNELS + [dict(PIN_CHANNEL, name="someone else")])
+        with self.assertRaises(robot.OrderProblem):
+            robot.pick_channels(CHANNELS + [PIN_CHANNEL, dict(PIN_CHANNEL, id="pin2")])
+
+    def test_the_board_follows_the_product(self):
+        pick = lambda words, wanted="": robot.choose_board(BOARDS, wanted, words)["serviceId"]
+        self.assertEqual(pick("Height-adjustable raised dog bowls."), "b-dog")
+        self.assertEqual(pick("Cat window perch for indoor cats"), "b-cat")
+        self.assertEqual(pick("No-pull dog harness"), "b-walk")
+        self.assertEqual(pick("Rabbit litter box with drawer"), "b-small")
+        self.assertEqual(pick("Cat window perch", "Dog Walking Essentials"), "b-walk")   # the order wins
+        self.assertIsNone(robot.choose_board([], "", "dog"))
+
+    def test_a_pin_has_one_picture_a_board_a_title_and_the_shop_link(self):
+        urls = dict(URLS, video="https://example.com/v.mp4",
+                    slides=["https://example.com/post.jpg", "https://example.com/slide-2.jpg"])
+        pin = {"board": BOARDS[0], "title": "Raised dog bowls"}
+        caption = "#ad Big dog bends low to eat?\n\n👉 Link in bio\n\n#dogs"
+        post = robot.build_post("pinterest", "pin", caption, urls, "Hook", True, plan_now(NOW), True, pin)
+        self.assertEqual(post["assets"], [{"image": {"url": URLS["picture"]}}])
+        self.assertEqual(post["metadata"], {"pinterest": {"boardServiceId": "b-dog", "title": "Raised dog bowls",
+                                                          "url": "https://solvix-shelf.pages.dev/?src=pin"}})
+        self.assertTrue(post["text"].startswith("#ad "))
+        self.assertNotIn("Link in bio", post["text"])
+        self.assertTrue(post["saveToDraft"])
+
+    def test_title_and_text_fit_pinterest_limits(self):
+        self.assertEqual(robot.pin_title("Raised dog bowls.", ""), "Raised dog bowls")
+        self.assertLessEqual(len(robot.pin_title("word " * 60, "")), 100)
+        self.assertLessEqual(len(robot.pin_text("#ad " + "word " * 200)), 500)
+
+    def test_pinterest_is_sent_with_the_others_and_checked_as_one_picture(self):
+        buffer = FakeBuffer()
+        targets = robot.pick_channels(CHANNELS + [PIN_CHANNEL])
+        urls = dict(URLS, slides=["https://example.com/post.jpg"])
+        posts = robot.send_to_buffer(buffer, targets, "#ad hello\n\n👉 Link in bio", urls, "Hook", True,
+                                     plan_now(NOW), True, [], lambda p: None, lambda: NOW,
+                                     {"board": BOARDS[0], "title": "T"})
+        self.assertEqual({p["service"] for p in posts}, {"facebook", "instagram", "tiktok", "pinterest"})
+
+    def test_boards_are_read_from_the_channel(self):
+        class Boards:
+            def ask(self, query, variables=None):
+                if "organizations" in query:
+                    return {"account": {"organizations": [{"id": "o1"}]}}
+                return {"channels": [{"id": "ig", "metadata": {}},
+                                     {"id": "pin", "metadata": {"boards": BOARDS + [{"name": "no id"}]}}]}
+        self.assertEqual(robot.pinterest_boards(Boards(), "pin"), BOARDS)
+        self.assertEqual(robot.pinterest_boards(Boards(), "missing"), [])
+
+    def test_the_queue_passes_the_board(self):
+        import pet_shelf_queue as queue
+        entry = {"id": "x", "date": "2026-11-12", "time": "02:00", "picture": "ready/a.jpg", "caption": "Hi",
+                 "board": "Indoor Cat Must-Haves"}
+        self.assertEqual(queue.order_env(entry, {}, "1", 1, "draft")["ORDER_BOARD"], "Indoor Cat Must-Haves")
+
+
 if __name__ == "__main__":
     unittest.main()

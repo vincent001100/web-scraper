@@ -35,7 +35,7 @@ import time
 import traceback
 from datetime import datetime, timedelta, timezone
 
-from buffer_post import (Buffer, BufferError, LABEL, MIN_LEAD, Plan, SERVICES, build_input, buffer_time,
+from buffer_post import (Buffer, BufferError, LABEL, MIN_LEAD, ORGANIZATIONS_QUERY, Plan, SERVICES, build_input, buffer_time,
                          check_caption, check_picture_is_public, human_time, judge, now_utc,
                          parse_buffer_time, plan_now, say, wait_for_publication, write_summary)
 
@@ -71,6 +71,19 @@ PICTURE_STYLE = (" Original product picture, soft natural light, square. "
 # The only channels this robot may use. Names are what Buffer shows; TikTok may show either name.
 PET_SHELF_NAMES = {"facebook": {"solvix pet shelf"}, "instagram": {"solvixpetshelf"},
                    "tiktok": {"solvixpetshelf", "small problems"}}
+# Pinterest is extra: used when the Pet Shelf Buffer has it, skipped when it does not. Its name must start with "solvix".
+PINTEREST = "pinterest"
+PIN_LINK = SITE + "?src=pin"                 # the pin itself links to the shop, so no "link in bio" there
+PIN_TITLE_MAX, PIN_TEXT_MAX = 100, 500       # Pinterest's own limits
+# The 6 boards boss made (marketing/solvix-pet-shelf-pinterest-kit.md in solvix-hq), and the words that pick each.
+PIN_BOARDS = (
+    ("Small Pet & Hamster Cage Ideas", r"hamster|rabbit|bunny|guinea|gerbil|small ?pet|ferret|chinchilla"),
+    ("Bird & Aquarium Essentials", r"\bbirds?\b|parrot|budgie|\bfish\b|aquarium|\btank\b|betta"),
+    ("Cat Toys for Bored Indoor Cats", r"\bcat\b.*\btoy|\btoy.*\bcat|kitten.*toy|wand|feather"),
+    ("Indoor Cat Must-Haves", r"\bcats?\b|kitten|kitty|litter|scratch"),
+    ("Dog Walking Essentials", r"leash|harness|walk|poop bag|travel bowl|water bottle"),
+    ("Dog Gear That Fixes Things", r"."),    # everything else
+)
 # The Solvix channels (from results/*/buffer-posts.json). Seeing one means the wrong key is in use.
 SOLVIX_CHANNEL_IDS = {"6ae9def0e29c69a1714a5301", "6ae9de2fe29c69a1714a4928", "6ae330e42f1f5ed6480d521a"}
 
@@ -127,6 +140,7 @@ def read_order(env):
         "team_caption": (env.get("ORDER_CAPTION") or "").strip(),
         "team_hashtags": (env.get("ORDER_HASHTAGS") or "").strip(),
         "queue_id": (env.get("ORDER_QUEUE_ID") or "").strip(),     # set by pet_shelf_queue.py
+        "board": (env.get("ORDER_BOARD") or "").strip(),           # Pinterest board; guessed when blank
     }
     if not order["brief"]:
         raise OrderProblem("The order has no idea or brief, so there is nothing to make.")
@@ -597,25 +611,76 @@ def check_video_is_public(url, sleep=time.sleep, tries=6):
 # =============================================================================================
 
 def pick_channels(channels):
-    """Exactly one Pet Shelf channel per app. Any doubt stops everything before anything is made."""
+    """Exactly one Pet Shelf channel per app (Pinterest: none or one). Any doubt stops everything."""
     if any(c["id"] in SOLVIX_CHANNEL_IDS for c in channels):
         raise OrderProblem("This Buffer key can see a Solvix channel, so I stopped. "
                            "PET_SHELF_BUFFER_API_KEY must be the key from the Pet Shelf Buffer account.")
     chosen = {}
-    for service in SERVICES:
+    for service in SERVICES + (PINTEREST,):
         matches = [c for c in channels if c["service"] == service]
+        if service == PINTEREST and not matches:
+            continue
         if len(matches) != 1:
             raise OrderProblem(f"I need exactly one {LABEL[service]} channel in the Pet Shelf Buffer "
                                f"and found {len(matches)}. Fix that in Buffer, then send the order again.")
-        if matches[0]["name"].strip().lower() not in PET_SHELF_NAMES[service]:
+        name = matches[0]["name"].strip().lower()
+        known = name.startswith("solvix") if service == PINTEREST else name in PET_SHELF_NAMES[service]
+        if not known:
             raise OrderProblem(f"The {LABEL[service]} channel is called '{matches[0]['name']}', which is not "
                                "a Pet Shelf name I know, so I stopped. Tell the Builders if it was renamed.")
         chosen[service] = matches[0]
     return chosen
 
 
-def build_post(service, channel_id, caption, urls, hook, ai_picture, plan, draft):
+def pinterest_boards(buffer, channel_id):
+    """The boards of one Pinterest channel in Buffer: a list of {serviceId, name}."""
+    fields = "id metadata { ... on PinterestMetadata { boards { serviceId name } } }"
+    for organization in (buffer.ask(ORGANIZATIONS_QUERY).get("account") or {}).get("organizations") or []:
+        query = ("query { channels(input: { organizationId: " + json.dumps(organization["id"]) + " }) { "
+                 + fields + " } }")
+        for channel in buffer.ask(query).get("channels") or []:
+            if channel.get("id") == channel_id:
+                return [b for b in ((channel.get("metadata") or {}).get("boards") or []) if b.get("serviceId")]
+    return []
+
+
+def choose_board(boards, wanted, words):
+    """The board for this pin: the one the order names, else the best match for the product words."""
+    by_name = {str(b.get("name") or "").strip().lower(): b for b in boards}
+    if wanted:
+        if wanted.strip().lower() in by_name:
+            return by_name[wanted.strip().lower()]
+        warn(f"There is no Pinterest board called '{wanted}', so I picked one from the product words.")
+    text = words.lower()
+    for name, pattern in PIN_BOARDS:
+        if name.lower() in by_name and re.search(pattern, text):
+            return by_name[name.lower()]
+    return boards[0] if boards else None
+
+
+def pin_title(brief, hook):
+    title = " ".join((brief or hook or "Pet pick").split()).rstrip(".")
+    if len(title) > PIN_TITLE_MAX:
+        title = title[:PIN_TITLE_MAX - 1].rsplit(" ", 1)[0] + "…"
+    return title
+
+
+def pin_text(caption):
+    """The pin description: our caption without 'link in bio' (the pin links to the shop itself)."""
+    text = caption.replace("\n\n👉 Link in bio", "").replace("👉 Link in bio", "").strip()
+    if len(text) > PIN_TEXT_MAX:
+        text = text[:PIN_TEXT_MAX - 1].rsplit(" ", 1)[0] + "…"
+    return text
+
+
+def build_post(service, channel_id, caption, urls, hook, ai_picture, plan, draft, pin=None):
     """Start from the Solvix post shape, then swap in the video and the Pet Shelf details."""
+    if service == PINTEREST:
+        # One picture per pin (the cover for videos and slides); the pin opens the shop.
+        post = build_input("facebook", channel_id, pin_text(caption), urls["picture"], plan, draft)
+        post["metadata"] = {"pinterest": {"boardServiceId": pin["board"]["serviceId"],
+                                          "title": pin["title"], "url": PIN_LINK}}
+        return post
     post = build_input(service, channel_id, caption, urls["picture"], plan, draft)
     video = "video" in urls or (service == "tiktok" and "tiktok_video" in urls)
     if video:
@@ -688,21 +753,22 @@ def check_post(buffer, item, plan, draft, caption, clock, expected_assets=1):
     return None
 
 
-def send_to_buffer(buffer, targets, caption, urls, hook, ai_picture, plan, draft, earlier, save, clock=now_utc):
+def send_to_buffer(buffer, targets, caption, urls, hook, ai_picture, plan, draft, earlier, save, clock=now_utc,
+                   pin=None):
     """Create one post per channel, then confirm each with Buffer. Tries every channel, then raises
     if any one failed. save(posts) writes the record after each post, so a re-run never doubles up."""
     posts = list(earlier)
     failed = []
     done = {p["service"] for p in earlier}
     new = []
-    for service in SERVICES:
+    for service in [s for s in SERVICES + (PINTEREST,) if s in targets]:
         if service in done:
             say(f"{LABEL[service]}: already in Buffer from the first try, so I am not sending it again.")
             continue
         channel = targets[service]
         try:
             post = buffer.create_post(build_post(service, channel["id"], caption, urls, hook,
-                                                 ai_picture, plan, draft))
+                                                 ai_picture, plan, draft, pin))
         except BufferError as problem:
             failed.append(f"{LABEL[service]}: {problem}")
             if problem.stop_everything:
@@ -717,7 +783,8 @@ def send_to_buffer(buffer, targets, caption, urls, hook, ai_picture, plan, draft
 
     for item in new:
         try:
-            problem = check_post(buffer, item, plan, draft, caption, clock, len(urls.get("slides") or [1]))
+            assets = 1 if item["service"] == PINTEREST else len(urls.get("slides") or [1])
+            problem = check_post(buffer, item, plan, draft, caption, clock, assets)
         except BufferError as trouble:
             problem = f"it was created, but I could not confirm it ({trouble})"
         if problem:
@@ -833,6 +900,21 @@ def run_order(env, clock=now_utc):
     except BufferError as problem:
         raise OrderProblem(str(problem).replace("BUFFER_API_KEY", "PET_SHELF_BUFFER_API_KEY"))
     targets = pick_channels(channels)
+    pin = None
+    if PINTEREST in targets:
+        try:
+            boards = pinterest_boards(buffer, targets[PINTEREST]["id"])
+        except BufferError as problem:
+            boards = []
+            warn(f"I could not read the Pinterest boards ({problem}).")
+        board = choose_board(boards, order["board"], " ".join([order["brief"], order["team_caption"],
+                                                               order["team_hashtags"]]))
+        if board:
+            pin = {"board": board, "title": pin_title(order["brief"], "")}
+            say(f"Pinterest: pin goes on the board '{board.get('name')}'.")
+        else:
+            warn("Pinterest is in Buffer but has no boards I can see, so this order skips Pinterest.")
+            del targets[PINTEREST]
     for service, channel in targets.items():
         if channel["paused"]:
             warn(f"The {LABEL[service]} queue in Buffer is paused, so posts may wait until you resume it.")
@@ -892,7 +974,7 @@ def run_order(env, clock=now_utc):
 
     try:
         posts = send_to_buffer(buffer, targets, caption, urls, details["hook"], details["ai_picture"],
-                               plan, draft, earlier, save, clock)
+                               plan, draft, earlier, save, clock, pin)
     finally:
         save_media(f"Buffer record for {folder}")   # saved even after a failure, so a re-run cannot double up
 

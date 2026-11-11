@@ -67,7 +67,7 @@ POST_HOUR_UTC = 6                       # 07:00 Lagos = 06:00 UTC, all year roun
 MIN_LEAD = timedelta(minutes=3)         # a scheduled time must still be in the future when Buffer gets it
 SERVICES = ("instagram", "facebook", "tiktok")    # Instagram first: it is the pickier one, so trouble shows up before anything is created
 OPTIONAL = ("tiktok",)                  # used when Buffer has it, quietly skipped when it does not
-LABEL = {"instagram": "Instagram", "facebook": "Facebook", "tiktok": "TikTok"}
+LABEL = {"instagram": "Instagram", "facebook": "Facebook", "tiktok": "TikTok", "pinterest": "Pinterest"}  # Pinterest: Pet Shelf only
 INSTAGRAM_MAX_CHARACTERS = 2200         # Instagram's own limits
 INSTAGRAM_MAX_HASHTAGS = 30
 WHEN_CHOICES = ("next", "today", "now")

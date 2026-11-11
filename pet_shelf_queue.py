@@ -97,6 +97,7 @@ def order_env(entry, base_env, run_id, n, mode):
         "ORDER_CAPTION": entry["caption"],
         "ORDER_HASHTAGS": entry.get("hashtags", ""),
         "ORDER_QUEUE_ID": entry["id"],
+        "ORDER_BOARD": entry.get("board", ""),   # Pinterest board; guessed from the words when blank
         "GITHUB_RUN_ID": f"{run_id}q{n}",       # each queued post gets its own orders/ folder
     })
     return env
