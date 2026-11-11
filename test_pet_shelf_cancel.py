@@ -71,6 +71,20 @@ class Cancel(unittest.TestCase):
                 cancel_tool.cancel(FOLDER, buffer, base)
             self.assertEqual(buffer.deleted, [])
 
+    def test_a_post_already_gone_counts_as_cancelled(self):
+        class Gone(FakeBuffer):
+            def ask(self, query, variables=None, changes_something=False):
+                if "deletePost" not in query and 'id: "p1"' in query:
+                    raise cancel_tool.BufferError("Buffer refused the request: Post not found for id: p1")
+                return super().ask(query, variables, changes_something)
+        with tempfile.TemporaryDirectory() as base:
+            path = write_record(base, [dict(p) for p in POSTS])
+            buffer = Gone({"p2": "scheduled", "p3": "scheduled"})
+            done = cancel_tool.cancel(FOLDER, buffer, base)
+            self.assertEqual(buffer.deleted, ["p2", "p3"])
+            self.assertIn("already gone", done[0])
+            self.assertEqual([p["status"] for p in json.load(open(path))["posts"]], ["deleted"] * 3)
+
     def test_folder_name_is_checked(self):
         for bad in ("", "../x", "orders/2026-11-07-a-1", "2026-11-07-a"):
             with self.assertRaises(robot.OrderProblem):

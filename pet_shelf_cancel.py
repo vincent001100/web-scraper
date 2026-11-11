@@ -40,7 +40,14 @@ def cancel(folder, buffer, base):
             continue
         if item.get("channel_id") not in allowed:
             raise robot.OrderProblem(f"The {label} post is not on a Pet Shelf channel, so I stopped.")
-        status = robot.read_post(buffer, item["post_id"])["status"].lower()
+        try:
+            status = robot.read_post(buffer, item["post_id"])["status"].lower()
+        except BufferError as problem:
+            if "not found" in str(problem).lower():       # already gone (e.g. an earlier try deleted it)
+                item["status"] = "deleted"
+                done.append(f"{label}: already gone from Buffer")
+                continue
+            raise
         if status not in CANCELLABLE:
             done.append(f"{label}: NOT cancelled, Buffer says '{status}' (already out or failed)")
             continue
