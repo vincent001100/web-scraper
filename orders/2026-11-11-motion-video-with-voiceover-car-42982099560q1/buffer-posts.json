@@ -7,7 +7,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6af41db127e91ec769bafdd3",
       "asset_count": 1,
-      "status": "draft",
+      "status": "deleted",
       "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-motion-video-with-voiceover-car-42982099560q1/video.mp4",
       "due_at": null
     },
@@ -17,7 +17,7 @@
       "channel_name": "Solvix Pet Shelf",
       "post_id": "6af41db27e9ab194b7f984a8",
       "asset_count": 1,
-      "status": "draft",
+      "status": "deleted",
       "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-motion-video-with-voiceover-car-42982099560q1/video.mp4",
       "due_at": null
     },
@@ -27,7 +27,7 @@
       "channel_name": "solvixpetshelf",
       "post_id": "6af41db260e4cf0fafb00e76",
       "asset_count": 1,
-      "status": "draft",
+      "status": "deleted",
       "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-motion-video-with-voiceover-car-42982099560q1/video.mp4",
       "due_at": null
     }
