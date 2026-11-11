@@ -1,0 +1,45 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af4fa0fbc9f3773a1a8fc32",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-height-adjustable-raised-dog-bowls-43119998462q1/post.jpg",
+      "due_at": "2026-11-12T01:00:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6af4fa0f77f44b65360204b4",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-height-adjustable-raised-dog-bowls-43119998462q1/post.jpg",
+      "due_at": "2026-11-12T01:00:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af4fa10304f8985c470574f",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-height-adjustable-raised-dog-bowls-43119998462q1/tiktok.mp4",
+      "due_at": "2026-11-12T01:00:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6af4fa10bc9f3773a1a8fc6b",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-height-adjustable-raised-dog-bowls-43119998462q1/post.jpg",
+      "due_at": "2026-11-12T01:00:00.000Z"
+    }
+  ]
+}
