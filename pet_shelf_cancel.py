@@ -18,7 +18,7 @@ import sys
 from buffer_post import Buffer, BufferError, say, write_summary
 import pet_shelf_order as robot
 
-FOLDER = re.compile(r"\d{4}-\d{2}-\d{2}-[a-z0-9-]+-\d+$")
+FOLDER = re.compile(r"\d{4}-\d{2}-\d{2}-[a-z0-9-]+-\d+(?:q\d+)?$")
 CANCELLABLE = {"scheduled", "draft"}      # "sending" and "sent" are already on their way out
 
 
