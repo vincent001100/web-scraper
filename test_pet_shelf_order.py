@@ -524,6 +524,7 @@ class Pinterest(unittest.TestCase):
 
     def test_title_and_text_fit_pinterest_limits(self):
         self.assertEqual(robot.pin_title("Raised dog bowls.", ""), "Raised dog bowls")
+        self.assertEqual(robot.pin_title("Motion video with voiceover: car seat hammock", ""), "Car seat hammock")
         self.assertLessEqual(len(robot.pin_title("word " * 60, "")), 100)
         self.assertLessEqual(len(robot.pin_text("#ad " + "word " * 200)), 500)
 

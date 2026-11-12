@@ -791,6 +791,8 @@ def learn_dead_boards(buffer, base):
 
 def pin_title(brief, hook):
     title = " ".join((brief or hook or "Pet pick").split()).rstrip(".")
+    title = re.sub(r"^(motion )?video( with voiceover)?\s*:\s*", "", title, flags=re.I) or "Pet pick"   # our own note, not a title
+    title = title[0].upper() + title[1:]
     if len(title) > PIN_TITLE_MAX:
         title = title[:PIN_TITLE_MAX - 1].rsplit(" ", 1)[0] + "…"
     return title
