@@ -1,0 +1,25 @@
+{
+  "hook": "Does your cat love the window",
+  "caption": "#ad Does your cat love the window?\nThis soft seat sticks to the glass, no drilling.\nCheck your window size first.\n\n\ud83d\udc49 Link in bio\n\n#cats #indoorcats #catowners #catlovers",
+  "ai_picture": true,
+  "slides": 1,
+  "tiktok_video": false,
+  "picture_source": "team advert (ready/videos/cat-window-hammock.mp4,ready/videos/cat-window-hammock-cover.jpg)",
+  "brief": "Motion video with voiceover: cat window hammock",
+  "type": "video",
+  "reference": "",
+  "when": "2026-11-13 19:30",
+  "mode": "post",
+  "picture": "ready/videos/cat-window-hammock.mp4,ready/videos/cat-window-hammock-cover.jpg",
+  "picture_ai": "yes",
+  "team_caption": "Does your cat love the window?\nThis soft seat sticks to the glass, no drilling.\nCheck your window size first.",
+  "team_hashtags": "cats, indoorcats, catowners, catlovers",
+  "queue_id": "2026-11-13-1930-video-cat-window-hammock",
+  "board": "",
+  "only": [],
+  "ready_pictures": [
+    "ready/videos/cat-window-hammock-cover.jpg"
+  ],
+  "ready_video": "ready/videos/cat-window-hammock.mp4",
+  "due_at": "2026-11-13T18:30:00.000Z"
+}
