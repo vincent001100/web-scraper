@@ -88,6 +88,10 @@ PIN_BOARDS = (
     ("Dog Walking Essentials", r"leash|harness|walk|poop bag|travel bowl|water bottle"),
     ("Dog Gear That Fixes Things", r"."),    # everything else
 )
+# Boards Pinterest refused ("this board doesn't exist"): kept on the media branch so the robot never uses
+# them again. Happens when a board is deleted and made again: Buffer keeps the old board's number.
+DEAD_BOARDS = "pinterest-dead-boards.json"
+BOARD_GONE = re.compile(r"board doesn.t exist", re.I)
 # The Solvix channels (from results/*/buffer-posts.json). Seeing one means the wrong key is in use.
 SOLVIX_CHANNEL_IDS = {"6ae9def0e29c69a1714a5301", "6ae9de2fe29c69a1714a4928", "6ae330e42f1f5ed6480d521a"}
 
@@ -694,18 +698,95 @@ def pinterest_boards(buffer, channel_id):
     return []
 
 
-def choose_board(boards, wanted, words):
-    """The board for this pin: the one the order names, else the best match for the product words."""
-    by_name = {str(b.get("name") or "").strip().lower(): b for b in boards}
+def board_number(board):
+    number = str(board.get("serviceId") or "")
+    return int(number) if number.isdigit() else 0
+
+
+def choose_board(boards, wanted, words, dead=()):
+    """The board for this pin: the one the order names, else the best match for the product words.
+    Boards Pinterest refused before (dead) are never used. When two boards share a name (one was deleted
+    and made again), the newest wins. With no fitting board the answer is None: no pin beats a wrong board."""
+    by_name = {}
+    for board in boards:
+        if board.get("serviceId") in dead:
+            continue
+        name = str(board.get("name") or "").strip().lower()
+        if name not in by_name or board_number(board) > board_number(by_name[name]):
+            by_name[name] = board
     if wanted:
         if wanted.strip().lower() in by_name:
             return by_name[wanted.strip().lower()]
-        warn(f"There is no Pinterest board called '{wanted}', so I picked one from the product words.")
+        warn(f"There is no working Pinterest board called '{wanted}', so I picked one from the product words.")
     text = words.lower()
+    other_animal = any(re.search(pattern, text) for _, pattern in PIN_BOARDS[:4])   # small pets, birds, fish, cats
     for name, pattern in PIN_BOARDS:
+        if pattern == "." and other_animal:
+            continue                    # a cat or hamster product never lands on the catch-all dog board
         if name.lower() in by_name and re.search(pattern, text):
             return by_name[name.lower()]
-    return boards[0] if boards else None
+    # The right board is missing or refused: stay with the same animal, never a random board.
+    for animal, pattern in (("cat", r"\bcats?\b|kitten|kitty|litter"), ("dog", r"\bdogs?\b|pupp|leash|\bpaws?\b")):
+        if re.search(pattern, text):
+            for name, _ in PIN_BOARDS:
+                if animal in name.lower() and name.lower() in by_name:
+                    return by_name[name.lower()]
+    return None
+
+
+def load_dead_boards(base):
+    path = os.path.join(base, DEAD_BOARDS)
+    if os.path.isfile(path):
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
+def pin_result_query(post_id):
+    return ("query { post(input: { id: " + json.dumps(post_id) + " }) { __typename ... on Post { status "
+            "error { message } metadata { ... on PinterestPostMetadata { board { serviceId name } } } } } }")
+
+
+def learn_dead_boards(buffer, base):
+    """Ask Buffer how earlier pins ended. A pin refused with 'board doesn't exist' marks that board as dead.
+    Each finished pin is asked about once (pin_result is written into its record). Returns the dead boards."""
+    dead = load_dead_boards(base)
+    orders = os.path.join(base, "orders")
+    found = False
+    for folder in sorted(os.listdir(orders)) if os.path.isdir(orders) else []:
+        path = os.path.join(orders, folder, RECORD)
+        if not os.path.isfile(path):
+            continue
+        with open(path, encoding="utf-8") as f:
+            record = json.load(f)
+        touched = False
+        for item in record.get("posts", []):
+            if (record.get("mode") != "post" or item.get("service") != PINTEREST or item.get("pin_result")
+                    or item.get("status") == "deleted" or not item.get("post_id")):
+                continue
+            try:
+                post = buffer.ask(pin_result_query(item["post_id"])).get("post") or {}
+            except BufferError:
+                continue
+            status = str(post.get("status") or "").lower()
+            if status not in ("sent", "error"):
+                continue                                    # still waiting: ask again next time
+            item["pin_result"], touched = status, True
+            message = (post.get("error") or {}).get("message") or ""
+            board = (post.get("metadata") or {}).get("board") or {}
+            if status == "error" and BOARD_GONE.search(message) and board.get("serviceId"):
+                if board["serviceId"] not in dead:
+                    warn(f"Pinterest refused the board '{board.get('name')}' (it was deleted), so I will not use "
+                         "it again. In Buffer, tap 'Refresh boards' so the new board shows up.")
+                dead[board["serviceId"]] = {"name": board.get("name"), "seen": folder[:10]}
+                found = True
+        if touched:
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(record, f, indent=2)
+    if found:
+        with open(os.path.join(base, DEAD_BOARDS), "w", encoding="utf-8") as f:
+            json.dump(dead, f, indent=2)
+    return dead
 
 
 def pin_title(brief, hook):
@@ -829,6 +910,8 @@ def send_to_buffer(buffer, targets, caption, urls, hook, ai_picture, plan, draft
             continue
         item = {"service": service, "channel_id": channel["id"], "channel_name": channel["name"],
                 "post_id": post["id"]}
+        if service == PINTEREST and pin:
+            item["board"], item["board_service_id"] = pin["board"].get("name"), pin["board"].get("serviceId")
         new.append(item)
         posts.append(item)
         save(posts)
@@ -956,27 +1039,32 @@ def run_order(env, clock=now_utc):
     only = order["only"]
     pin_buffer = connect_pinterest(env, targets) if not only or PINTEREST in only else None
     targets = limit_targets(targets, only)
-    pin = None
-    if PINTEREST in targets:
-        try:
-            boards = pinterest_boards(pin_buffer or buffer, targets[PINTEREST]["id"])
-        except BufferError as problem:
-            boards = []
-            warn(f"I could not read the Pinterest boards ({problem}).")
-        board = choose_board(boards, order["board"], " ".join([order["brief"], order["team_caption"],
-                                                               order["team_hashtags"]]))
-        if board:
-            pin = {"board": board, "title": pin_title(order["brief"], "")}
-            say(f"Pinterest: pin goes on the board '{board.get('name')}'.")
-        else:
-            warn("Pinterest is in Buffer but has no boards I can see, so this order skips Pinterest.")
-            del targets[PINTEREST]
     for service, channel in targets.items():
         if channel["paused"]:
             warn(f"The {LABEL[service]} queue in Buffer is paused, so posts may wait until you resume it.")
 
     run_id = env.get("GITHUB_RUN_ID") or "local"
     open_media_branch()
+    pin = None
+    if PINTEREST in targets:
+        pin_account = pin_buffer or buffer
+        try:
+            boards = pinterest_boards(pin_account, targets[PINTEREST]["id"])
+        except BufferError as problem:
+            boards = []
+            warn(f"I could not read the Pinterest boards ({problem}).")
+        dead = learn_dead_boards(pin_account, MEDIA_DIR)
+        board = choose_board(boards, order["board"], " ".join([order["brief"], order["team_caption"],
+                                                               order["team_hashtags"]]), dead)
+        if board:
+            pin = {"board": board, "title": pin_title(order["brief"], "")}
+            say(f"Pinterest: pin goes on the board '{board.get('name')}'.")
+        else:
+            warn("No working Pinterest board fits this post, so this order skips Pinterest. "
+                 "(In Buffer, tap 'Refresh boards' after making or re-making a board.)")
+            del targets[PINTEREST]
+            if not targets:
+                raise OrderProblem("Pinterest was the only app asked for and no working board fits, so nothing was sent.")
     folder = find_earlier_run(run_id)
     earlier = []
     if folder:

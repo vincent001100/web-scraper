@@ -461,6 +461,54 @@ class Pinterest(unittest.TestCase):
         self.assertEqual(pick("Cat window perch", "Dog Walking Essentials"), "b-walk")   # the order wins
         self.assertIsNone(robot.choose_board([], "", "dog"))
 
+    def test_a_refused_board_is_never_used_and_the_newest_twin_wins(self):
+        old_gear, new_gear = BOARDS[0], {"serviceId": "999", "name": "Dog Gear That Fixes Things"}
+        pick = lambda boards, words, dead=(): robot.choose_board(boards, "", words, dead)
+        # the board was deleted and made again: Buffer lists both, the newest number wins
+        self.assertEqual(pick(BOARDS + [new_gear], "Raised dog bowls")["serviceId"], "999")
+        # only the dead one is listed: a dog product stays on a dog board, never a random one
+        self.assertEqual(pick(BOARDS, "Raised dog bowls", {"b-dog"})["serviceId"], "b-walk")
+        self.assertEqual(pick(BOARDS, "Cat window perch", {"b-cat"}), None)        # no other cat board here
+        self.assertEqual(pick(BOARDS, "Aquarium net", {"b-dog"}), None)            # no pin beats a wrong board
+        self.assertEqual(old_gear["serviceId"], "b-dog")
+
+    def test_the_robot_learns_dead_boards_from_refused_pins(self):
+        class Pins:
+            asked = []
+            def ask(self, query, variables=None):
+                post_id = query.split('id: "')[1].split('"')[0]
+                self.asked.append(post_id)
+                return {"post": {
+                    "gone": {"status": "error", "error": {"message": "So sorry, it seems this board doesn't exist in Pinterest anymore"},
+                             "metadata": {"board": {"serviceId": "b-dog", "name": "Dog Gear That Fixes Things"}}},
+                    "fine": {"status": "sent", "error": None, "metadata": {"board": {"serviceId": "b-cat", "name": "x"}}},
+                    "wait": {"status": "scheduled", "error": None, "metadata": {}},
+                    "other": {"status": "error", "error": {"message": "Something else broke"},
+                              "metadata": {"board": {"serviceId": "b-walk", "name": "y"}}}}[post_id]}
+        with tempfile.TemporaryDirectory() as base:
+            for n, post_id in enumerate(("gone", "fine", "wait", "other")):
+                folder = os.path.join(base, "orders", f"2026-11-12-pin-{n}")
+                os.makedirs(folder)
+                with open(os.path.join(folder, robot.RECORD), "w") as f:
+                    json.dump({"mode": "post", "posts": [{"service": "instagram", "post_id": "ig"},
+                                                         {"service": "pinterest", "post_id": post_id}]}, f)
+            pins = Pins()
+            dead = robot.learn_dead_boards(pins, base)
+            self.assertEqual(list(dead), ["b-dog"])                       # only "board doesn't exist" counts
+            self.assertEqual(robot.load_dead_boards(base), dead)          # remembered on the media branch
+            self.assertEqual(sorted(pins.asked), ["fine", "gone", "other", "wait"])   # never asks about Instagram
+            pins.asked.clear()
+            self.assertEqual(list(robot.learn_dead_boards(pins, base)), ["b-dog"])
+            self.assertEqual(pins.asked, ["wait"])                        # finished pins are asked about once
+
+    def test_the_pin_record_keeps_its_board(self):
+        buffer = FakeBuffer()
+        targets = robot.pick_channels(CHANNELS + [PIN_CHANNEL])
+        posts = robot.send_to_buffer(buffer, robot.limit_targets(targets, ["pinterest"]), "#ad hello", URLS, "Hook",
+                                     True, plan_now(NOW), True, [], lambda p: None, lambda: NOW,
+                                     {"board": BOARDS[1], "title": "T"})
+        self.assertEqual((posts[0]["board"], posts[0]["board_service_id"]), ("Indoor Cat Must-Haves", "b-cat"))
+
     def test_a_pin_has_one_picture_a_board_a_title_and_the_shop_link(self):
         urls = dict(URLS, video="https://example.com/v.mp4",
                     slides=["https://example.com/post.jpg", "https://example.com/slide-2.jpg"])
