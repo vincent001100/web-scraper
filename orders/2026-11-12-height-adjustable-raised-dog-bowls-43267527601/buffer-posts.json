@@ -11,7 +11,8 @@
       "asset_count": 1,
       "status": "sent",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-height-adjustable-raised-dog-bowls-43267527601/post.jpg",
-      "due_at": "2026-11-12T17:16:06.115Z"
+      "due_at": "2026-11-12T17:16:06.115Z",
+      "pin_result": "sent"
     }
   ]
 }
