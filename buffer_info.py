@@ -61,6 +61,14 @@ def main():
         for n in pins[:8]: lines.append(describe(b, n))
     except (BufferError, KeyError, TypeError) as e:
         lines.append(f"(schema list not available: {e})")
+    try:   # what Buffer's API lets a key ask for and change (names only; nothing is called)
+        ops = b.ask("query { __schema { queryType { fields { name } } mutationType { fields { name args { name type { name kind ofType { name } } } } } } }")["__schema"]
+        lines.append("Questions Buffer answers: " + ", ".join(f["name"] for f in ops["queryType"]["fields"]))
+        lines.append("Changes Buffer allows: " + ", ".join(
+            f["name"] + "(" + ", ".join(a["name"] + ":" + str((a["type"].get("name") or (a["type"].get("ofType") or {}).get("name"))) for a in f["args"]) + ")"
+            for f in ops["mutationType"]["fields"]))
+    except (BufferError, KeyError, TypeError) as e:
+        lines.append(f"(list of API actions not available: {e})")
     post_id = (os.environ.get("POST_ID") or "").strip()
     if post_id:   # read-only: everything Buffer holds for one post (used to debug a failed pin)
         lines.append(describe(b, "Post"))
