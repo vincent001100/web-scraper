@@ -50,6 +50,10 @@ on:
         description: "Optional: hashtags for the team's caption, like: dogs, roadtrip, petcare"
         type: string
         required: false
+      only:
+        description: "Optional: send to one app only, like instagram (to resend a post that app missed). Blank = all apps"
+        type: string
+        required: false
       mode:
         description: "post = schedule it for real. draft = Buffer drafts only, nothing is published"
         type: choice
@@ -93,6 +97,7 @@ jobs:
           ORDER_REFERENCE: ${{ inputs.reference }}
           ORDER_WHEN: ${{ inputs.when }}
           ORDER_MODE: ${{ inputs.mode }}
+          ORDER_ONLY: ${{ inputs.only }}
           ORDER_PICTURE: ${{ inputs.picture }}
           ORDER_PICTURE_AI: ${{ inputs.picture_ai }}
           ORDER_CAPTION: ${{ inputs.caption }}

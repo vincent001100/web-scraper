@@ -145,7 +145,12 @@ def read_order(env):
         "team_hashtags": (env.get("ORDER_HASHTAGS") or "").strip(),
         "queue_id": (env.get("ORDER_QUEUE_ID") or "").strip(),     # set by pet_shelf_queue.py
         "board": (env.get("ORDER_BOARD") or "").strip(),           # Pinterest board; guessed when blank
+        # Blank = every Pet Shelf app. "instagram" = only that app (used to resend a post one app missed).
+        "only": [w for w in re.split(r"[,\s]+", (env.get("ORDER_ONLY") or "").strip().lower()) if w],
     }
+    strange = [w for w in order["only"] if w not in SERVICES + (PINTEREST,)]
+    if strange:
+        raise OrderProblem(f"'only' must be instagram, facebook, tiktok or pinterest, not '{strange[0]}'.")
     if not order["brief"]:
         raise OrderProblem("The order has no idea or brief, so there is nothing to make.")
     if order["type"] not in ("picture", "video"):
@@ -636,6 +641,17 @@ def pick_channels(channels):
     return chosen
 
 
+def limit_targets(targets, only):
+    """Keep only the apps an order asks for (blank = all). Used to resend a post that one app missed."""
+    if not only:
+        return targets
+    kept = {service: channel for service, channel in targets.items() if service in only}
+    if not kept:
+        raise OrderProblem(f"None of the apps asked for ({', '.join(only)}) is connected, so nothing was sent.")
+    say(f"Only for: {', '.join(LABEL[s] for s in kept)}.")
+    return kept
+
+
 def pick_pinterest_channel(channels):
     """The one Pet Shelf Pinterest channel in the separate Pinterest Buffer account. Any doubt stops Pinterest."""
     if any(c["id"] in SOLVIX_CHANNEL_IDS for c in channels):
@@ -937,7 +953,9 @@ def run_order(env, clock=now_utc):
     except BufferError as problem:
         raise OrderProblem(str(problem).replace("BUFFER_API_KEY", "PET_SHELF_BUFFER_API_KEY"))
     targets = pick_channels(channels)
-    pin_buffer = connect_pinterest(env, targets)
+    only = order["only"]
+    pin_buffer = connect_pinterest(env, targets) if not only or PINTEREST in only else None
+    targets = limit_targets(targets, only)
     pin = None
     if PINTEREST in targets:
         try:

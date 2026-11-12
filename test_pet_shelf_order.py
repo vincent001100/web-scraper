@@ -227,6 +227,25 @@ class SlidesAndSound(unittest.TestCase):
             with self.assertRaises(robot.OrderProblem):
                 robot.read_order(dict(self.base, ORDER_PICTURE=bad))
 
+    def test_only_limits_an_order_to_the_apps_named(self):
+        base = dict(self.base, ORDER_PICTURE="ready/a.jpg")
+        self.assertEqual(robot.read_order(base)["only"], [])
+        self.assertEqual(robot.read_order(dict(base, ORDER_ONLY="Instagram, pinterest"))["only"],
+                         ["instagram", "pinterest"])
+        with self.assertRaises(robot.OrderProblem):
+            robot.read_order(dict(base, ORDER_ONLY="twitter"))
+        self.assertEqual(set(robot.limit_targets(dict(TARGETS), [])), {"instagram", "facebook", "tiktok"})
+        self.assertEqual(set(robot.limit_targets(dict(TARGETS), ["instagram"])), {"instagram"})
+        with self.assertRaises(robot.OrderProblem):
+            robot.limit_targets(dict(TARGETS), ["pinterest"])          # not connected here
+
+    def test_an_instagram_only_resend_never_touches_the_other_apps(self):
+        buffer = FakeBuffer()
+        posts = robot.send_to_buffer(buffer, robot.limit_targets(dict(TARGETS), ["instagram"]), "#ad hello", URLS,
+                                     "Hook", True, plan_now(NOW), True, [], lambda p: None, lambda: NOW)
+        self.assertEqual([p["service"] for p in posts], ["instagram"])
+        self.assertEqual([p["channelId"] for p in buffer.created], ["ig"])
+
     def test_slides_become_one_picture_per_item(self):
         plan = robot.Plan("customScheduled", datetime(2030, 1, 1, tzinfo=timezone.utc), None)
         urls = {"picture": "https://x/1.jpg", "slides": ["https://x/1.jpg", "https://x/2.jpg"]}
