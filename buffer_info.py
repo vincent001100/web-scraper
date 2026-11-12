@@ -58,6 +58,17 @@ def main():
         for n in pins[:8]: lines.append(describe(b, n))
     except (BufferError, KeyError, TypeError) as e:
         lines.append(f"(schema list not available: {e})")
+    post_id = (os.environ.get("POST_ID") or "").strip()
+    if post_id:   # read-only: everything Buffer holds for one post (used to debug a failed pin)
+        lines.append(describe(b, "Post"))
+        for fields in ("id status text dueAt sentAt externalLink channelId error { message } "
+                       "metadata { __typename ... on PinterestPostMetadata { title url board { id serviceId name url } } }",
+                       "id status dueAt channelId error { message }"):
+            try:
+                got = b.ask("query { post(input: { id: " + json.dumps(post_id) + " }) { __typename ... on Post { " + fields + " } } }")
+                lines.append(f"Post {post_id}: " + json.dumps(got)); break
+            except BufferError as e:
+                lines.append(f"Post {post_id}: question refused ({e})")
     text = "\n".join(lines); say(text); write_summary("### Buffer info\n```\n" + text + "\n```")
     return 0
 
