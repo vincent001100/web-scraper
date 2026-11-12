@@ -18,5 +18,14 @@ class Collect(unittest.TestCase):
             self.assertEqual([(folder, item["post_id"]) for folder, item in rows], [("a-1", "a-10")])
 
 
+
+class Accounts(unittest.TestCase):
+    def test_pins_are_read_from_the_pinterest_account(self):
+        import pet_shelf_check as check
+        self.assertEqual(check.account_for({"service": "pinterest"}, "main", "pins"), "pins")
+        self.assertEqual(check.account_for({"service": "instagram"}, "main", "pins"), "main")
+        self.assertEqual(check.account_for({"service": "pinterest"}, "main", None), "main")
+
+
 if __name__ == "__main__":
     unittest.main()

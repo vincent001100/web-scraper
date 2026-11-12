@@ -85,6 +85,25 @@ class Cancel(unittest.TestCase):
             self.assertIn("already gone", done[0])
             self.assertEqual([p["status"] for p in json.load(open(path))["posts"]], ["deleted"] * 3)
 
+    def test_a_pin_is_cancelled_in_the_pinterest_buffer_account(self):
+        with tempfile.TemporaryDirectory() as base:
+            pin = {"service": "pinterest", "channel_id": "pin1", "post_id": "p4", "status": "scheduled"}
+            path = write_record(base, [dict(p) for p in POSTS] + [pin])
+            main = FakeBuffer({"p1": "scheduled", "p2": "scheduled", "p3": "scheduled"})
+            pins = FakeBuffer({"p4": "scheduled"}, [{"id": "pin1", "service": "pinterest",
+                                                    "name": "solvixpetsupplies", "paused": False}])
+            cancel_tool.cancel(FOLDER, main, base, {"PINTEREST_BUFFER_API_KEY": "k"}, lambda key: pins)
+            self.assertEqual(main.deleted, ["p1", "p2", "p3"])
+            self.assertEqual(pins.deleted, ["p4"])
+            self.assertTrue(all(p["status"] == "deleted" for p in json.load(open(path))["posts"]))
+
+    def test_without_the_pinterest_key_a_pin_stops_the_cancel(self):
+        with tempfile.TemporaryDirectory() as base:
+            pin = {"service": "pinterest", "channel_id": "pin1", "post_id": "p4", "status": "scheduled"}
+            write_record(base, [pin])
+            with self.assertRaises(robot.OrderProblem):
+                cancel_tool.cancel(FOLDER, FakeBuffer({}), base)
+
     def test_folder_name_is_checked(self):
         for bad in ("", "../x", "orders/2026-11-07-a-1", "2026-11-07-a"):
             with self.assertRaises(robot.OrderProblem):

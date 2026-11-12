@@ -30,15 +30,22 @@ def collect(base):
     return rows
 
 
+def account_for(item, buffer, pin_buffer):
+    """Pins are in the Pinterest Buffer account (when it is set up); everything else in the Pet Shelf one."""
+    return pin_buffer if item.get("service") == robot.PINTEREST and pin_buffer is not None else buffer
+
+
 def main():
     try:
         buffer = Buffer(os.environ.get("PET_SHELF_BUFFER_API_KEY"))
+        pin_key = (os.environ.get("PINTEREST_BUFFER_API_KEY") or "").strip()
+        pin_buffer = Buffer(pin_key) if pin_key else None      # pins live in the separate Pinterest Buffer account
         robot.open_media_branch()
         lines = ["| Order | App | Due (UTC) | Buffer status | Problem |", "|---|---|---|---|---|"]
         counts = {}
         for folder, item in collect(robot.MEDIA_DIR):
             try:
-                info = buffer.post_status(item["post_id"])
+                info = account_for(item, buffer, pin_buffer).post_status(item["post_id"])
                 status, problem = info.get("status", "?"), info.get("problem") or ""
             except BufferError as error:
                 status, problem = "unknown", str(error)

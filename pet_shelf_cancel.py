@@ -22,7 +22,7 @@ FOLDER = re.compile(r"\d{4}-\d{2}-\d{2}-[a-z0-9-]+-\d+(?:q\d+)?$")
 CANCELLABLE = {"scheduled", "draft"}      # "sending" and "sent" are already on their way out
 
 
-def cancel(folder, buffer, base):
+def cancel(folder, buffer, base, env=None, make_buffer=None):
     if not FOLDER.match(folder or ""):
         raise robot.OrderProblem("Give the order folder name, like 2026-11-07-dog-paw-cleaner-cup-a-42333996838.")
     path = os.path.join(base, "orders", folder, robot.RECORD)
@@ -31,7 +31,12 @@ def cancel(folder, buffer, base):
     with open(path, encoding="utf-8") as f:
         record = json.load(f)
 
-    allowed = {c["id"] for c in robot.pick_channels(buffer.channels()).values()}   # stops on a Solvix key
+    targets = robot.pick_channels(buffer.channels())                               # stops on a Solvix key
+    pin_buffer = robot.connect_pinterest(env or {}, targets, make_buffer)          # pins: the Pinterest Buffer account
+    allowed = {c["id"] for c in targets.values()}
+
+    def account(item):
+        return pin_buffer if item.get("service") == robot.PINTEREST and pin_buffer is not None else buffer
     done = []
     for item in record.get("posts", []):
         label = item.get("service", "?")
@@ -41,7 +46,7 @@ def cancel(folder, buffer, base):
         if item.get("channel_id") not in allowed:
             raise robot.OrderProblem(f"The {label} post is not on a Pet Shelf channel, so I stopped.")
         try:
-            status = robot.read_post(buffer, item["post_id"])["status"].lower()
+            status = robot.read_post(account(item), item["post_id"])["status"].lower()
         except BufferError as problem:
             if "not found" in str(problem).lower():       # already gone (e.g. an earlier try deleted it)
                 item["status"] = "deleted"
@@ -51,7 +56,7 @@ def cancel(folder, buffer, base):
         if status not in CANCELLABLE:
             done.append(f"{label}: NOT cancelled, Buffer says '{status}' (already out or failed)")
             continue
-        robot.delete_post(buffer, item["post_id"])
+        robot.delete_post(account(item), item["post_id"])
         item["status"] = "deleted"
         done.append(f"{label}: cancelled")
     with open(path, "w", encoding="utf-8") as f:
@@ -65,7 +70,7 @@ def main():
         buffer = Buffer(os.environ.get("PET_SHELF_BUFFER_API_KEY"))
         robot.open_media_branch()
         try:
-            done = cancel(folder, buffer, robot.MEDIA_DIR)
+            done = cancel(folder, buffer, robot.MEDIA_DIR, os.environ)
         finally:
             robot.save_media(f"Cancelled Buffer posts for {folder}")
         text = "\n".join(f"- {line}" for line in done)

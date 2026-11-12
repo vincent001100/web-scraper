@@ -28,9 +28,10 @@ jobs:
           python-version: "3.12"
       - name: Install helper tools
         run: pip install requests==2.34.2 pillow==13.0.0
-      # Only the Pet Shelf Buffer key. BUFFER_API_KEY (Solvix) must never be added here.
+      # Only the Pet Shelf Buffer keys. BUFFER_API_KEY (Solvix) must never be added here.
       - name: Cancel the booked posts
         env:
           PET_SHELF_BUFFER_API_KEY: ${{ secrets.PET_SHELF_BUFFER_API_KEY }}
+          PINTEREST_BUFFER_API_KEY: ${{ secrets.PINTEREST_BUFFER_API_KEY }}
           CANCEL_FOLDER: ${{ inputs.folder }}
         run: python pet_shelf_cancel.py
