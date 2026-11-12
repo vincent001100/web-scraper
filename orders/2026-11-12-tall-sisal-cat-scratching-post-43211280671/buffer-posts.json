@@ -9,7 +9,8 @@
       "asset_count": 1,
       "status": "sent",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-tall-sisal-cat-scratching-post-43211280671/post.jpg",
-      "due_at": "2026-11-12T11:41:40.027Z"
+      "due_at": "2026-11-12T11:41:40.027Z",
+      "pin_result": "sent"
     }
   ]
 }
