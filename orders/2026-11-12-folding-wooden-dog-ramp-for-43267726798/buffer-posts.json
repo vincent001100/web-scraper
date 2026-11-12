@@ -11,7 +11,8 @@
       "asset_count": 1,
       "status": "sent",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-folding-wooden-dog-ramp-for-43267726798/post.jpg",
-      "due_at": "2026-11-12T17:17:18.736Z"
+      "due_at": "2026-11-12T17:17:18.736Z",
+      "pin_result": "sent"
     }
   ]
 }
