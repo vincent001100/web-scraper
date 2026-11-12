@@ -1,0 +1,17 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6af5f4559ec46948df1723c8",
+      "board": "Dog Gear That Fixes Things",
+      "board_service_id": "229683718435408355",
+      "asset_count": 1,
+      "status": "sent",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-height-adjustable-raised-dog-bowls-43267527601/post.jpg",
+      "due_at": "2026-11-12T17:16:06.115Z"
+    }
+  ]
+}
