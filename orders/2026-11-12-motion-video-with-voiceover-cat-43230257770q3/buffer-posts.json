@@ -1,0 +1,47 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af5c305431e4703e48b3519",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-motion-video-with-voiceover-cat-43230257770q3/video.mp4",
+      "due_at": "2026-11-13T18:30:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6af5c306fcb998ff11b84553",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-motion-video-with-voiceover-cat-43230257770q3/video.mp4",
+      "due_at": "2026-11-13T18:30:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af5c306a7aa7358fdacae29",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-motion-video-with-voiceover-cat-43230257770q3/video.mp4",
+      "due_at": "2026-11-13T18:30:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6af5c307bdd678b700c04b75",
+      "board": "Indoor Cat Must-Haves",
+      "board_service_id": "229683718435407933",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-motion-video-with-voiceover-cat-43230257770q3/post.jpg",
+      "due_at": "2026-11-13T18:30:00.000Z"
+    }
+  ]
+}
