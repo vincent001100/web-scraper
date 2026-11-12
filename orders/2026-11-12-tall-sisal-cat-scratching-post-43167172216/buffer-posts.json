@@ -1,0 +1,15 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af55a329539b54d8823c09b",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-tall-sisal-cat-scratching-post-43167172216/post.jpg",
+      "due_at": "2026-11-12T20:00:00.000Z"
+    }
+  ]
+}
