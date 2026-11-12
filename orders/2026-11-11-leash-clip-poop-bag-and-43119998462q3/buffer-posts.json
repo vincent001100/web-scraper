@@ -39,7 +39,8 @@
       "asset_count": 1,
       "status": "scheduled",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-leash-clip-poop-bag-and-43119998462q3/post.jpg",
-      "due_at": "2026-11-12T15:00:00.000Z"
+      "due_at": "2026-11-12T15:00:00.000Z",
+      "pin_result": "sent"
     }
   ]
 }
