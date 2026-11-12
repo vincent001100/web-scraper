@@ -1,0 +1,17 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6af5f4d6295a894043857e70",
+      "board": "Dog Gear That Fixes Things",
+      "board_service_id": "229683718435408355",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-dog-car-seat-cover-hammock-43267891768/post.jpg",
+      "due_at": "2026-11-12T18:30:00.000Z"
+    }
+  ]
+}
