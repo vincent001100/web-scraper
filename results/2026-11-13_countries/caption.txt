@@ -1,0 +1,8 @@
+📊 Daily Data Drop: Countries of the World
+
+My scraper collected 250 records today, fully automatic (country, capital, population, area_km2).
+Every morning it picks a website, checks it's allowed, collects the data and delivers a clean spreadsheet.
+
+Need prices, products, leads or listings collected for your business? DM me.
+
+#webscraping #python #automation #dataextraction #freelancer #solvix
