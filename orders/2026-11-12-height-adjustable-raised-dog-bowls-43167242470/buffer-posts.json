@@ -1,0 +1,15 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af55a553edeaff13c024e89",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-height-adjustable-raised-dog-bowls-43167242470/post.jpg",
+      "due_at": "2026-11-13T08:00:00.000Z"
+    }
+  ]
+}
