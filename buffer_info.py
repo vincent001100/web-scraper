@@ -32,11 +32,14 @@ def main():
         orgs = (b.ask("query { account { organizations { id name } } }").get("account") or {}).get("organizations") or []
         for o in orgs:
             lines.append(f"Organization '{o.get('name')}' ({o.get('id')}):")
-            q = ("query { channels(input: { organizationId: " + json.dumps(o["id"]) + " }) { id name service "
-                 "isLocked isDisconnected metadata { ... on PinterestMetadata { boards { serviceId name } } } } }")
+            q = ("query { channels(input: { organizationId: " + json.dumps(o["id"]) + " }) { id name service type "
+                 "isLocked isDisconnected scopes serviceId createdAt updatedAt "
+                 "metadata { ... on PinterestMetadata { boards { serviceId name } } } } }")
             for c in b.ask(q).get("channels") or []:
                 lines.append(f"  - {c.get('service')} '{c.get('name')}' locked={c.get('isLocked')} "
                              f"disconnected={c.get('isDisconnected')}")
+                lines.append(f"      type={c.get('type')} permissions={c.get('scopes')} "
+                             f"connected={c.get('createdAt')} refreshed={c.get('updatedAt')}")
                 for bd in ((c.get("metadata") or {}).get("boards") or []):
                     lines.append(f"      board '{bd.get('name')}' serviceId {bd.get('serviceId')}")
                 if c.get("service") == "pinterest":   # show exactly what Buffer returns
