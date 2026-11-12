@@ -5,8 +5,11 @@ name: Pet Shelf queue
 
 on:
   schedule:
-    - cron: "13 17 * * *"      # 18:13 Lagos: books tomorrow's posts
-    - cron: "17 5 * * *"       # 06:17 Lagos: backup, in case the evening run was late or failed
+    # GitHub often starts timed runs late (11 Nov 2026: 6 hours late, which nearly missed the 02:00 post).
+    # So the first booking is at midday: even 12 hours late it still books tomorrow's 02:00 post in time.
+    - cron: "41 10 * * *"      # 11:41 Lagos: books everything due in the next 36 hours (tomorrow's 4 posts)
+    - cron: "13 17 * * *"      # 18:13 Lagos: second look, picks up anything added in the afternoon
+    - cron: "17 5 * * *"       # 06:17 Lagos: backup, in case the earlier runs were late or failed
   workflow_dispatch:
     inputs:
       only:
