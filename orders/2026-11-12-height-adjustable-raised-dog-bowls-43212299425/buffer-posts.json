@@ -1,0 +1,17 @@
+{
+  "mode": "draft",
+  "posts": [
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6af5a7a3c6319c29c4934db7",
+      "board": "Dog Walking Essentials",
+      "board_service_id": "229683718435407934",
+      "asset_count": 1,
+      "status": "draft",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-height-adjustable-raised-dog-bowls-43212299425/post.jpg",
+      "due_at": null
+    }
+  ]
+}
