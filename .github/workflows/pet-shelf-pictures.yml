@@ -1,0 +1,34 @@
+# Pet Shelf pictures without the PC (boss, 13 Nov 2026): Gemini draws product pictures from the team's prompts.
+# Saves them on the pet-shelf-media branch (pictures/...) for the team to check. Never posts or changes the shop.
+name: Pet Shelf pictures
+
+on:
+  workflow_dispatch:
+    inputs:
+      ids:
+        description: "Product ids from pet_shelf_picture_prompts.md, separated by commas (up to 12)"
+        type: string
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pet-shelf-order       # shares the media branch with the posting robots, so never at the same time
+  cancel-in-progress: false
+
+jobs:
+  pictures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install requests==2.34.2 pillow==13.0.0
+      - name: Draw the pictures
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PICTURE_IDS: ${{ inputs.ids }}
+        run: python pet_shelf_pictures.py
