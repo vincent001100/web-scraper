@@ -1,0 +1,27 @@
+{
+  "hook": "Swipe through \ud83d\udc49 Cat loves the",
+  "caption": "#ad Swipe through \ud83d\udc49 Cat loves the window?\nWindow-mounted seat for watching outside.\nGood for indoor cats, sunny windows.\n\n\ud83d\udc49 Link in bio\n\n#cats #catowners #indoorcats #catlovers",
+  "ai_picture": true,
+  "slides": 3,
+  "tiktok_video": false,
+  "picture_source": "team advert (ready/2026-11-14-swipe-cat-window-hammock-s1.jpg,ready/2026-11-14-swipe-cat-window-hammock-s2.jpg,ready/2026-11-14-swipe-cat-window-hammock-s3.jpg)",
+  "brief": "Suction-cup cat window hammock",
+  "type": "picture",
+  "reference": "",
+  "when": "2026-11-14 16:00",
+  "mode": "post",
+  "picture": "ready/2026-11-14-swipe-cat-window-hammock-s1.jpg,ready/2026-11-14-swipe-cat-window-hammock-s2.jpg,ready/2026-11-14-swipe-cat-window-hammock-s3.jpg",
+  "picture_ai": "yes",
+  "team_caption": "Swipe through \ud83d\udc49 Cat loves the window?\nWindow-mounted seat for watching outside.\nGood for indoor cats, sunny windows.",
+  "team_hashtags": "cats, catowners, indoorcats, catlovers",
+  "queue_id": "2026-11-14-1600-swipe-cat-window-hammock",
+  "board": "",
+  "only": [],
+  "ready_pictures": [
+    "ready/2026-11-14-swipe-cat-window-hammock-s1.jpg",
+    "ready/2026-11-14-swipe-cat-window-hammock-s2.jpg",
+    "ready/2026-11-14-swipe-cat-window-hammock-s3.jpg"
+  ],
+  "ready_video": "",
+  "due_at": "2026-11-14T15:00:00.000Z"
+}
