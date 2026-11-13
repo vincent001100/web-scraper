@@ -39,7 +39,8 @@
       "asset_count": 1,
       "status": "scheduled",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-11-dog-paw-cleaner-cup-medium-43119998462q5/post.jpg",
-      "due_at": "2026-11-13T01:00:00.000Z"
+      "due_at": "2026-11-13T01:00:00.000Z",
+      "pin_result": "sent"
     }
   ]
 }

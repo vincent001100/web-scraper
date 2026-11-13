@@ -11,7 +11,8 @@
       "asset_count": 1,
       "status": "scheduled",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-dog-car-seat-cover-hammock-43267891768/post.jpg",
-      "due_at": "2026-11-12T18:30:00.000Z"
+      "due_at": "2026-11-12T18:30:00.000Z",
+      "pin_result": "sent"
     }
   ]
 }

@@ -41,7 +41,8 @@
       "asset_count": 1,
       "status": "scheduled",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-12-back-seat-hammock-car-cover-43230257770q1/post.jpg",
-      "due_at": "2026-11-13T11:30:00.000Z"
+      "due_at": "2026-11-13T11:30:00.000Z",
+      "pin_result": "sent"
     }
   ]
 }
