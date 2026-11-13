@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 14 Nov 2026: Laptop Store (30 records)
+
+[Data (CSV)](2026-11-14_laptops/data.csv) · [Caption](2026-11-14_laptops/caption.txt)
+
+![Laptop Store](2026-11-14_laptops/post.png)
+
 ## 13 Nov 2026: Countries of the World (250 records)
 
 [Data (CSV)](2026-11-13_countries/data.csv) · [Caption](2026-11-13_countries/caption.txt)
