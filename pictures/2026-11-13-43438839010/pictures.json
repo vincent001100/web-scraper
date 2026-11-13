@@ -1,0 +1,17 @@
+{
+ "made": [
+  [
+   "cat-tunnel",
+   "@cf/black-forest-labs/flux-1-schnell (free fallback; Gemini said: gemini-3.1-flash-image-preview: HTTP 429 You exceeded your current quota, please check you)"
+  ],
+  [
+   "felt-cat-cave",
+   "@cf/black-forest-labs/flux-1-schnell (free fallback; Gemini said: gemini-3.1-flash-image-preview: HTTP 429 You exceeded your current quota, please check you)"
+  ]
+ ],
+ "failed": [],
+ "prompts": {
+  "cat-tunnel": "Create an image: a three-way crinkle cat tunnel: bright light blue fabric tubes with thin white rings, joined in a Y shape, a small hanging ball at one opening. No animal. Studio product photo, no logo, no brand name, no text, soft daylight, plain cream background (#f4efe6), square 1:1, high detail.",
+  "felt-cat-cave": "Create an image: a round cat cave bed made of thick charcoal grey wool felt, egg-shaped with one round entrance hole at the front. No animal. Studio product photo, no logo, no brand name, no text, soft daylight, plain cream background (#f4efe6), square 1:1, high detail."
+ }
+}
