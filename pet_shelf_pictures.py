@@ -90,14 +90,12 @@ def draw(prompt, key, models, post=requests.post):
 
 def main():
     key = (os.environ.get("GEMINI_API_KEY") or "").strip()
-    if not key:
-        robot.fail_message("The GEMINI_API_KEY secret is missing."); return 1
     prompts = load_prompts()
     wanted = [w for w in re.split(r"[,\s]+", os.environ.get("PICTURE_IDS", "")) if w]
     unknown = [w for w in wanted if w not in prompts]
     if not wanted or unknown:
         robot.fail_message(f"Give product ids from pet_shelf_picture_prompts.md. Unknown: {unknown or 'none given'}"); return 1
-    models = image_models(key)
+    models = image_models(key) if key else []
     say("Picture models this key can use: " + (", ".join(n for _, n in models) or "none"))
     robot.open_media_branch()
     folder = f"pictures/{datetime.now(timezone.utc):%Y-%m-%d}-{os.environ.get('GITHUB_RUN_ID', 'local')}"
@@ -105,6 +103,16 @@ def main():
     done, failed = [], []
     for pid in wanted[:12]:
         data, who = draw(prompts[pid], key, models)
+        if not data:
+            # Free fallback: Cloudflare's picture service (same keys the order robot uses). Lower quality, check it.
+            picture, why = robot.draw_cloudflare_picture(prompts[pid].replace("Create an image: ", ""),
+                                                         os.environ.get("CLOUDFLARE_ACCOUNT_ID"), os.environ.get("CLOUDFLARE_API_TOKEN"))
+            if picture is not None:
+                import io
+                buf = io.BytesIO(); picture.save(buf, "JPEG", quality=92); data = buf.getvalue()
+                who = f"{robot.CLOUDFLARE_MODEL} (free fallback; Gemini said: {who[:90]})"
+            else:
+                who = f"Gemini: {who[:120]} | Cloudflare: {why}"
         if data:
             ext = "jpg" if data[:3] == b"\xff\xd8\xff" else "png"
             open(os.path.join(robot.MEDIA_DIR, folder, f"{pid}.{ext}"), "wb").write(data)

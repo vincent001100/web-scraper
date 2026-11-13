@@ -30,5 +30,7 @@ jobs:
       - name: Draw the pictures
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           PICTURE_IDS: ${{ inputs.ids }}
         run: python pet_shelf_pictures.py
