@@ -1,5 +1,5 @@
 {
- "about": "Pet Shelf queue, Thu 19 - Wed 25 Nov 2026. Status 'preview' = made and waiting for boss; the robot only books 'approved'. Boss rule: no reply by 08:00 = posts go out.",
+ "about": "Pet Shelf queue, Thu 19 - Wed 25 Nov 2026. Boss approved all 28 posts on 13 Nov 2026. Boss rule: no reply by 08:00 = posts go out.",
  "posts": [
   {
    "id": "2026-11-19-0200-honest-snuffle-mat",
@@ -11,7 +11,7 @@
    "caption": "Eats too fast?\nThis snuffle mat for sniffing out treats: hide food in the fabric so your dog sniffs it out.\nGood for: slowing down meals, rainy-day play. Not for: dogs that chew and swallow fabric, so watch them.",
    "hashtags": "dogs, dogowners, doglovers, dogcare",
    "board": "Dog Gear That Fixes Things",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-19-1230-swipe-hamster-wheel",
@@ -23,7 +23,7 @@
    "caption": "Swipe through 👉 Noisy wheel at night?\nLarger quiet wheel for a straight running position.\nGood for larger hamsters, quiet nights.",
    "hashtags": "hamsters, hamstercage, smallpets, hamsterlovers",
    "board": "Small Pet & Hamster Cage Ideas",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-19-1600-kit-rainy-day",
@@ -35,7 +35,7 @@
    "caption": "Wet walk? A thick towel soaks up the water, and a paw cup cleans muddy feet at the door.",
    "hashtags": "dogs, dogowners, doglovers, dogcare",
    "board": "Dog Gear That Fixes Things",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-19-1930-video-led-dog-collar",
@@ -47,7 +47,7 @@
    "caption": "Hard to see your dog on night walks?\nThis collar glows, so cars and people can see your dog.\nKeep the ID tag collar on too.",
    "hashtags": "dogs, dogwalks, dogowners, nightwalks",
    "board": "Dog Walking Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-20-0200-kit-brain-games",
@@ -59,7 +59,7 @@
    "caption": "Two ways to keep a clever dog busy: a mat to sniff out food, and a puzzle with hidden treats. Stay close if your dog chews things.",
    "hashtags": "dogs, dogowners, doglovers, dogcare",
    "board": "Dog Gear That Fixes Things",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-20-1230-honest-aquarium-glass-cleaner",
@@ -71,7 +71,7 @@
    "caption": "Green tank glass?\nThis magnetic aquarium glass cleaner: magnet cleaner wipes the glass with dry hands.\nGood for: algae on glass. Not for: glass thicker than its rating, so check first.",
    "hashtags": "aquarium, fishtank, fishkeeping, bettafish",
    "board": "Bird & Aquarium Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-20-1600-swipe-led-dog-collar",
@@ -83,7 +83,7 @@
    "caption": "Swipe through 👉 Dark walks?\nA glowing collar that cars and people can see.\nGood for evening and early-morning walks.",
    "hashtags": "dogs, dogowners, doglovers, dogcare",
    "board": "Dog Walking Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-20-1930-video-hamster-wheel",
@@ -95,7 +95,7 @@
    "caption": "Is the hamster wheel too noisy at night?\nThis bigger wheel is made to run quietly, with room to run straight.\nCheck that your cage fits 11 inches.",
    "hashtags": "hamsters, hamstercage, smallpets, hamsterlovers",
    "board": "Small Pet & Hamster Cage Ideas",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-21-0200-swipe-deshedding-brush",
@@ -107,7 +107,7 @@
    "caption": "Swipe through 👉 Fur everywhere?\nA wavy blade pulls out loose fur as you brush.\nGood for dogs that shed a lot.",
    "hashtags": "dogs, dogowners, doglovers, dogcare",
    "board": "Dog Gear That Fixes Things",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-21-1230-honest-bird-play-stand",
@@ -119,7 +119,7 @@
    "caption": "Bored in the cage?\nThis natural wood bird play stand: wooden stand for play on a table.\nGood for: small birds like budgies and cockatiels. Not for: large parrots, since it is small.",
    "hashtags": "birds, petbirds, budgies, cockatiels",
    "board": "Bird & Aquarium Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-21-1600-kit-night-walk",
@@ -131,7 +131,7 @@
    "caption": "For dark evenings: a collar that lights up and a harness with reflective strips, so your dog is easier to see.",
    "hashtags": "dogs, dogowners, doglovers, dogcare",
    "board": "Dog Walking Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-21-1930-video-snuffle-mat",
@@ -143,7 +143,7 @@
    "caption": "Does your dog eat too fast?\nHide the food in this mat, and your dog sniffs it out.\nStay close if your dog chews fabric.",
    "hashtags": "dogs, dogowners, dogfood, doglovers",
    "board": "Dog Gear That Fixes Things",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-22-0200-honest-long-training-lead",
@@ -155,7 +155,7 @@
    "caption": "Practising recall?\nThis 30 ft long training lead: a very long lead so your dog can roam while still attached.\nGood for: recall training, parks, beaches. Not for: busy streets, where a short lead is safer.",
    "hashtags": "dogs, dogowners, doglovers, dogcare",
    "board": "Dog Walking Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-22-1230-kit-rabbit-corner",
@@ -167,7 +167,7 @@
    "caption": "A big litter box with a pull-out drawer, and a rack that keeps hay off the floor. Measure your cage first.",
    "hashtags": "rabbits, bunnies, guineapigs, smallpets",
    "board": "Small Pet & Hamster Cage Ideas",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-22-1600-swipe-dog-puzzle-toy",
@@ -179,7 +179,7 @@
    "caption": "Swipe through 👉 Bored dog at home?\nSlide and lift the blocks to find hidden treats.\nGood for smart dogs, alone time with a bit of food.",
    "hashtags": "dogs, dogowners, doglovers, dogcare",
    "board": "Dog Gear That Fixes Things",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-22-1930-video-deshedding-brush",
@@ -191,7 +191,7 @@
    "caption": "Dog fur all over the house?\nThis brush has a wavy blade that pulls out loose fur.\nNot for sore or broken skin.",
    "hashtags": "dogs, dogowners, doggrooming, doglovers",
    "board": "Dog Gear That Fixes Things",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-23-0200-swipe-dog-drying-towel",
@@ -203,7 +203,7 @@
    "caption": "Swipe through 👉 Wet dog again?\nA thick microfibre towel that soaks up water fast.\nGood for after baths, rain and beach days.",
    "hashtags": "dogs, dogowners, doglovers, dogcare",
    "board": "Dog Gear That Fixes Things",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-23-1230-honest-no-drip-water-bottle",
@@ -215,7 +215,7 @@
    "caption": "Wet bedding again?\nThis no-drip small pet water bottle (32 oz): hanging bottle with a no-drip nozzle.\nGood for: small pets, cages with bars. Not for: pets that need a smaller bottle, so check the size.",
    "hashtags": "smallpets, hamsters, guineapigs, rabbits",
    "board": "Small Pet & Hamster Cage Ideas",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-23-1600-kit-clean-tank",
@@ -227,7 +227,7 @@
    "caption": "A magnet cleaner for algae on the glass, and a hand siphon for water changes and gravel.",
    "hashtags": "aquarium, fishtank, fishkeeping, bettafish",
    "board": "Bird & Aquarium Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-23-1930-video-dog-puzzle-toy",
@@ -239,7 +239,7 @@
    "caption": "Bored dog at home?\nHide treats in this puzzle, and your dog slides the blocks to find them.\nStay with strong chewers.",
    "hashtags": "dogs, dogowners, dogtoys, doglovers",
    "board": "Dog Gear That Fixes Things",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-24-0200-honest-cat-backpack-carrier",
@@ -251,7 +251,7 @@
    "caption": "Vet trip stress?\nThis expandable cat backpack carrier: soft backpack carrier that expands.\nGood for: vet trips, short travel. Not for: anyone flying, until you check your airline's size rules.",
    "hashtags": "cats, catowners, indoorcats, catlovers",
    "board": "Indoor Cat Must-Haves",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-24-1230-swipe-bird-seed-catcher",
@@ -263,7 +263,7 @@
    "caption": "Swipe through 👉 Seed on the floor?\nMesh skirt around the cage catches the mess.\nGood for seed eaters, tidier floors.",
    "hashtags": "birds, petbirds, budgies, cockatiels",
    "board": "Bird & Aquarium Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-24-1600-kit-bird-corner",
@@ -275,7 +275,7 @@
    "caption": "A small wooden stand for play on a table, and a perch that holds on the shower wall or window. Always stay with your bird.",
    "hashtags": "birds, petbirds, budgies, cockatiels",
    "board": "Bird & Aquarium Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-24-1930-video-aquarium-glass-cleaner",
@@ -287,7 +287,7 @@
    "caption": "Green algae on the tank glass?\nThis magnet cleaner wipes the inside, while your hands stay dry.\nCheck your glass thickness first.",
    "hashtags": "aquarium, fishtank, fishkeeping, bettafish",
    "board": "Bird & Aquarium Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-25-0200-kit-indoor-cat",
@@ -299,7 +299,7 @@
    "caption": "A feather wand for playtime, and a window seat for watching the world. Check your window size first.",
    "hashtags": "cats, catowners, indoorcats, catlovers",
    "board": "Cat Toys for Bored Indoor Cats",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-25-1230-honest-betta-leaf-hammock",
@@ -311,7 +311,7 @@
    "caption": "Betta needs a rest?\nThis betta leaf hammock (3-pack): leaf-shaped hammock with a suction cup.\nGood for: betta tanks. Not for: tanks with very strong flow, so check placement.",
    "hashtags": "aquarium, fishtank, fishkeeping, bettafish",
    "board": "Bird & Aquarium Essentials",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-25-1600-swipe-rabbit-litter-box",
@@ -323,7 +323,7 @@
    "caption": "Swipe through 👉 Messy cage corner?\nA big litter box with a pull-out drawer for easy cleaning.\nGood for rabbits, guinea pigs.",
    "hashtags": "rabbits, bunnies, guineapigs, smallpets",
    "board": "Small Pet & Hamster Cage Ideas",
-   "status": "preview"
+   "status": "approved"
   },
   {
    "id": "2026-11-25-1930-video-cat-litter-mat",
@@ -335,7 +335,7 @@
    "caption": "Litter all over the floor?\nThis mat has two layers, so litter from the paws falls inside.\nIt catches most, not every grain.",
    "hashtags": "cats, catowners, indoorcats, catlovers",
    "board": "Indoor Cat Must-Haves",
-   "status": "preview"
+   "status": "approved"
   }
  ]
 }
