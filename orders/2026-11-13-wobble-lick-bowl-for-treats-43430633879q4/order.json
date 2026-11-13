@@ -1,0 +1,27 @@
+{
+  "hook": "Swipe through \ud83d\udc49 Dinner gone in",
+  "caption": "#ad Swipe through \ud83d\udc49 Dinner gone in seconds?\nSpread food in the bowl so licking takes longer.\nGood for mealtime, bath time and quiet time.\n\n\ud83d\udc49 Link in bio\n\n#dogs #dogowners #doglovers #dogwalks",
+  "ai_picture": true,
+  "slides": 3,
+  "tiktok_video": false,
+  "picture_source": "team advert (ready/2026-11-15-swipe-lick-mat-s1.jpg,ready/2026-11-15-swipe-lick-mat-s2.jpg,ready/2026-11-15-swipe-lick-mat-s3.jpg)",
+  "brief": "Wobble lick bowl for treats and wet food",
+  "type": "picture",
+  "reference": "",
+  "when": "2026-11-15 02:00",
+  "mode": "post",
+  "picture": "ready/2026-11-15-swipe-lick-mat-s1.jpg,ready/2026-11-15-swipe-lick-mat-s2.jpg,ready/2026-11-15-swipe-lick-mat-s3.jpg",
+  "picture_ai": "yes",
+  "team_caption": "Swipe through \ud83d\udc49 Dinner gone in seconds?\nSpread food in the bowl so licking takes longer.\nGood for mealtime, bath time and quiet time.",
+  "team_hashtags": "dogs, dogowners, doglovers, dogwalks",
+  "queue_id": "2026-11-15-0200-swipe-lick-mat",
+  "board": "",
+  "only": [],
+  "ready_pictures": [
+    "ready/2026-11-15-swipe-lick-mat-s1.jpg",
+    "ready/2026-11-15-swipe-lick-mat-s2.jpg",
+    "ready/2026-11-15-swipe-lick-mat-s3.jpg"
+  ],
+  "ready_video": "",
+  "due_at": "2026-11-15T01:00:00.000Z"
+}
