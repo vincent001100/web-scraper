@@ -1,0 +1,25 @@
+{
+  "hook": "Does your dog finish dinner in",
+  "caption": "#ad Does your dog finish dinner in seconds?\nSpread food in the bumps, and licking takes longer.\nNot for dogs that chew soft rubber.\n\n\ud83d\udc49 Link in bio\n\n#dogs #dogowners #dogfood #doglovers",
+  "ai_picture": true,
+  "slides": 1,
+  "tiktok_video": false,
+  "picture_source": "team advert (ready/videos/lick-mat.mp4,ready/videos/lick-mat-cover.jpg)",
+  "brief": "Motion video with voiceover: lick mat",
+  "type": "video",
+  "reference": "",
+  "when": "2026-11-14 19:30",
+  "mode": "post",
+  "picture": "ready/videos/lick-mat.mp4,ready/videos/lick-mat-cover.jpg",
+  "picture_ai": "yes",
+  "team_caption": "Does your dog finish dinner in seconds?\nSpread food in the bumps, and licking takes longer.\nNot for dogs that chew soft rubber.",
+  "team_hashtags": "dogs, dogowners, dogfood, doglovers",
+  "queue_id": "2026-11-14-1930-video-lick-mat",
+  "board": "",
+  "only": [],
+  "ready_pictures": [
+    "ready/videos/lick-mat-cover.jpg"
+  ],
+  "ready_video": "ready/videos/lick-mat.mp4",
+  "due_at": "2026-11-14T18:30:00.000Z"
+}
