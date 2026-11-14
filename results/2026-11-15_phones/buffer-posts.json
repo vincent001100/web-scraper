@@ -1,0 +1,26 @@
+{
+  "post_date": "2026-11-15",
+  "mode": "customScheduled",
+  "due_at": "2026-11-15T06:00:00.000Z",
+  "created_at": "2026-11-14T22:26:15+00:00",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6ae9def0e29c69a1714a5301",
+      "channel_name": "solvix0",
+      "post_id": "6af8e00776c23bf1c743c508"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6ae9de2fe29c69a1714a4928",
+      "channel_name": "Solvix",
+      "post_id": "6af8e007c5b364e0621d5a37"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6ae330e42f1f5ed6480d521a",
+      "channel_name": "solvix32",
+      "post_id": "6af8e00776c23bf1c743c567"
+    }
+  ]
+}
