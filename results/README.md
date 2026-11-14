@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 15 Nov 2026: Phone Store (9 records)
+
+[Data (CSV)](2026-11-15_phones/data.csv) · [Caption](2026-11-15_phones/caption.txt)
+
+![Phone Store](2026-11-15_phones/post.png)
+
 ## 14 Nov 2026: Laptop Store (30 records)
 
 [Data (CSV)](2026-11-14_laptops/data.csv) · [Caption](2026-11-14_laptops/caption.txt)
