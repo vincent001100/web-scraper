@@ -1,0 +1,47 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af9a91bc5b364e062568bf8",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-motion-video-with-voiceover-paw-43715289325q3/video.mp4",
+      "due_at": "2026-11-16T18:30:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6af9a91bb9a106584caa7667",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-motion-video-with-voiceover-paw-43715289325q3/video.mp4",
+      "due_at": "2026-11-16T18:30:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af9a91c918fe79d2ee24825",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-motion-video-with-voiceover-paw-43715289325q3/video.mp4",
+      "due_at": "2026-11-16T18:30:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6af9a91c918fe79d2ee2484e",
+      "board": "Dog Gear That Fixes Things",
+      "board_service_id": "229683718435408355",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-motion-video-with-voiceover-paw-43715289325q3/post.jpg",
+      "due_at": "2026-11-16T18:30:00.000Z"
+    }
+  ]
+}
