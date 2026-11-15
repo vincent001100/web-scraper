@@ -1,0 +1,47 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af9ea7c4f0276ab94505129",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-double-layer-cat-litter-mat-43740772013q1/post.jpg",
+      "due_at": "2026-11-17T01:00:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6af9ea7ce5a113497a00f97f",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-double-layer-cat-litter-mat-43740772013q1/post.jpg",
+      "due_at": "2026-11-17T01:00:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af9ea7d4f0276ab94505172",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-double-layer-cat-litter-mat-43740772013q1/post.jpg",
+      "due_at": "2026-11-17T01:00:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6af9ea7dc5b364e0626ea07f",
+      "board": "Indoor Cat Must-Haves",
+      "board_service_id": "229683718435407933",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-double-layer-cat-litter-mat-43740772013q1/post.jpg",
+      "due_at": "2026-11-17T01:00:00.000Z"
+    }
+  ]
+}
