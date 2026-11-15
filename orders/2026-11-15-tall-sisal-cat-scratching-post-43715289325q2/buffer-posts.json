@@ -1,0 +1,47 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af9a91176c23bf1c77d056f",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-tall-sisal-cat-scratching-post-43715289325q2/post.jpg",
+      "due_at": "2026-11-16T15:00:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6af9a911e5a113497ae906f5",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-tall-sisal-cat-scratching-post-43715289325q2/post.jpg",
+      "due_at": "2026-11-16T15:00:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6af9a912b9a106584caa74db",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-tall-sisal-cat-scratching-post-43715289325q2/post.jpg",
+      "due_at": "2026-11-16T15:00:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6af9a912c5b364e062568a4b",
+      "board": "Indoor Cat Must-Haves",
+      "board_service_id": "229683718435407933",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-15-tall-sisal-cat-scratching-post-43715289325q2/post.jpg",
+      "due_at": "2026-11-16T15:00:00.000Z"
+    }
+  ]
+}
