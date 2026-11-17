@@ -1,0 +1,47 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6afce869bb12698d1582d117",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-17-quiet-hamster-exercise-wheel-11-44202876879q1/post.jpg",
+      "due_at": "2026-11-19T11:30:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6afce86a9f3765f6ab19f848",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-17-quiet-hamster-exercise-wheel-11-44202876879q1/post.jpg",
+      "due_at": "2026-11-19T11:30:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6afce86aab47737bddb36e4c",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-17-quiet-hamster-exercise-wheel-11-44202876879q1/post.jpg",
+      "due_at": "2026-11-19T11:30:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6afce86bf0c5ce9361aaf544",
+      "board": "Small Pet & Hamster Cage Ideas",
+      "board_service_id": "229683718435407937",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-17-quiet-hamster-exercise-wheel-11-44202876879q1/post.jpg",
+      "due_at": "2026-11-19T11:30:00.000Z"
+    }
+  ]
+}
