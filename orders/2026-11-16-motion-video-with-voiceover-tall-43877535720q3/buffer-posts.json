@@ -41,7 +41,8 @@
       "asset_count": 1,
       "status": "scheduled",
       "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-16-motion-video-with-voiceover-tall-43877535720q3/post.jpg",
-      "due_at": "2026-11-17T18:30:00.000Z"
+      "due_at": "2026-11-17T18:30:00.000Z",
+      "pin_result": "sent"
     }
   ]
 }
