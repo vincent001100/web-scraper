@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 17 Nov 2026: Famous Quotes (50 records)
+
+[Data (CSV)](2026-11-17_quotes/data.csv) · [Caption](2026-11-17_quotes/caption.txt)
+
+![Famous Quotes](2026-11-17_quotes/post.png)
+
 ## 16 Nov 2026: Famous Quotes (50 records)
 
 [Data (CSV)](2026-11-16_quotes/data.csv) · [Caption](2026-11-16_quotes/caption.txt)
