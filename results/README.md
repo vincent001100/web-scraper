@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 19 Nov 2026: Hockey Team Stats (125 records)
+
+[Data (CSV)](2026-11-19_hockey/data.csv) · [Caption](2026-11-19_hockey/caption.txt)
+
+![Hockey Team Stats](2026-11-19_hockey/post.png)
+
 ## 18 Nov 2026: Famous Quotes (JavaScript site) (50 records)
 
 [Data (CSV)](2026-11-18_quotes_js/data.csv) · [Caption](2026-11-18_quotes_js/caption.txt)

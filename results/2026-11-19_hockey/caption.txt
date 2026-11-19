@@ -1,0 +1,8 @@
+📊 Daily Data Drop: Hockey Team Stats
+
+My scraper collected 125 records today, fully automatic (team, year, wins, losses).
+Every morning it picks a website, checks it's allowed, collects the data and delivers a clean spreadsheet.
+
+Need prices, products, leads or listings collected for your business? DM me.
+
+#webscraping #python #automation #dataextraction #freelancer #solvix
