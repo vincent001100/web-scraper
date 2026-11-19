@@ -1,0 +1,47 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6aff06f0abf4ba608b7b0cd4",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-19-deshedding-brush-with-a-wavy-44543476566q4/post.jpg",
+      "due_at": "2026-11-21T01:00:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6aff06f003dff68ab4618332",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-19-deshedding-brush-with-a-wavy-44543476566q4/post.jpg",
+      "due_at": "2026-11-21T01:00:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6aff06f1443a2a9f2fc7f8a2",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-19-deshedding-brush-with-a-wavy-44543476566q4/post.jpg",
+      "due_at": "2026-11-21T01:00:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6aff06f1fd08883b6470b3f0",
+      "board": "Dog Gear That Fixes Things",
+      "board_service_id": "229683718435408355",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-19-deshedding-brush-with-a-wavy-44543476566q4/post.jpg",
+      "due_at": "2026-11-21T01:00:00.000Z"
+    }
+  ]
+}
