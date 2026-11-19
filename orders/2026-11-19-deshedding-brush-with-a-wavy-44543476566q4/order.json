@@ -1,0 +1,27 @@
+{
+  "hook": "Swipe through \ud83d\udc49 Fur everywhere",
+  "caption": "#ad Swipe through \ud83d\udc49 Fur everywhere?\nA wavy blade pulls out loose fur as you brush.\nGood for dogs that shed a lot.\n\n\ud83d\udc49 Link in bio\n\n#dogs #dogowners #doglovers #dogcare",
+  "ai_picture": true,
+  "slides": 3,
+  "tiktok_video": false,
+  "picture_source": "team advert (ready/2026-11-21-swipe-deshedding-brush-s1.jpg,ready/2026-11-21-swipe-deshedding-brush-s2.jpg,ready/2026-11-21-swipe-deshedding-brush-s3.jpg)",
+  "brief": "Deshedding brush with a wavy blade",
+  "type": "picture",
+  "reference": "",
+  "when": "2026-11-21 02:00",
+  "mode": "post",
+  "picture": "ready/2026-11-21-swipe-deshedding-brush-s1.jpg,ready/2026-11-21-swipe-deshedding-brush-s2.jpg,ready/2026-11-21-swipe-deshedding-brush-s3.jpg",
+  "picture_ai": "yes",
+  "team_caption": "Swipe through \ud83d\udc49 Fur everywhere?\nA wavy blade pulls out loose fur as you brush.\nGood for dogs that shed a lot.",
+  "team_hashtags": "dogs, dogowners, doglovers, dogcare",
+  "queue_id": "2026-11-21-0200-swipe-deshedding-brush",
+  "board": "Dog Gear That Fixes Things",
+  "only": [],
+  "ready_pictures": [
+    "ready/2026-11-21-swipe-deshedding-brush-s1.jpg",
+    "ready/2026-11-21-swipe-deshedding-brush-s2.jpg",
+    "ready/2026-11-21-swipe-deshedding-brush-s3.jpg"
+  ],
+  "ready_video": "",
+  "due_at": "2026-11-21T01:00:00.000Z"
+}
