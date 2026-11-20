@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 20 Nov 2026: Job Listings (100 records)
+
+[Data (CSV)](2026-11-20_jobs/data.csv) · [Caption](2026-11-20_jobs/caption.txt)
+
+![Job Listings](2026-11-20_jobs/post.png)
+
 ## 19 Nov 2026: Hockey Team Stats (125 records)
 
 [Data (CSV)](2026-11-19_hockey/data.csv) · [Caption](2026-11-19_hockey/caption.txt)
