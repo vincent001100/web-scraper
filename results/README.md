@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 22 Nov 2026: Countries of the World (250 records)
+
+[Data (CSV)](2026-11-22_countries/data.csv) · [Caption](2026-11-22_countries/caption.txt)
+
+![Countries of the World](2026-11-22_countries/post.png)
+
 ## 21 Nov 2026: Famous Quotes (JavaScript site) (50 records)
 
 [Data (CSV)](2026-11-21_quotes_js/data.csv) · [Caption](2026-11-21_quotes_js/caption.txt)
