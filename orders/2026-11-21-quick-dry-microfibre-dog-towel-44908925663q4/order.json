@@ -1,0 +1,27 @@
+{
+  "hook": "Swipe through \ud83d\udc49 Wet dog again",
+  "caption": "#ad Swipe through \ud83d\udc49 Wet dog again?\nA thick microfibre towel that soaks up water fast.\nGood for after baths, rain and beach days.\n\n\ud83d\udc49 Link in bio\n\n#dogs #dogowners #doglovers #dogcare",
+  "ai_picture": true,
+  "slides": 3,
+  "tiktok_video": false,
+  "picture_source": "team advert (ready/2026-11-23-swipe-dog-drying-towel-s1.jpg,ready/2026-11-23-swipe-dog-drying-towel-s2.jpg,ready/2026-11-23-swipe-dog-drying-towel-s3.jpg)",
+  "brief": "Quick-dry microfibre dog towel",
+  "type": "picture",
+  "reference": "",
+  "when": "2026-11-23 02:00",
+  "mode": "post",
+  "picture": "ready/2026-11-23-swipe-dog-drying-towel-s1.jpg,ready/2026-11-23-swipe-dog-drying-towel-s2.jpg,ready/2026-11-23-swipe-dog-drying-towel-s3.jpg",
+  "picture_ai": "yes",
+  "team_caption": "Swipe through \ud83d\udc49 Wet dog again?\nA thick microfibre towel that soaks up water fast.\nGood for after baths, rain and beach days.",
+  "team_hashtags": "dogs, dogowners, doglovers, dogcare",
+  "queue_id": "2026-11-23-0200-swipe-dog-drying-towel",
+  "board": "Dog Gear That Fixes Things",
+  "only": [],
+  "ready_pictures": [
+    "ready/2026-11-23-swipe-dog-drying-towel-s1.jpg",
+    "ready/2026-11-23-swipe-dog-drying-towel-s2.jpg",
+    "ready/2026-11-23-swipe-dog-drying-towel-s3.jpg"
+  ],
+  "ready_video": "",
+  "due_at": "2026-11-23T01:00:00.000Z"
+}
