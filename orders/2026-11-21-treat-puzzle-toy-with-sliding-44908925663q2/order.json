@@ -1,0 +1,27 @@
+{
+  "hook": "Swipe through \ud83d\udc49 Bored dog at",
+  "caption": "#ad Swipe through \ud83d\udc49 Bored dog at home?\nSlide and lift the blocks to find hidden treats.\nGood for smart dogs, alone time with a bit of food.\n\n\ud83d\udc49 Link in bio\n\n#dogs #dogowners #doglovers #dogcare",
+  "ai_picture": true,
+  "slides": 3,
+  "tiktok_video": false,
+  "picture_source": "team advert (ready/2026-11-22-swipe-dog-puzzle-toy-s1.jpg,ready/2026-11-22-swipe-dog-puzzle-toy-s2.jpg,ready/2026-11-22-swipe-dog-puzzle-toy-s3.jpg)",
+  "brief": "Treat puzzle toy with sliding blocks",
+  "type": "picture",
+  "reference": "",
+  "when": "2026-11-22 16:00",
+  "mode": "post",
+  "picture": "ready/2026-11-22-swipe-dog-puzzle-toy-s1.jpg,ready/2026-11-22-swipe-dog-puzzle-toy-s2.jpg,ready/2026-11-22-swipe-dog-puzzle-toy-s3.jpg",
+  "picture_ai": "yes",
+  "team_caption": "Swipe through \ud83d\udc49 Bored dog at home?\nSlide and lift the blocks to find hidden treats.\nGood for smart dogs, alone time with a bit of food.",
+  "team_hashtags": "dogs, dogowners, doglovers, dogcare",
+  "queue_id": "2026-11-22-1600-swipe-dog-puzzle-toy",
+  "board": "Dog Gear That Fixes Things",
+  "only": [],
+  "ready_pictures": [
+    "ready/2026-11-22-swipe-dog-puzzle-toy-s1.jpg",
+    "ready/2026-11-22-swipe-dog-puzzle-toy-s2.jpg",
+    "ready/2026-11-22-swipe-dog-puzzle-toy-s3.jpg"
+  ],
+  "ready_video": "",
+  "due_at": "2026-11-22T15:00:00.000Z"
+}
