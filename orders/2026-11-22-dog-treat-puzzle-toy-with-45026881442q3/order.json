@@ -1,0 +1,25 @@
+{
+  "hook": "Bored dog at home",
+  "caption": "#ad Bored dog at home?\nHide treats in this puzzle, and your dog slides the blocks to find them.\nStay with strong chewers.\n\n\ud83d\udc49 Link in bio\n\n#dogs #dogowners #dogtoys #doglovers",
+  "ai_picture": true,
+  "slides": 1,
+  "tiktok_video": false,
+  "picture_source": "team advert (ready/videos/dog-puzzle-toy.mp4,ready/videos/dog-puzzle-toy-cover.jpg)",
+  "brief": "Dog treat puzzle toy with sliding blocks",
+  "type": "video",
+  "reference": "",
+  "when": "2026-11-23 19:30",
+  "mode": "post",
+  "picture": "ready/videos/dog-puzzle-toy.mp4,ready/videos/dog-puzzle-toy-cover.jpg",
+  "picture_ai": "yes",
+  "team_caption": "Bored dog at home?\nHide treats in this puzzle, and your dog slides the blocks to find them.\nStay with strong chewers.",
+  "team_hashtags": "dogs, dogowners, dogtoys, doglovers",
+  "queue_id": "2026-11-23-1930-video-dog-puzzle-toy",
+  "board": "Dog Gear That Fixes Things",
+  "only": [],
+  "ready_pictures": [
+    "ready/videos/dog-puzzle-toy-cover.jpg"
+  ],
+  "ready_video": "ready/videos/dog-puzzle-toy.mp4",
+  "due_at": "2026-11-23T18:30:00.000Z"
+}
