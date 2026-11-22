@@ -1,0 +1,47 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6b02ec23d5eabfb8ccad70d0",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-22-expandable-cat-backpack-carrier-45026881442q4/post.jpg",
+      "due_at": "2026-11-24T01:00:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6b02ec24cc364169c156c6be",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-22-expandable-cat-backpack-carrier-45026881442q4/post.jpg",
+      "due_at": "2026-11-24T01:00:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6b02ec24c72676f5e92ec359",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-22-expandable-cat-backpack-carrier-45026881442q4/tiktok.mp4",
+      "due_at": "2026-11-24T01:00:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6b02ec25846b0ee9078a2317",
+      "board": "Indoor Cat Must-Haves",
+      "board_service_id": "229683718435407933",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-22-expandable-cat-backpack-carrier-45026881442q4/post.jpg",
+      "due_at": "2026-11-24T01:00:00.000Z"
+    }
+  ]
+}
