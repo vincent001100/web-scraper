@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 23 Nov 2026: Online Bookstore (100 records)
+
+[Data (CSV)](2026-11-23_books/data.csv) · [Caption](2026-11-23_books/caption.txt)
+
+![Online Bookstore](2026-11-23_books/post.png)
+
 ## 22 Nov 2026: Countries of the World (250 records)
 
 [Data (CSV)](2026-11-22_countries/data.csv) · [Caption](2026-11-22_countries/caption.txt)
