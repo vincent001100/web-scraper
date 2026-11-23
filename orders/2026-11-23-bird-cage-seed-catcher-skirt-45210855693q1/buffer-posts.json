@@ -1,0 +1,47 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6b04624b779e9370a78cf387",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-23-bird-cage-seed-catcher-skirt-45210855693q1/post.jpg",
+      "due_at": "2026-11-24T11:30:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6b04624b82358053926d6e66",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-23-bird-cage-seed-catcher-skirt-45210855693q1/post.jpg",
+      "due_at": "2026-11-24T11:30:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6b04624ba9268e442358babf",
+      "asset_count": 3,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-23-bird-cage-seed-catcher-skirt-45210855693q1/post.jpg",
+      "due_at": "2026-11-24T11:30:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6b04624c779e9370a78cf3d5",
+      "board": "Bird & Aquarium Essentials",
+      "board_service_id": "229683718435408354",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-23-bird-cage-seed-catcher-skirt-45210855693q1/post.jpg",
+      "due_at": "2026-11-24T11:30:00.000Z"
+    }
+  ]
+}
