@@ -29,3 +29,17 @@ class Accounts(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Recent(unittest.TestCase):
+    def test_only_recent_order_folders_are_checked(self):
+        import json, os, tempfile
+        import pet_shelf_check as check
+        with tempfile.TemporaryDirectory() as base:
+            for name in ("2026-11-10-old-1", "2026-11-22-new-2"):
+                os.makedirs(os.path.join(base, "orders", name))
+                json.dump({"mode": "post", "posts": [{"service": "instagram", "post_id": name}]},
+                          open(os.path.join(base, "orders", name, check.robot.RECORD), "w"))
+            self.assertEqual([f for f, _ in check.collect(base, "2026-11-20")], ["2026-11-22-new-2"])
+            self.assertEqual(len(check.collect(base)), 2)
+

@@ -8,15 +8,19 @@ From the phone: Actions, Pet Shelf check, Run workflow.
 import json
 import os
 import sys
+from datetime import datetime, timedelta, timezone
 
 from buffer_post import Buffer, BufferError, LABEL, say, write_summary
 import pet_shelf_order as robot
 
 
-def collect(base):
+def collect(base, since=""):
+    """Real, not-cancelled posts from order folders dated `since` (YYYY-MM-DD) or later ("" = all)."""
     rows = []
     orders = os.path.join(base, "orders")
     for folder in sorted(os.listdir(orders)) if os.path.isdir(orders) else []:
+        if since and folder[:10] < since:
+            continue
         path = os.path.join(orders, folder, robot.RECORD)
         if not os.path.isfile(path):
             continue
@@ -43,7 +47,11 @@ def main():
         robot.open_media_branch()
         lines = ["| Order | App | Due (UTC) | Buffer status | Problem |", "|---|---|---|---|---|"]
         counts = {}
-        for folder, item in collect(robot.MEDIA_DIR):
+        # Only recent orders: asking Buffer about every post ever booked hits its question limit (seen 23 Nov 2026).
+        days = int(os.environ.get("CHECK_DAYS") or 4)
+        since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d") if days > 0 else ""
+        say(f"Checking orders booked since {since or 'the start'}.")
+        for folder, item in collect(robot.MEDIA_DIR, since):
             try:
                 info = account_for(item, buffer, pin_buffer).post_status(item["post_id"])
                 status, problem = info.get("status", "?"), info.get("problem") or ""

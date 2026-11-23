@@ -4,6 +4,11 @@ name: Pet Shelf check
 
 on:
   workflow_dispatch:
+    inputs:
+      days:
+        description: "How many days back to check (0 = every post ever; many posts can hit Buffer's question limit)"
+        type: string
+        default: "4"
 
 permissions:
   contents: read
@@ -23,5 +28,6 @@ jobs:
       - name: Ask Buffer about every booked post
         env:
           PET_SHELF_BUFFER_API_KEY: ${{ secrets.PET_SHELF_BUFFER_API_KEY }}
+          CHECK_DAYS: ${{ inputs.days }}
           PINTEREST_BUFFER_API_KEY: ${{ secrets.PINTEREST_BUFFER_API_KEY }}
         run: python pet_shelf_check.py
