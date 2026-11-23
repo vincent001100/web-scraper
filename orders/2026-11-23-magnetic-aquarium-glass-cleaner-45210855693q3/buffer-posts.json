@@ -1,0 +1,47 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6b046261cc150d473b7e9544",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-23-magnetic-aquarium-glass-cleaner-45210855693q3/video.mp4",
+      "due_at": "2026-11-24T18:30:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6b046261779e9370a78cfac6",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-23-magnetic-aquarium-glass-cleaner-45210855693q3/video.mp4",
+      "due_at": "2026-11-24T18:30:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6b046262a17868cf45bc6f94",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-23-magnetic-aquarium-glass-cleaner-45210855693q3/video.mp4",
+      "due_at": "2026-11-24T18:30:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6b046262779e9370a78cfb0b",
+      "board": "Bird & Aquarium Essentials",
+      "board_service_id": "229683718435408354",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-23-magnetic-aquarium-glass-cleaner-45210855693q3/post.jpg",
+      "due_at": "2026-11-24T18:30:00.000Z"
+    }
+  ]
+}
