@@ -1,0 +1,47 @@
+{
+  "mode": "post",
+  "posts": [
+    {
+      "service": "instagram",
+      "channel_id": "6aeb7b62e29c69a1716125e8",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6b05026ebc151fa8ad1c60f9",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-24-betta-leaf-hammock-3-pack-45318735979q1/post.jpg",
+      "due_at": "2026-11-25T11:30:00.000Z"
+    },
+    {
+      "service": "facebook",
+      "channel_id": "6aeb79fde29c69a171610133",
+      "channel_name": "Solvix Pet Shelf",
+      "post_id": "6b05026e9a4bd32ca3ed0dab",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-24-betta-leaf-hammock-3-pack-45318735979q1/post.jpg",
+      "due_at": "2026-11-25T11:30:00.000Z"
+    },
+    {
+      "service": "tiktok",
+      "channel_id": "6aeb7bc0e29c69a171612d42",
+      "channel_name": "solvixpetshelf",
+      "post_id": "6b05026f9a4bd32ca3ed0dea",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "video: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-24-betta-leaf-hammock-3-pack-45318735979q1/tiktok.mp4",
+      "due_at": "2026-11-25T11:30:00.000Z"
+    },
+    {
+      "service": "pinterest",
+      "channel_id": "6af463df62b70b94b0f48544",
+      "channel_name": "solvixpetsupplies",
+      "post_id": "6b05026fc43c1f2f5c840cdb",
+      "board": "Bird & Aquarium Essentials",
+      "board_service_id": "229683718435408354",
+      "asset_count": 1,
+      "status": "scheduled",
+      "asset": "image: https://raw.githubusercontent.com/vincent001100/web-scraper/pet-shelf-media/orders/2026-11-24-betta-leaf-hammock-3-pack-45318735979q1/post.jpg",
+      "due_at": "2026-11-25T11:30:00.000Z"
+    }
+  ]
+}
