@@ -2,6 +2,12 @@
 
 A new website is scraped automatically every morning. Newest first.
 
+## 24 Nov 2026: Famous Quotes (JavaScript site) (50 records)
+
+[Data (CSV)](2026-11-24_quotes_js/data.csv) · [Caption](2026-11-24_quotes_js/caption.txt)
+
+![Famous Quotes (JavaScript site)](2026-11-24_quotes_js/post.png)
+
 ## 23 Nov 2026: Online Bookstore (100 records)
 
 [Data (CSV)](2026-11-23_books/data.csv) · [Caption](2026-11-23_books/caption.txt)
