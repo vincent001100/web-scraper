@@ -43,3 +43,18 @@ class Recent(unittest.TestCase):
             self.assertEqual([f for f, _ in check.collect(base, "2026-11-20")], ["2026-11-22-new-2"])
             self.assertEqual(len(check.collect(base)), 2)
 
+
+
+def test_metrics_report_sorts_best_first(tmp_path, monkeypatch):
+    import pet_shelf_check as check
+    monkeypatch.chdir(tmp_path)
+    numbers = {"a": {"Likes": 2, "Reach": 900}, "b": {"Likes": 9, "Reach": 10}}
+    class FakeBuffer:
+        def post_metrics(self, post_id):
+            return {"status": "sent", "link": None, "updated": None, "metrics": numbers[post_id]}
+    monkeypatch.setattr(check, "write_summary", lambda text: None)
+    rows = [("2026-11-20-a", {"service": "instagram", "post_id": "a"}),
+            ("2026-11-21-b", {"service": "instagram", "post_id": "b"})]
+    check.metrics_report(rows, FakeBuffer(), None)
+    lines = (tmp_path / "results.csv").read_text().splitlines()
+    assert lines[1].startswith("2026-11-21-b")

@@ -191,6 +191,12 @@ def post_status_query(post_id, extras=True):
             + fields + " } } }")
 
 
+def post_metrics_query(post_id):
+    """Read-only: the numbers Buffer has for one sent post (likes, views, reach...)."""
+    return ("query { post(input: { id: " + json.dumps(post_id) + " }) { __typename ... on Post { "
+            "status sentAt externalLink metricsUpdatedAt metrics { name type value unit } } } }")
+
+
 # Buffer insists on a post "type" for Facebook and Instagram (found in other people's working
 # code; the docs we could open did not list it). A picture post is type "post".
 POST_METADATA = {
@@ -410,6 +416,19 @@ class Buffer:
             "sent_at": parse_buffer_time(post.get("sentAt")),
             "link": post.get("externalLink"),
             "problem": error.get("message") if isinstance(error, dict) else None,
+        }
+
+    def post_metrics(self, post_id):
+        """Read-only. Returns a dict: status, link, updated, metrics {name: value}."""
+        post = self.ask(post_metrics_query(post_id)).get("post") or {}
+        if "status" not in post:
+            raise BufferError(f"Buffer gave no numbers for post {post_id} "
+                              f"(it answered with '{post.get('__typename') or 'nothing'}').")
+        return {
+            "status": str(post.get("status") or "").lower(),
+            "link": post.get("externalLink"),
+            "updated": post.get("metricsUpdatedAt"),
+            "metrics": {m.get("name") or m.get("type"): m.get("value") for m in post.get("metrics") or []},
         }
 
 
