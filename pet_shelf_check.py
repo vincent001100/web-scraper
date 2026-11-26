@@ -7,6 +7,7 @@ From the phone: Actions, Pet Shelf check, Run workflow.
 """
 import json
 import os
+import re
 import sys
 from datetime import datetime, timedelta, timezone
 
@@ -39,6 +40,38 @@ def account_for(item, buffer, pin_buffer):
     return pin_buffer if item.get("service") == robot.PINTEREST and pin_buffer is not None else buffer
 
 
+def metrics_report(rows, buffer, pin_buffer):
+    """Read-only results table: every sent post with Buffer's numbers, best first. Also saves results.csv."""
+    import csv
+    table, names = [], []
+    for folder, item in rows:
+        try:
+            info = account_for(item, buffer, pin_buffer).post_metrics(item["post_id"])
+        except BufferError as error:
+            say(f"no numbers for {folder} ({item['service']}): {error}")
+            continue
+        for name in info["metrics"]:
+            if name not in names:
+                names.append(name)
+        table.append((folder, LABEL.get(item["service"], item["service"]), info))
+    def score(row):
+        m = row[2]["metrics"]
+        return sum(v or 0 for k, v in m.items() if not re.search(r"impression|reach|view", k, re.I)), \
+            sum(v or 0 for v in m.values())
+    table.sort(key=score, reverse=True)
+    with open("results.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["order", "app", "status", "link", "updated"] + names)
+        for folder, app, info in table:
+            w.writerow([folder, app, info["status"], info["link"] or "", info["updated"] or ""]
+                       + [info["metrics"].get(n, "") for n in names])
+    lines = ["| Order | App | " + " | ".join(names) + " |", "|---|---|" + "---|" * len(names)]
+    for folder, app, info in table:
+        lines.append(f"| {folder[:48]} | {app} | " + " | ".join(str(info["metrics"].get(n, "")) for n in names) + " |")
+    write_summary("### Pet Shelf results (best first; numbers from Buffer)\n" + "\n".join(lines))
+    say("\n".join(lines))
+
+
 def main():
     try:
         buffer = Buffer(os.environ.get("PET_SHELF_BUFFER_API_KEY"))
@@ -51,6 +84,9 @@ def main():
         days = int(os.environ.get("CHECK_DAYS") or 4)
         since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d") if days > 0 else ""
         say(f"Checking orders booked since {since or 'the start'}.")
+        if (os.environ.get("CHECK_METRICS") or "").strip().lower() in ("1", "yes", "true"):
+            metrics_report(collect(robot.MEDIA_DIR, since), buffer, pin_buffer)
+            return 0
         for folder, item in collect(robot.MEDIA_DIR, since):
             try:
                 info = account_for(item, buffer, pin_buffer).post_status(item["post_id"])

@@ -9,6 +9,10 @@ on:
         description: "How many days back to check (0 = every post ever; many posts can hit Buffer's question limit)"
         type: string
         default: "4"
+      results:
+        description: "yes = show likes, views and other numbers for each sent post (still read-only)"
+        type: string
+        default: "no"
 
 permissions:
   contents: read
@@ -29,5 +33,6 @@ jobs:
         env:
           PET_SHELF_BUFFER_API_KEY: ${{ secrets.PET_SHELF_BUFFER_API_KEY }}
           CHECK_DAYS: ${{ inputs.days }}
+          CHECK_METRICS: ${{ inputs.results }}
           PINTEREST_BUFFER_API_KEY: ${{ secrets.PINTEREST_BUFFER_API_KEY }}
         run: python pet_shelf_check.py
