@@ -81,7 +81,11 @@ def main():
         lines = ["| Order | App | Due (UTC) | Buffer status | Problem |", "|---|---|---|---|---|"]
         counts = {}
         # Only recent orders: asking Buffer about every post ever booked hits its question limit (seen 23 Nov 2026).
-        days = int(os.environ.get("CHECK_DAYS") or 4)
+        # "9 results" in the days box = also show likes, views... for each sent post (read-only).
+        raw = (os.environ.get("CHECK_DAYS") or "4").lower()
+        if "result" in raw:
+            os.environ["CHECK_METRICS"] = "yes"
+        days = int(re.sub(r"[^0-9]", "", raw) or 4)
         since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d") if days > 0 else ""
         say(f"Checking orders booked since {since or 'the start'}.")
         if (os.environ.get("CHECK_METRICS") or "").strip().lower() in ("1", "yes", "true"):
